@@ -17,20 +17,24 @@ namespace QuizWorld.Common.Constants.ValidationErrorMessages
 
         public static class Text
         {
-            public const string NotEnoughAnswers = "Question is missing answers!";
-            public const string TooManyAnswers = "Question should not have more than 15 answers!";
+            public const string NotEnoughAnswers = "Text questions must have at least one answer!";
+            public const string TooManyAnswers = "Text questions should not have more than 15 answers!";
+            public const string HasWrongAnswers = "Text questions cannot have wrong answers!";
         }
 
         public static class SingleChoice
         {
-            public const string NotEnoughAnswers = "Question is missing answers!";
-            public const string TooManyAnswers = "Question should not have more than ten answers!";
+            public const string NotEnoughAnswers = "Single-choice questions must have at least two answers!";
+            public const string DoesNotHaveWrongAnswers = "Single-choice questions must have at least one wrong answer!";
+            public const string TooManyCorrectAnswers = "Single-choice questions should have only one correct answer!";
+            public const string TooManyAnswers = "Single-choice questions should not have more than ten answers!";
         }
 
         public static class MultipleChoice
         {
-            public const string NotEnoughAnswers = "Question is missing answers!";
-            public const string TooManyAnswers = "Question should not have more than ten answers!";
+            public const string NotEnoughAnswers = "Multiple-choice questions must have at least two answers!";
+            public const string DoesNotHaveCorrectAnswers = "Multiple-choice questions questions must have at least one correct answer!";
+            public const string TooManyAnswers = "Multiple-choice questions should not have more than ten answers!";
         }
     }
 }
