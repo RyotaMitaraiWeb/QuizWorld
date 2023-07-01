@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace QuizWorld.Common.Constants.ValidationErrorMessages
 {
+    /// <summary>
+    /// Contains static messages that indicate that an answer view model has failed validations.
+    /// </summary>
     public static class AnswerValidationErrorMessages
     {
         public const string IsEmpty = "The answer cannot be empty!";

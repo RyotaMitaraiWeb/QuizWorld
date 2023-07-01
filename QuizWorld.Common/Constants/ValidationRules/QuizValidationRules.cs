@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace QuizWorld.Common.Constants.ValidationRules
 {
+    /// <summary>
+    /// Contains hardcoded values for validation of quiz view models.
+    /// </summary>
     public static class QuizValidationRules
     {
         public static class Title

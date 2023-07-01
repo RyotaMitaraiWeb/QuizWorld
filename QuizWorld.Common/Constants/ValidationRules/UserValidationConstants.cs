@@ -9,6 +9,9 @@ using System.Text.RegularExpressions;
 
 namespace QuizWorld.Common.Constants.ValidationRules
 {
+    /// <summary>
+    /// Contains hardcoded values for validation of user view models.
+    /// </summary>
     public static class UserValidationConstants
     {
         public static class Username

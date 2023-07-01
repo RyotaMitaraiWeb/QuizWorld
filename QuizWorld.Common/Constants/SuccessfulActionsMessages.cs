@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace QuizWorld.Common.Constants
 {
+    /// <summary>
+    /// Contains static messages to notify the user that they performed a certain task successfully.
+    /// </summary>
     public static class SuccessfulActionsMessages
     {
         public const string Registered = "You registered successfully!";

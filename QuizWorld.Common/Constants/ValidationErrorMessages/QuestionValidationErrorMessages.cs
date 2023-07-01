@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace QuizWorld.Common.Constants.ValidationErrorMessages
 {
+    /// <summary>
+    /// Contains static messages that indicate that a question view model has failed validations.
+    /// </summary>
     public static class QuestionValidationErrorMessages
     {
         public const string InvalidType = "The question type is invalid! Make sure to provide it as \"single\", \"multi\", or \"text\"";

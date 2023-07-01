@@ -8,6 +8,9 @@ using static QuizWorld.Common.Constants.ValidationRules.UserValidationConstants;
 
 namespace QuizWorld.Common.Constants.ValidationErrorMessages
 {
+    /// <summary>
+    /// Contains static messages that indicate that a user view model has failed validations.
+    /// </summary>
     public static class UserValidationErrorMessages
     {
         public static class Username

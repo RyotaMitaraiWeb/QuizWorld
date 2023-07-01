@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace QuizWorld.Common.Constants.ValidationErrorMessages
 {
+    /// <summary>
+    /// Contains static messages that indicate that a quiz view model has failed validations.
+    /// </summary>
     public static class QuizValidationErrorMessages
     {
         public static class Title

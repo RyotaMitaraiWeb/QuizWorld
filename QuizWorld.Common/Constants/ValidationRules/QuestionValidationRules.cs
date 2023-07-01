@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace QuizWorld.Common.Constants.ValidationRules
 {
+    /// <summary>
+    /// Contains hardcoded values for validation of question view models. This also includes
+    /// things like required/maximum amount of answers and so on.
+    /// </summary>
     public static class QuestionValidationRules
     {
         public static readonly string[] AllowedTypes = new string[]

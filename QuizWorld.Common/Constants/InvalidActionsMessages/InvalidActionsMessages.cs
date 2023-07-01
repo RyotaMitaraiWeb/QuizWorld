@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace QuizWorld.Common.Constants.InvalidActionsMessages
 {
+    /// <summary>
+    /// Contains static messages to notify the user that they could not perform a particular task.
+    /// </summary>
     public static class InvalidActionsMessages
     {
         public const string IsNotLoggedIn = "You must be logged in to perform this action!";
