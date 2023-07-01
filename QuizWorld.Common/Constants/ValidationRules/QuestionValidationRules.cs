@@ -23,16 +23,19 @@ namespace QuizWorld.Common.Constants.ValidationRules
 
         public static class SingleChoice
         {
+            public const int MinimumAmountOfAnswers = 2;
             public const int MaximumAmountOfAnswers = 10;
         }
 
         public static class MultipleChoice
         {
+            public const int MinimumAmountOfAnswers = 2;
             public const int MaximumAmountOfAnswers = 10;
         }
 
         public static class Text
         {
+            public const int MinimumAmountOfAnswers = 1;
             public const int MaximumAmountOfAnswers = 15;
         }
     }
