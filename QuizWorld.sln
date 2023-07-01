@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizWorld.Tests", "QuizWorl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizWorld.Common", "QuizWorld.Common\QuizWorld.Common.csproj", "{679D343D-B99F-4542-B1EF-F41EC1155593}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuizWorld.Infrastructure", "QuizWorld.Infrastructure\QuizWorld.Infrastructure.csproj", "{EC46D2B9-3CF5-4E95-9F92-0E3684F61924}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{679D343D-B99F-4542-B1EF-F41EC1155593}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{679D343D-B99F-4542-B1EF-F41EC1155593}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{679D343D-B99F-4542-B1EF-F41EC1155593}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC46D2B9-3CF5-4E95-9F92-0E3684F61924}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC46D2B9-3CF5-4E95-9F92-0E3684F61924}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC46D2B9-3CF5-4E95-9F92-0E3684F61924}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC46D2B9-3CF5-4E95-9F92-0E3684F61924}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
