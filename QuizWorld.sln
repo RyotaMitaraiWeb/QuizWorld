@@ -7,9 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizWorld.Web", "QuizWorld.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizWorld.Tests", "QuizWorld.Tests\QuizWorld.Tests.csproj", "{1CD54038-1C4A-4DE6-B943-36BC139BBB3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuizWorld.Common", "QuizWorld.Common\QuizWorld.Common.csproj", "{679D343D-B99F-4542-B1EF-F41EC1155593}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{C84927F8-3DD9-4397-A51B-DFA73EF241D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizWorld.Common", "QuizWorld.Common\QuizWorld.Common.csproj", "{679D343D-B99F-4542-B1EF-F41EC1155593}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,9 +30,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{679D343D-B99F-4542-B1EF-F41EC1155593} = {C84927F8-3DD9-4397-A51B-DFA73EF241D2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {45E2E6C2-5A5D-4F49-AF56-6DFC71EC028D}
