@@ -18,6 +18,11 @@ namespace QuizWorld.Common.Constants.ValidationErrorMessages
             public const string IsEmpty = "The quiz title is required!";
         }
 
+        public static class InstantMode
+        {
+            public const string IsMissing = "You must specify whether the quiz is in instant mode or not!";
+        }
+
         public static class Description
         {
             public const string IsTooShort = "The quiz description must be at least ten characters!";
