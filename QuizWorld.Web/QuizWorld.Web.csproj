@@ -16,4 +16,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\QuizWorld.Common\QuizWorld.Common.csproj" />
+    <ProjectReference Include="..\QuizWorld.Tests\QuizWorld.Tests.csproj" />
+  </ItemGroup>
+
 </Project>
