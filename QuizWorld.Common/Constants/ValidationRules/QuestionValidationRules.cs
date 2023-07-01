@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QuizWorld.Common.Constants.Types;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,13 @@ namespace QuizWorld.Common.Constants.ValidationRules
 {
     public static class QuestionValidationRules
     {
+        public static readonly string[] AllowedTypes = new string[]
+        {
+            QuestionTypes.MultipleChoice,
+            QuestionTypes.SingleChoice,
+            QuestionTypes.Text,
+        };
+
         public static class Prompt
         {
             public const int MaxLength = 200;
