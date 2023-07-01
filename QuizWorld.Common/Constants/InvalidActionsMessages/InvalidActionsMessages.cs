@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace QuizWorld.Common.Constants.InvalidActionsMessages
 {
-    public static class InvalidActionMessages
+    public static class InvalidActionsMessages
     {
         public const string IsNotLoggedIn = "You must be logged in to perform this action!";
         public const string IsNotLoggedOut = "You must be logged out to perform this action!";
