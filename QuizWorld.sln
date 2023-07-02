@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizWorld.Common", "QuizWor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizWorld.Infrastructure", "QuizWorld.Infrastructure\QuizWorld.Infrastructure.csproj", "{EC46D2B9-3CF5-4E95-9F92-0E3684F61924}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuizWorld.ViewModels", "QuizWorld.ViewModels\QuizWorld.ViewModels.csproj", "{E6E8976C-8527-479B-9CF6-89EE48BA734D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
