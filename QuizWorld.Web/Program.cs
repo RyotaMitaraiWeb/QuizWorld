@@ -6,6 +6,10 @@ using Microsoft.OpenApi.Models;
 using QuizWorld.Infrastructure.Data;
 using QuizWorld.Infrastructure.Data.Entities;
 using System.Text;
+using System.Text.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace QuizWorld.Web
 {
@@ -53,11 +57,33 @@ namespace QuizWorld.Web
                         SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
                 };
             });
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                    options.JsonSerializerOptions.WriteIndented = true;
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                }).AddNewtonsoftJson(options =>
+                {
+                    
+                    options.SerializerSettings.ContractResolver = new DefaultContractResolver
+                    {
+                        NamingStrategy = new CamelCaseNamingStrategy
+                        {
+                            ProcessDictionaryKeys = true,
+                            ProcessExtensionDataNames= true,
+                        }
+                    };
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                });
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options =>
             {
+                options.ResolveConflictingActions(api => api.First());
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "Quiz World", Version = "v1" });
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -85,6 +111,7 @@ namespace QuizWorld.Web
             });
 
             var app = builder.Build();
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
