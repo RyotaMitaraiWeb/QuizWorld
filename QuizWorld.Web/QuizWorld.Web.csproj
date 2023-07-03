@@ -26,7 +26,6 @@
   <ItemGroup>
     <ProjectReference Include="..\QuizWorld.Common\QuizWorld.Common.csproj" />
     <ProjectReference Include="..\QuizWorld.Infrastructure\QuizWorld.Infrastructure.csproj" />
-    <ProjectReference Include="..\QuizWorld.Tests\QuizWorld.Tests.csproj" />
     <ProjectReference Include="..\QuizWorld.ViewModels\QuizWorld.ViewModels.csproj" />
   </ItemGroup>
 
