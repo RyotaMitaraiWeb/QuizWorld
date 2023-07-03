@@ -10,6 +10,9 @@ using QuizWorld.Common.Constants.ValidationErrorMessages;
 
 namespace QuizWorld.ViewModels.Authentication
 {
+    /// <summary>
+    /// Represents the body of a register request. Includes validations.
+    /// </summary>
     public class RegisterViewModel
     {
         [Required(ErrorMessage = UserValidationErrorMessages.Username.IsEmpty)]
