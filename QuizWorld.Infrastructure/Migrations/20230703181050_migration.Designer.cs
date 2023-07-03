@@ -12,8 +12,8 @@ using QuizWorld.Infrastructure.Data;
 namespace QuizWorld.Infrastructure.Migrations
 {
     [DbContext(typeof(QuizWorldDbContext))]
-    [Migration("20230702114941_application-user")]
-    partial class applicationuser
+    [Migration("20230703181050_migration")]
+    partial class migration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,6 +50,29 @@ namespace QuizWorld.Infrastructure.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("5768a1ac-2d2c-4507-9aac-7f57eb7cc384"),
+                            ConcurrencyStamp = "95aa57c9-dc04-4226-ba58-4a70a6058338",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = new Guid("d53a3c78-d770-4199-b07c-a3e4ce4fec6e"),
+                            ConcurrencyStamp = "94af65b2-fc39-4410-bceb-3419fac21881",
+                            Name = "Administrator",
+                            NormalizedName = "ADMINISTRATOR"
+                        },
+                        new
+                        {
+                            Id = new Guid("05e139e1-d6cc-4b63-ae4a-abeadbf2ddb6"),
+                            ConcurrencyStamp = "19e0fc70-dde3-49e7-a7a1-fd5c278aba32",
+                            Name = "Moderator",
+                            NormalizedName = "MODERATOR"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
