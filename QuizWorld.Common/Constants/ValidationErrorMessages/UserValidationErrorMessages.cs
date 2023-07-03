@@ -24,6 +24,7 @@ namespace QuizWorld.Common.Constants.ValidationErrorMessages
 
         public static class Password
         {
+            public const string IsEmpty = "The password is required!";
             public const string IsTooShort = "The password must be at least six characters long!";
         }
     }
