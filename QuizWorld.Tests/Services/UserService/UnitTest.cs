@@ -208,3 +208,5 @@ namespace QuizWorld.Tests.Services.UserServiceTest
                 Assert.That(result.Roles, Has.Length.EqualTo(1));
             });
         }
+    }
+}
