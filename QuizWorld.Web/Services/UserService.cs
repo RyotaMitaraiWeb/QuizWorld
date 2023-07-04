@@ -140,11 +140,12 @@ namespace QuizWorld.Web.Services
         }
 
         /// <summary>
-        /// Decodes the provided JWT into a UserViewModel
+        /// Decodes the provided JWT into a UserViewModel.
         /// </summary>
         /// <param name="jwt">The token to be decoded</param>
         /// <returns>A UserViewModel representing the content of the JWT</returns>
         /// <exception cref="InvalidOperationException">If roles is null</exception>
+
         public UserViewModel DecodeJWT(string jwt)
         {
             var handler = new JwtSecurityTokenHandler();
