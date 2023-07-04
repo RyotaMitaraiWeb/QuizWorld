@@ -7,5 +7,6 @@ namespace QuizWorld.Web.Contracts
         public Task<UserViewModel?> Register(RegisterViewModel user);
         public Task<UserViewModel?> Login(LoginViewModel user);
         public string GenerateJWT(UserViewModel user);
+        public UserViewModel DecodeJWT(string jwt);
     }
 }

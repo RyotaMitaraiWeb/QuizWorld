@@ -132,5 +132,34 @@ namespace QuizWorld.Web.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        /// <summary>
+        /// Decodes the provided JWT into a UserViewModel
+        /// </summary>
+        /// <param name="jwt">The token to be decoded</param>
+        /// <returns>A UserViewModel representing the content of the JWT</returns>
+        /// <exception cref="InvalidOperationException">If roles is null</exception>
+        public UserViewModel DecodeJWT(string jwt)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var token = handler.ReadJwtToken(jwt);
+
+            var rolesJson = token.Claims.First(t => t.Type == "roles").Value;
+            var roles = JsonConvert.DeserializeObject<string[]>(rolesJson);
+
+            if (roles == null)
+            {
+                throw new InvalidOperationException("roles is null, this is most likely an error from the token itself");
+            }
+
+            var user = new UserViewModel()
+            {
+                Id = token.Claims.First(t => t.Type == "id").Value,
+                Username = token.Claims.First(t => t.Type == "username").Value,
+                Roles = roles
+            };
+
+            return user;
+        }
     }
 }
