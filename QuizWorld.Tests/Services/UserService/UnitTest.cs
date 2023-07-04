@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -16,6 +17,7 @@ namespace QuizWorld.Tests.Services.UserServiceTest
         public RegisterViewModel register;
         public LoginViewModel login;
         public ApplicationUser user;
+        public Mock<IConfiguration> config;
 
         [SetUp]
         public void Setup()
@@ -31,7 +33,9 @@ namespace QuizWorld.Tests.Services.UserServiceTest
                 new Mock<IServiceProvider>().Object,
                 new Mock<ILogger<UserManager<ApplicationUser>>>().Object);
 
-            this.service = new UserService(this.userManagerMock.Object);
+            this.config = new Mock<IConfiguration>();
+
+            this.service = new UserService(this.userManagerMock.Object, this.config.Object);
 
             this.register = new RegisterViewModel()
             {
@@ -142,6 +146,32 @@ namespace QuizWorld.Tests.Services.UserServiceTest
 
             var result = await this.service.Login(this.login);
             Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void Test_GenerateJWTReturnsWhateverTokenIsGenerated()
+        {
+            var user = new UserViewModel()
+            {
+                Username = "ryota1",
+                Id = Guid.NewGuid().ToString(),
+                Roles = new string[] { "User" }
+            };
+
+            this.config
+                .SetupGet(c => c["JWT:Secret"])
+                .Returns("aswenwe12tasgq3qwsas3t");
+
+            this.config
+                .SetupGet(c => c["JWT:ValidAudience"])
+                .Returns("localhost:4200");
+
+            this.config
+                .SetupGet(c => c["JWT:ValidIssuer"])
+                .Returns("localhost:5000");
+
+            var result = this.service.GenerateJWT(user);
+            Assert.That(result, Has.Length.GreaterThan(20));
         }
     }
 }
