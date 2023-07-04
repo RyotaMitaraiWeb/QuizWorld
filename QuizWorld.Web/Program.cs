@@ -10,6 +10,11 @@ using System.Text.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using System.Text.Json.Serialization;
+using QuizWorld.Web.Contracts;
+using QuizWorld.Web.Services;
+using Redis.OM.Skeleton.HostedServices;
+using Redis.OM;
+using Redis.OM.Contracts;
 
 namespace QuizWorld.Web
 {
@@ -26,6 +31,10 @@ namespace QuizWorld.Web
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             });
+
+            builder.Services.AddHostedService<IndexCreationService>();
+            builder.Services.AddSingleton(new RedisConnectionProvider(builder.Configuration["REDIS_CONNECTION_STRING"]));
+
 
             builder.Services.AddDbContext<QuizWorldDbContext>(options =>
             {
