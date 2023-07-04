@@ -173,5 +173,40 @@ namespace QuizWorld.Tests.Services.UserServiceTest
             var result = this.service.GenerateJWT(user);
             Assert.That(result, Has.Length.GreaterThan(20));
         }
+
+        [Test]
+        public void Test_DecodeJWTReturnsAUserViewModelWhenTokenIsValid()
+        {
+            var user = new UserViewModel()
+            {
+                Id = "qekonwe",
+                Username = "ryota1",
+                Roles = new string[] { "User" }
+            };
+
+            this.config
+                .SetupGet(c => c["JWT:Secret"])
+                .Returns("aswenwe12tasgq3qwsas3t");
+
+            this.config
+                .SetupGet(c => c["JWT:ValidAudience"])
+                .Returns("localhost:4200");
+
+            this.config
+                .SetupGet(c => c["JWT:ValidIssuer"])
+                .Returns("localhost:5000");
+
+            var token = this.service.GenerateJWT(user);
+
+            var result = this.service.DecodeJWT(token);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Id, Is.EqualTo(user.Id));
+                Assert.That(result.Username, Is.EqualTo(user.Username));
+                Assert.That(result.Roles[0], Is.EqualTo("User"));
+                Assert.That(result.Roles, Has.Length.EqualTo(1));
+            });
+        }
     }
 }
