@@ -18,6 +18,7 @@ namespace QuizWorld.Tests.Services.UserServiceTest
         public LoginViewModel login;
         public ApplicationUser user;
         public Mock<IConfiguration> config;
+        public Mock<IJwtBlacklist> jwtBlacklistMock;
 
         [SetUp]
         public void Setup()
@@ -34,8 +35,9 @@ namespace QuizWorld.Tests.Services.UserServiceTest
                 new Mock<ILogger<UserManager<ApplicationUser>>>().Object);
 
             this.config = new Mock<IConfiguration>();
+            this.jwtBlacklistMock = new Mock<IJwtBlacklist>();
 
-            this.service = new UserService(this.userManagerMock.Object, this.config.Object);
+            this.service = new UserService(this.userManagerMock.Object, this.config.Object, this.jwtBlacklistMock.Object);
 
             this.register = new RegisterViewModel()
             {
@@ -208,3 +210,29 @@ namespace QuizWorld.Tests.Services.UserServiceTest
                 Assert.That(result.Roles, Has.Length.EqualTo(1));
             });
         }
+
+        [Test]
+        public async Task Test_LogoutReturnsTrueIfBlacklistJWTReturnsTrue()
+        {
+            string jwt = "a";
+            this.jwtBlacklistMock
+                .Setup(j => j.BlacklistJWT(jwt))
+                .ReturnsAsync(true);
+
+            var result = await this.service.Logout(jwt);
+            Assert.That(result, Is.True);
+        }
+
+        [Test]
+        public async Task Test_LogoutReturnsTrueIfBlacklistJWTReturnsFalse()
+        {
+            string jwt = "a";
+            this.jwtBlacklistMock
+                .Setup(j => j.BlacklistJWT(jwt))
+                .ReturnsAsync(false);
+
+            var result = await this.service.Logout(jwt);
+            Assert.That(result, Is.False);
+        }
+    }
+}

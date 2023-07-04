@@ -4,6 +4,8 @@ using Newtonsoft.Json;
 using QuizWorld.Infrastructure.Data.Entities;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.Web.Contracts;
+using Redis.OM;
+using Redis.OM.Contracts;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -18,15 +20,19 @@ namespace QuizWorld.Web.Services
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IConfiguration config;
+        private readonly IJwtBlacklist jwtBlacklist;
+
         // private readonly RoleManager<IdentityRole<Guid>> roleManager;
         public UserService(
                 UserManager<ApplicationUser> userManager,
-                IConfiguration config
+                IConfiguration config,
+                IJwtBlacklist jwtBlacklist
                 //RoleManager<IdentityRole<Guid>> roleManager
             )
         {
             this.userManager = userManager;
             this.config = config;
+            this.jwtBlacklist = jwtBlacklist;
             //this.roleManager = roleManager;
         }
 
@@ -160,6 +166,13 @@ namespace QuizWorld.Web.Services
             };
 
             return user;
+        }
+
+        public async Task<bool> Logout(string jwt)
+        {
+            var result = await this.jwtBlacklist.BlacklistJWT(jwt);
+            return result;
+
         }
     }
 }

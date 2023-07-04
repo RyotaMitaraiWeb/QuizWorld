@@ -2,6 +2,7 @@
 using Moq;
 using QuizWorld.Infrastructure;
 using QuizWorld.ViewModels.Authentication;
+using QuizWorld.Web.Contracts;
 using QuizWorld.Web.Services;
 using System;
 using System.Collections.Generic;
@@ -20,8 +21,9 @@ namespace QuizWorld.Tests.Services.UserServiceTest
         public async Task Setup()
         {
             var config = new Mock<IConfiguration>();
+            var jwtBlacklistMock = new Mock<IJwtBlacklist>();
             this.testDb = new TestDB();
-            this.service = new UserService(testDb.userManager, config.Object);
+            this.service = new UserService(testDb.userManager, config.Object, jwtBlacklistMock.Object);
         }
 
         [Test]
