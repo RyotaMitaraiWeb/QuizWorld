@@ -1,4 +1,6 @@
-﻿using QuizWorld.Infrastructure;
+﻿using Microsoft.Extensions.Configuration;
+using Moq;
+using QuizWorld.Infrastructure;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.Web.Services;
 using System;
@@ -17,8 +19,9 @@ namespace QuizWorld.Tests.Services.UserServiceTest
         [SetUp]
         public async Task Setup()
         {
+            var config = new Mock<IConfiguration>();
             this.testDb = new TestDB();
-            this.service = new UserService(testDb.userManager);
+            this.service = new UserService(testDb.userManager, config.Object);
         }
 
         [Test]
