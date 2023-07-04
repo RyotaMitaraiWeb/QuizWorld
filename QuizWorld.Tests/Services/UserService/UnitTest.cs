@@ -14,6 +14,7 @@ namespace QuizWorld.Tests.Services.UserServiceTest
         public Mock<UserManager<ApplicationUser>> userManagerMock;
         public UserService service;
         public RegisterViewModel register;
+        public LoginViewModel login;
         public ApplicationUser user;
 
         [SetUp]
@@ -31,7 +32,14 @@ namespace QuizWorld.Tests.Services.UserServiceTest
                 new Mock<ILogger<UserManager<ApplicationUser>>>().Object);
 
             this.service = new UserService(this.userManagerMock.Object);
+
             this.register = new RegisterViewModel()
+            {
+                Username = "ryota1",
+                Password = "123456",
+            };
+
+            this.login = new LoginViewModel()
             {
                 Username = "ryota1",
                 Password = "123456",
@@ -81,6 +89,58 @@ namespace QuizWorld.Tests.Services.UserServiceTest
             );
 
             var result = await this.service.Register(this.register);
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public async Task Test_LoginReturnsAUserWhenUserManagerCheckPasswordReturnsTrue()
+        {
+            this.userManagerMock
+                .Setup(um => um.FindByNameAsync(this.login.Username))
+                .ReturnsAsync(new ApplicationUser()
+                {
+                    UserName = this.login.Username
+                });
+
+            this.userManagerMock
+                .Setup(um => um.CheckPasswordAsync(It.IsAny<ApplicationUser>(), this.login.Password))
+                .ReturnsAsync(true);
+
+            this.userManagerMock
+                .Setup(um => um.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string>() { "User" });
+
+            var result = await this.service.Login(this.login);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Username, Is.EqualTo(this.login.Username));
+            });
+        }
+
+        [Test]
+        public async Task Test_LoginReturnsNullWhenUserManagerCheckPasswordReturnsFalse()
+        {
+            this.userManagerMock
+                .Setup(um => um.FindByNameAsync(this.login.Username))
+                .ReturnsAsync(new ApplicationUser());
+
+            this.userManagerMock
+                .Setup(um => um.CheckPasswordAsync(It.IsAny<ApplicationUser>(), this.login.Password))
+                .ReturnsAsync(false);
+
+            var result = await this.service.Login(this.login);
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public async Task Test_LoginReturnsNullWhenUserManagerCannotFindTheUser()
+        {
+            this.userManagerMock
+                .Setup(um => um.FindByNameAsync(this.login.Username))
+                .ReturnsAsync(() => null);
+
+            var result = await this.service.Login(this.login);
             Assert.That(result, Is.Null);
         }
     }
