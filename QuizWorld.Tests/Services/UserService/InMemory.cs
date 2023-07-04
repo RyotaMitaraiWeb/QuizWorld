@@ -4,7 +4,6 @@ using QuizWorld.Web.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -54,7 +53,7 @@ namespace QuizWorld.Tests.Services.UserServiceTest
             var user = await this.testDb.userManager.FindByNameAsync(register.Username);
             Assert.That(user, Is.Null);
         }
-
+      
         [Test]
         public async Task Test_LoginReturnsAUserOnSuccessfulLogin()
         {
