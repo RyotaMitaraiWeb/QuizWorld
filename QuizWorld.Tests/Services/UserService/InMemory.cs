@@ -53,5 +53,48 @@ namespace QuizWorld.Tests.Services.UserServiceTest
             var user = await this.testDb.userManager.FindByNameAsync(register.Username);
             Assert.That(user, Is.Null);
         }
+      
+        [Test]
+        public async Task Test_LoginReturnsAUserOnSuccessfulLogin()
+        {
+            var login = new LoginViewModel()
+            {
+                Username = this.testDb.User.UserName,
+                Password = "123456"
+            };
+
+            var result = await this.service.Login(login);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Username, Is.EqualTo(login.Username));
+            });
+        }
+
+        [Test]
+        public async Task Test_LoginReturnsNullOnWrongPassword()
+        {
+            var login = new LoginViewModel()
+            {
+                Username = this.testDb.User.UserName,
+                Password = "123456123623ds"
+            };
+
+            var result = await this.service.Login(login);
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public async Task Test_LoginReturnsNullOnNonExistantUsername()
+        {
+            var login = new LoginViewModel()
+            {
+                Username = "aaaaaa",
+                Password = "123456"
+            };
+
+            var result = await this.service.Login(login);
+            Assert.That(result, Is.Null);
+        }
     }
 }
