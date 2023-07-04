@@ -173,5 +173,6 @@ namespace QuizWorld.Tests.Services.UserServiceTest
             var result = this.service.GenerateJWT(user);
             Assert.That(result, Has.Length.GreaterThan(20));
         }
+
     }
 }
