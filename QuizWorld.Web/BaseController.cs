@@ -9,6 +9,7 @@ namespace QuizWorld.Web
     /// Extends the ControllerBase. Authorizes every route by default. Allows easy access to the user's JWT
     /// </summary>
     [Authorize(AuthenticationSchemes = "Bearer")]
+    [ApiController]
     public class BaseController : ControllerBase
     {
         /// <summary>
