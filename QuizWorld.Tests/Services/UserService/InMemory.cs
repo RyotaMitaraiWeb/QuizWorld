@@ -102,5 +102,19 @@ namespace QuizWorld.Tests.Services.UserServiceTest
             var result = await this.service.Login(login);
             Assert.That(result, Is.Null);
         }
+
+        [Test]
+        public async Task Test_CheckIfUsernameIsTakenReturnsTrueIfAUserWithTheUsernameExistsInTheDatabase()
+        {
+            var result = await this.service.CheckIfUsernameIsTaken(this.testDb.User.UserName);
+            Assert.That(result, Is.True);
+        }
+
+        [Test]
+        public async Task Test_CheckIfUsernameIsTakenReturnsFalseIfAUserWithTheUsernameDoesNotExistInTheDatabase()
+        {
+            var result = await this.service.CheckIfUsernameIsTaken("!");
+            Assert.That(result, Is.False);
+        }
     }
 }

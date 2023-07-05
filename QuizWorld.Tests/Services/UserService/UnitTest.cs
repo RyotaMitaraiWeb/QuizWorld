@@ -172,5 +172,27 @@ namespace QuizWorld.Tests.Services.UserServiceTest
             var result = await this.service.Logout(jwt);
             Assert.That(result, Is.False);
         }
+
+        [Test]
+        public async Task Test_CheckIfUsernameIsTakenReturnsTrueIfTheUserManagerFindsAUserWithTheGivenUsername()
+        {
+            this.userManagerMock
+                .Setup(um => um.FindByNameAsync("a"))
+                .ReturnsAsync(new ApplicationUser());
+
+            var result = await this.service.CheckIfUsernameIsTaken("a");
+            Assert.That(result, Is.True);
+        }
+
+        [Test]
+        public async Task Test_CheckIfUsernameIsTakenReturnsFalseIfTheUserManagerDoesNotFindAUserWithTheGivenUsername()
+        {
+            this.userManagerMock
+                .Setup(um => um.FindByNameAsync("a"))
+                .ReturnsAsync(() => null);
+
+            var result = await this.service.CheckIfUsernameIsTaken("a");
+            Assert.That(result, Is.False);
+        }
     }
 }
