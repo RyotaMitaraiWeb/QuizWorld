@@ -3,7 +3,7 @@ using QuizWorld.Infrastructure.Data.Redis.Models;
 using Redis.OM;
 using Redis.OM.Searching;
 
-namespace QuizWorld.Web.Services
+namespace QuizWorld.Infrastructure.Data.Services.JsonwebToken
 {
     /// <summary>
     /// A service to manage a Redis-based of JWTs. A blacklisted JWT will be rejected
@@ -17,7 +17,7 @@ namespace QuizWorld.Web.Services
         public JwtBlacklistService(RedisConnectionProvider redisProvider)
         {
             this.redisProvider = redisProvider;
-            this.tokens = (RedisCollection<JWT>) this.redisProvider.RedisCollection<JWT>();
+            tokens = (RedisCollection<JWT>)this.redisProvider.RedisCollection<JWT>();
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace QuizWorld.Web.Services
         /// <returns>the JWT or null if it doesn't exist</returns>
         public async Task<string?> FindJWT(string jwt)
         {
-            var token = await this.tokens.Where(t => t.Token == jwt).FirstOrDefaultAsync();
+            var token = await tokens.Where(t => t.Token == jwt).FirstOrDefaultAsync();
             return token?.Token;
         }
 
@@ -39,19 +39,19 @@ namespace QuizWorld.Web.Services
         /// <returns>A boolean value indicating whether the operation succeeded</returns>
         public async Task<bool> BlacklistJWT(string jwt)
         {
-            var token = await this.FindJWT(jwt);
+            var token = await FindJWT(jwt);
             if (token != null)
             {
                 return false;
             }
 
-            var result = await this.tokens.InsertAsync(new JWT
+            var result = await tokens.InsertAsync(new JWT
             {
                 Id = jwt,
                 Token = token
             }, new TimeSpan(24, 0, 0));
 
-            await this.tokens.SaveAsync();
+            await tokens.SaveAsync();
 
             return result != null;
         }

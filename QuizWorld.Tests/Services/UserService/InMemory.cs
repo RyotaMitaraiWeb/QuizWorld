@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Moq;
 using QuizWorld.Infrastructure;
+using QuizWorld.Infrastructure.Data.Contracts;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.Web.Contracts;
 using QuizWorld.Web.Services;
@@ -16,14 +17,14 @@ namespace QuizWorld.Tests.Services.UserServiceTest
     {
         public TestDB testDb;
         public UserService service;
+        public Mock<IJwtService> jwtServiceMock;
 
         [SetUp]
         public async Task Setup()
         {
-            var config = new Mock<IConfiguration>();
-            var jwtBlacklistMock = new Mock<IJwtBlacklist>();
+            this.jwtServiceMock= new Mock<IJwtService>();
             this.testDb = new TestDB();
-            this.service = new UserService(testDb.userManager, config.Object, jwtBlacklistMock.Object);
+            this.service = new UserService(testDb.userManager, this.jwtServiceMock.Object);
         }
 
         [Test]
