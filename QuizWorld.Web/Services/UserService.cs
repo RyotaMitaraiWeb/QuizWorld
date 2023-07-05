@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using QuizWorld.Infrastructure.Data.Contracts;
 using QuizWorld.Infrastructure.Data.Entities;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.Web.Contracts;
@@ -19,21 +20,15 @@ namespace QuizWorld.Web.Services
     public class UserService : IUserService
     {
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly IConfiguration config;
-        private readonly IJwtBlacklist jwtBlacklist;
+        private readonly IJwtService jwtService;
 
-        // private readonly RoleManager<IdentityRole<Guid>> roleManager;
         public UserService(
                 UserManager<ApplicationUser> userManager,
-                IConfiguration config,
-                IJwtBlacklist jwtBlacklist
-                //RoleManager<IdentityRole<Guid>> roleManager
+                IJwtService jwtService
             )
         {
             this.userManager = userManager;
-            this.config = config;
-            this.jwtBlacklist = jwtBlacklist;
-            //this.roleManager = roleManager;
+            this.jwtService = jwtService;
         }
 
         /// <summary>
@@ -106,72 +101,9 @@ namespace QuizWorld.Web.Services
             };
         }
 
-        /// <summary>
-        /// Generates a JWT that can be decoded to a UserViewModel
-        /// </summary>
-        /// <param name="user">The user to be converted to a JWT</param>
-        /// <returns>A string representing the JWT</returns>
-        public string GenerateJWT(UserViewModel user)
-        {
-            var secret = this.config["JWT:Secret"];
-            var issuer = this.config["JWT:ValidIssuer"];
-            var audience = this.config["JWT:ValidAudience"];
-
-
-            var claims = new List<Claim>
-            {
-                new Claim("id", user.Id),
-                new Claim("username", user.Username),
-                new Claim("roles", JsonConvert.SerializeObject(user.Roles))
-            };
-
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
-
-            var token = new JwtSecurityToken(
-                issuer: issuer,
-                audience: audience,
-                expires: DateTime.Now.AddDays(1),
-                claims: claims,
-                signingCredentials: 
-                    new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        /// <summary>
-        /// Decodes the provided JWT into a UserViewModel.
-        /// </summary>
-        /// <param name="jwt">The token to be decoded</param>
-        /// <returns>A UserViewModel representing the content of the JWT</returns>
-        /// <exception cref="InvalidOperationException">If roles is null</exception>
-
-        public UserViewModel DecodeJWT(string jwt)
-        {
-            var handler = new JwtSecurityTokenHandler();
-            var token = handler.ReadJwtToken(jwt);
-
-            var rolesJson = token.Claims.First(t => t.Type == "roles").Value;
-            var roles = JsonConvert.DeserializeObject<string[]>(rolesJson);
-
-            if (roles == null)
-            {
-                throw new InvalidOperationException("roles is null, this is most likely an error from the token itself");
-            }
-
-            var user = new UserViewModel()
-            {
-                Id = token.Claims.First(t => t.Type == "id").Value,
-                Username = token.Claims.First(t => t.Type == "username").Value,
-                Roles = roles
-            };
-
-            return user;
-        }
-
         public async Task<bool> Logout(string jwt)
         {
-            var result = await this.jwtBlacklist.BlacklistJWT(jwt);
+            var result = await this.jwtService.InvalidateJWT(jwt);
             return result;
 
         }

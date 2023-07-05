@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
+using QuizWorld.Infrastructure.Data.Contracts;
 using QuizWorld.Infrastructure.Data.Entities;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.Web.Contracts;
@@ -17,8 +18,7 @@ namespace QuizWorld.Tests.Services.UserServiceTest
         public RegisterViewModel register;
         public LoginViewModel login;
         public ApplicationUser user;
-        public Mock<IConfiguration> config;
-        public Mock<IJwtBlacklist> jwtBlacklistMock;
+        public Mock<IJwtService> jwtServiceMock;
 
         [SetUp]
         public void Setup()
@@ -34,10 +34,9 @@ namespace QuizWorld.Tests.Services.UserServiceTest
                 new Mock<IServiceProvider>().Object,
                 new Mock<ILogger<UserManager<ApplicationUser>>>().Object);
 
-            this.config = new Mock<IConfiguration>();
-            this.jwtBlacklistMock = new Mock<IJwtBlacklist>();
+            this.jwtServiceMock = new Mock<IJwtService>();
 
-            this.service = new UserService(this.userManagerMock.Object, this.config.Object, this.jwtBlacklistMock.Object);
+            this.service = new UserService(this.userManagerMock.Object, this.jwtServiceMock.Object);
 
             this.register = new RegisterViewModel()
             {
@@ -151,72 +150,11 @@ namespace QuizWorld.Tests.Services.UserServiceTest
         }
 
         [Test]
-        public void Test_GenerateJWTReturnsWhateverTokenIsGenerated()
-        {
-            var user = new UserViewModel()
-            {
-                Username = "ryota1",
-                Id = Guid.NewGuid().ToString(),
-                Roles = new string[] { "User" }
-            };
-
-            this.config
-                .SetupGet(c => c["JWT:Secret"])
-                .Returns("aswenwe12tasgq3qwsas3t");
-
-            this.config
-                .SetupGet(c => c["JWT:ValidAudience"])
-                .Returns("localhost:4200");
-
-            this.config
-                .SetupGet(c => c["JWT:ValidIssuer"])
-                .Returns("localhost:5000");
-
-            var result = this.service.GenerateJWT(user);
-            Assert.That(result, Has.Length.GreaterThan(20));
-        }
-
-        [Test]
-        public void Test_DecodeJWTReturnsAUserViewModelWhenTokenIsValid()
-        {
-            var user = new UserViewModel()
-            {
-                Id = "qekonwe",
-                Username = "ryota1",
-                Roles = new string[] { "User" }
-            };
-
-            this.config
-                .SetupGet(c => c["JWT:Secret"])
-                .Returns("aswenwe12tasgq3qwsas3t");
-
-            this.config
-                .SetupGet(c => c["JWT:ValidAudience"])
-                .Returns("localhost:4200");
-
-            this.config
-                .SetupGet(c => c["JWT:ValidIssuer"])
-                .Returns("localhost:5000");
-
-            var token = this.service.GenerateJWT(user);
-
-            var result = this.service.DecodeJWT(token);
-
-            Assert.Multiple(() =>
-            {
-                Assert.That(result.Id, Is.EqualTo(user.Id));
-                Assert.That(result.Username, Is.EqualTo(user.Username));
-                Assert.That(result.Roles[0], Is.EqualTo("User"));
-                Assert.That(result.Roles, Has.Length.EqualTo(1));
-            });
-        }
-
-        [Test]
         public async Task Test_LogoutReturnsTrueIfBlacklistJWTReturnsTrue()
         {
             string jwt = "a";
-            this.jwtBlacklistMock
-                .Setup(j => j.BlacklistJWT(jwt))
+            this.jwtServiceMock
+                .Setup(j => j.InvalidateJWT(jwt))
                 .ReturnsAsync(true);
 
             var result = await this.service.Logout(jwt);
@@ -224,11 +162,11 @@ namespace QuizWorld.Tests.Services.UserServiceTest
         }
 
         [Test]
-        public async Task Test_LogoutReturnsTrueIfBlacklistJWTReturnsFalse()
+        public async Task Test_LogoutReturnsFalseIfBlacklistJWTReturnsFalse()
         {
             string jwt = "a";
-            this.jwtBlacklistMock
-                .Setup(j => j.BlacklistJWT(jwt))
+            this.jwtServiceMock
+                .Setup(j => j.InvalidateJWT(jwt))
                 .ReturnsAsync(false);
 
             var result = await this.service.Logout(jwt);
