@@ -107,5 +107,11 @@ namespace QuizWorld.Web.Services
             return result;
 
         }
+
+        public async Task<bool> CheckIfUsernameIsTaken(string username)
+        {
+            var user = await this.userManager.FindByNameAsync(username);
+            return user != null;
+        }
     }
 }
