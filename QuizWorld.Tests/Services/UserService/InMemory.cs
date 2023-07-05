@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using QuizWorld.Infrastructure;
 using QuizWorld.Infrastructure.Data.Contracts;
