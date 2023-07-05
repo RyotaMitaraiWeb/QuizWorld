@@ -162,7 +162,7 @@ namespace QuizWorld.Tests.Services.UserServiceTest
         }
 
         [Test]
-        public async Task Test_LogoutReturnsTrueIfBlacklistJWTReturnsFalse()
+        public async Task Test_LogoutReturnsFalseIfBlacklistJWTReturnsFalse()
         {
             string jwt = "a";
             this.jwtServiceMock
