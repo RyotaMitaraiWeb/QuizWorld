@@ -89,6 +89,7 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
                     Token = jwt
                 };
 
+
                 return Created("/users" + session.Username, session);
             }
             catch
@@ -113,6 +114,7 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
                     Username = user.Username,
                     Roles = user.Roles,
                 };
+
 
                 return Created($"/users/{user.Username}", session);
             }
@@ -151,6 +153,7 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
         {
             string token = jwt ?? string.Empty;
             token = token.Replace("Bearer ", "");
+
             try
             {
                 bool succeeded = await this.jwtService.InvalidateJWT(token);
@@ -161,6 +164,7 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
 
                 return NoContent();
             }
+
             catch (Exception e)
             {
                 
