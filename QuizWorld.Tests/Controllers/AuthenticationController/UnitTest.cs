@@ -63,7 +63,8 @@ namespace QuizWorld.Tests.Controllers.AuthenticationControllerUnitTests
                 .Setup(js => js.GenerateJWT(this.user))
                 .Returns("a");
 
-            var response = await this.controller.Register(this.register) as CreatedAtActionResult;
+            var response = await this.controller.Register(this.register) as CreatedResult;
+
             var value = response.Value as SessionViewModel;
             Assert.Multiple(() =>
             {
@@ -112,7 +113,7 @@ namespace QuizWorld.Tests.Controllers.AuthenticationControllerUnitTests
                 .Returns("a");
 
 
-            var result = await this.controller.Login(this.login) as CreatedAtActionResult;
+            var result = await this.controller.Login(this.login) as CreatedResult;
             var value = result.Value as SessionViewModel;
 
 
@@ -157,7 +158,9 @@ namespace QuizWorld.Tests.Controllers.AuthenticationControllerUnitTests
                 .Returns(this.user);
 
 
-            var result = await this.controller.Session("a") as CreatedAtActionResult;
+
+            var result = await this.controller.Session("a") as CreatedResult;
+
             var value = result.Value as SessionViewModel;
 
 

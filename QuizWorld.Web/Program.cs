@@ -15,6 +15,9 @@ using QuizWorld.Web.Services;
 using Redis.OM.Skeleton.HostedServices;
 using Redis.OM;
 using Redis.OM.Contracts;
+using QuizWorld.Infrastructure.Data.Contracts;
+using QuizWorld.Infrastructure.Data.Services.JsonWebToken;
+using QuizWorld.Infrastructure.Data.Services.JsonwebToken;
 
 namespace QuizWorld.Web
 {
@@ -33,8 +36,10 @@ namespace QuizWorld.Web
             });
 
             builder.Services.AddHostedService<IndexCreationService>();
+            builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddSingleton(new RedisConnectionProvider(builder.Configuration["REDIS_CONNECTION_STRING"]));
-
+            builder.Services.AddSingleton<IJwtService, JwtService>();
+            builder.Services.AddSingleton<IJwtBlacklist, JwtBlacklistService>();
 
             builder.Services.AddDbContext<QuizWorldDbContext>(options =>
             {

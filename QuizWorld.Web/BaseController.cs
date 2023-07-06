@@ -10,8 +10,10 @@ namespace QuizWorld.Web
     /// </summary>
     [Authorize(AuthenticationSchemes = "Bearer")]
     [ApiController]
+    [Route("api")]
     public class BaseController : ControllerBase
     {
+        [NonAction]
         /// <summary>
         /// Returns the JWT attached to the Authorization header
         /// </summary>

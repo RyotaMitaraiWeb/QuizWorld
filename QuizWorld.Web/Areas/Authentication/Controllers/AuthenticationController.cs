@@ -50,13 +50,20 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
                     Token = jwt
                 };
 
-                return CreatedAtAction($"/users/{user.Username}", session);
+                return Created("/users" + session.Username, session);
             }
             catch
             {
                 var errors = new ErrorViewModel() { Errors = new string[] { InvalidActionsMessages.RequestFailed } };
                 return StatusCode(503, errors);
             }
+        }
+
+        [HttpGet]
+        [Route("placeholder")]
+        public IActionResult Placeholder()
+        {
+            return Ok();
         }
 
         [AllowAnonymous]
@@ -82,7 +89,8 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
                     Token = jwt
                 };
 
-                return CreatedAtAction($"/users/{user.Username}", session);
+
+                return Created("/users" + session.Username, session);
             }
             catch
             {
@@ -107,7 +115,8 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
                     Roles = user.Roles,
                 };
 
-                return CreatedAtAction($"/users/{user.Username}", session);
+
+                return Created($"/users/{user.Username}", session);
             }
             catch
             {
@@ -143,19 +152,23 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
         public async Task<IActionResult> Logout([FromHeader(Name = "Authorization")] string? jwt)
         {
             string token = jwt ?? string.Empty;
+            token = token.Replace("Bearer ", "");
+
             try
             {
                 bool succeeded = await this.jwtService.InvalidateJWT(token);
                 if (!succeeded)
                 {
-                    return Forbid();
+                    return Forbid("Bearer");
                 }
 
                 return NoContent();
             }
-            catch
+
+            catch (Exception e)
             {
-                var errors = new ErrorViewModel() { Errors = new string[] { InvalidActionsMessages.RequestFailed } };
+                
+                var errors = new ErrorViewModel() { Errors = new string[] { e.Message } };
                 return StatusCode(503, errors);
             }
         }
