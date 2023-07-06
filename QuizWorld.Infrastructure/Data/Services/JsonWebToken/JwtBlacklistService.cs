@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using QuizWorld.Infrastructure.Data.Contracts;
 using QuizWorld.Infrastructure.Data.Redis.Models;
 using Redis.OM;
 using Redis.OM.Searching;
@@ -9,7 +10,7 @@ namespace QuizWorld.Infrastructure.Data.Services.JsonwebToken
     /// A service to manage a Redis-based of JWTs. A blacklisted JWT will be rejected
     /// in any authorized request.
     /// </summary>
-    public class JwtBlacklistService
+    public class JwtBlacklistService : IJwtBlacklist
     {
         private readonly RedisConnectionProvider redisProvider;
         private readonly RedisCollection<JWT> tokens;
@@ -27,8 +28,8 @@ namespace QuizWorld.Infrastructure.Data.Services.JsonwebToken
         /// <returns>the JWT or null if it doesn't exist</returns>
         public async Task<string?> FindJWT(string jwt)
         {
-            var token = await tokens.Where(t => t.Token == jwt).FirstOrDefaultAsync();
-            return token?.Token;
+            var token = await tokens.Where(t => t.Id == jwt).FirstOrDefaultAsync();
+            return token?.Id;
         }
 
         /// <summary>
