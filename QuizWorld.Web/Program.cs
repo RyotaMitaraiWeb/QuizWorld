@@ -18,6 +18,7 @@ using Redis.OM.Contracts;
 using QuizWorld.Infrastructure.Data.Contracts;
 using QuizWorld.Infrastructure.Data.Services.JsonWebToken;
 using QuizWorld.Infrastructure.Data.Services.JsonwebToken;
+using QuizWorld.Infrastructure.AuthConfig;
 
 namespace QuizWorld.Web
 {
@@ -40,6 +41,7 @@ namespace QuizWorld.Web
             builder.Services.AddSingleton(new RedisConnectionProvider(builder.Configuration["REDIS_CONNECTION_STRING"]));
             builder.Services.AddSingleton<IJwtService, JwtService>();
             builder.Services.AddSingleton<IJwtBlacklist, JwtBlacklistService>();
+            builder.Services.AddScoped<AppJwtBearerEvents>();
 
             builder.Services.AddDbContext<QuizWorldDbContext>(options =>
             {
@@ -68,8 +70,11 @@ namespace QuizWorld.Web
                     ValidAudience = builder.Configuration["JWT:ValidAudience"],
                     ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
                     IssuerSigningKey = new
-                        SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+                        SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"])),
+                   
                 };
+
+                options.EventsType = typeof(AppJwtBearerEvents);
             });
             builder.Services.AddControllers()
                 .AddJsonOptions(options =>
