@@ -1,4 +1,4 @@
-﻿using Azure;
+using Azure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -154,8 +154,12 @@ namespace QuizWorld.Tests.Controllers.AuthenticationControllerUnitTests
         public async Task Test_SessionReturnsSessionViewModelIfTheUserHasAValidSession()
         {
             this.jwtServiceMock
-                .Setup(js => js.DecodeJWT("a"))
+                .Setup(js => js.DecodeJWT(It.IsAny<string>()))
                 .Returns(this.user);
+
+            this.jwtServiceMock
+                .Setup(js => js.RemoveBearer(It.IsAny<string>()))
+                .Returns("a");
 
 
 
@@ -189,7 +193,7 @@ namespace QuizWorld.Tests.Controllers.AuthenticationControllerUnitTests
         public async Task Test_LogoutReturns204IfInvalidateTokenReturnsTrue()
         {
             this.jwtServiceMock
-                .Setup(js => js.InvalidateJWT("a"))
+                .Setup(js => js.InvalidateJWT(It.IsAny<string>()))
                 .ReturnsAsync(true);
 
             var result = await this.controller.Logout("a");
@@ -214,13 +218,13 @@ namespace QuizWorld.Tests.Controllers.AuthenticationControllerUnitTests
         }
 
         [Test]
-        public async Task Test_LogoutReturnsBadRequestIfInvalidateTokenThrows()
+        public async Task Test_LogoutReturnsObjectResultIfInvalidateTokenThrows()
         {
             this.jwtServiceMock
-                .Setup(js => js.InvalidateJWT("a"))
+                .Setup(js => js.InvalidateJWT(It.IsAny<string>()))
                 .ThrowsAsync(new Exception());
 
-            var result = await this.controller.Logout("a");
+            var result = await this.controller.Logout("Bearer a");
             
 
             Assert.That(result, Is.TypeOf<ObjectResult>());

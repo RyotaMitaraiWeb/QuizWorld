@@ -13,5 +13,6 @@ namespace QuizWorld.Infrastructure.Data.Contracts
         public UserViewModel DecodeJWT(string jwt);
         public Task<bool> InvalidateJWT(string jwt);
         public Task<bool> CheckIfJWTHasBeenInvalidated(string jwt);
+        public string RemoveBearer(string? bearerToken);
     }
 }
