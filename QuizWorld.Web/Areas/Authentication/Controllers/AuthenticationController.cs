@@ -89,6 +89,7 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
                     Token = jwt
                 };
 
+
                 return Created("/users" + session.Username, session);
             }
             catch
@@ -113,6 +114,7 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
                     Username = user.Username,
                     Roles = user.Roles,
                 };
+
 
                 return Created($"/users/{user.Username}", session);
             }
@@ -160,6 +162,7 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
 
                 return NoContent();
             }
+
             catch (Exception e)
             {
                 

@@ -64,6 +64,7 @@ namespace QuizWorld.Tests.Controllers.AuthenticationControllerUnitTests
                 .Returns("a");
 
             var response = await this.controller.Register(this.register) as CreatedResult;
+
             var value = response.Value as SessionViewModel;
             Assert.Multiple(() =>
             {
@@ -161,7 +162,9 @@ namespace QuizWorld.Tests.Controllers.AuthenticationControllerUnitTests
                 .Returns("a");
 
 
+
             var result = await this.controller.Session("a") as CreatedResult;
+
             var value = result.Value as SessionViewModel;
 
 
