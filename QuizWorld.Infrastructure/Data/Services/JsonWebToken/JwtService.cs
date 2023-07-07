@@ -114,5 +114,21 @@ namespace QuizWorld.Infrastructure.Data.Services.JsonWebToken
             var succeeded = await this.blacklist.BlacklistJWT(jwt);
             return succeeded;
         }
+
+        /// <summary>
+        /// Removes the "Bearer " part of the token.
+        /// </summary>
+        /// <param name="bearerToken">The token to be truncated</param>
+        /// <returns>The JWT from the bearer token or an empty string if <paramref name="bearerToken"/> is null</returns>
+        public string RemoveBearer(string? bearerToken)
+        {
+            if (bearerToken == null)
+            {
+                return string.Empty;
+            }
+
+            string jwt = bearerToken.Replace("Bearer ", string.Empty);
+            return jwt;
+        }
     }
 }

@@ -102,7 +102,7 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
         [Route("session")]
         public async Task<IActionResult> Session([FromHeader(Name = "Authorization")] string? jwt)
         {
-            string token = jwt ?? string.Empty;
+            string token = this.jwtService.RemoveBearer(jwt);
             try
             {
                 var user = this.jwtService.DecodeJWT(token);
@@ -149,8 +149,7 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
         [Route("logout")]
         public async Task<IActionResult> Logout([FromHeader(Name = "Authorization")] string? jwt)
         {
-            string token = jwt ?? string.Empty;
-            token = token.Replace("Bearer ", "");
+            string token = this.jwtService.RemoveBearer(jwt);
             try
             {
                 bool succeeded = await this.jwtService.InvalidateJWT(token);

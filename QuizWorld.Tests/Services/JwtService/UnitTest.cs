@@ -130,5 +130,29 @@ namespace QuizWorld.Tests.Services.JwtServiceUnitTests
             var result = await this.service.InvalidateJWT("a");
             Assert.That(result, Is.False);
         }
+
+        [Test]
+        public void Test_RemoveBearerRemovesTheBearerTextFromAToken()
+        {
+            string token = this.service.RemoveBearer("Bearer test");
+            Assert.That(token, Is.EqualTo("test"));
+        }
+
+        [Test]
+        public void Test_RemoveBearerReturnsAnEmptyStringIfNullIsPassed()
+        {
+            string token = this.service.RemoveBearer(null);
+            Assert.That(token, Is.EqualTo(string.Empty));
+        }
+
+        [Test]
+        [TestCase("test", ExpectedResult = "test")]
+        [TestCase("BearerTest", ExpectedResult = "BearerTest")]
+        [TestCase("Bearer", ExpectedResult = "Bearer")]
+        public string Test_RemoveBearerReturnsTheSameStringIfItDoesContainBearerWithSpace(string token)
+        {
+
+            return this.service.RemoveBearer(token);
+        }
     }
 }
