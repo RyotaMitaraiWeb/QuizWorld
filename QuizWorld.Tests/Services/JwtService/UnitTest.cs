@@ -154,5 +154,106 @@ namespace QuizWorld.Tests.Services.JwtServiceUnitTests
 
             return this.service.RemoveBearer(token);
         }
+
+        [Test]
+        public async Task Test_CheckIfJWTIsValidReturnsTrueIfTokenIsNotFoundInTheBlacklist()
+        {
+            var user = new UserViewModel()
+            {
+                Id = "aaaaa",
+                Username = "ryota1",
+                Roles = new string[] { "User" }
+            };
+
+            this.configMock
+                .SetupGet(c => c["JWT:Secret"])
+                .Returns("aswenwe12tasgq3qwsas3t");
+
+            this.configMock
+                .SetupGet(c => c["JWT:ValidIssuer"])
+                .Returns("localhost:5000");
+
+            this.configMock
+                .SetupGet(c => c["JWT:ValidAudience"])
+                .Returns("localhost:4200");
+
+            string token = this.service.GenerateJWT(user);
+
+            this.blacklistMock
+                .Setup(b => b.FindJWT(token))
+                .ReturnsAsync(() => null);
+
+            bool result = await this.service.CheckIfJWTIsValid(token);
+            Assert.That(result, Is.True);
+        }
+
+        [Test]
+        public async Task Test_CheckIfJWTIsValidReturnsFalseIfTokenIsFoundInTheBlacklist()
+        {
+            var user = new UserViewModel()
+            {
+                Id = "aaaaa",
+                Username = "ryota1",
+                Roles = new string[] { "User" }
+            };
+
+            this.configMock
+                .SetupGet(c => c["JWT:Secret"])
+                .Returns("aswenwe12tasgq3qwsas3t");
+
+            this.configMock
+                .SetupGet(c => c["JWT:ValidIssuer"])
+                .Returns("localhost:5000");
+
+            this.configMock
+                .SetupGet(c => c["JWT:ValidAudience"])
+                .Returns("localhost:4200");
+
+            string token = this.service.GenerateJWT(user);
+
+            this.blacklistMock
+                .Setup(b => b.FindJWT(token))
+                .ReturnsAsync(token);
+
+            bool result = await this.service.CheckIfJWTIsValid(token);
+            Assert.That(result, Is.False);
+        }
+
+        [Test]
+        public async Task Test_CheckIfJWTIsValidReturnsFalseIfTokenValidationFails()
+        {
+            var user = new UserViewModel()
+            {
+                Id = "aaaaa",
+                Username = "ryota1",
+                Roles = new string[] { "User" }
+            };
+
+            // Act as if the client tampered with the JWT and thus changed its secret
+            this.configMock
+                .SetupGet(c => c["JWT:Secret"])
+                .Returns("aswenwe12tasgq3qwsas3t");
+
+            this.configMock
+                .SetupGet(c => c["JWT:ValidIssuer"])
+                .Returns("localhost:5000");
+
+            this.configMock
+                .SetupGet(c => c["JWT:ValidAudience"])
+                .Returns("localhost:4200");
+
+            string token = this.service.GenerateJWT(user);
+
+            this.configMock
+                .SetupGet(c => c["JWT:Secret"])
+                .Returns("correctsecret");
+
+            this.blacklistMock
+                .Setup(b => b.FindJWT(token))
+                .ReturnsAsync(token);
+
+            bool result = await this.service.CheckIfJWTIsValid(token);
+            Assert.That(result, Is.False);
+        }
     }
 }

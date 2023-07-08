@@ -130,5 +130,43 @@ namespace QuizWorld.Infrastructure.Data.Services.JsonWebToken
             string jwt = bearerToken.Replace("Bearer ", string.Empty);
             return jwt;
         }
+
+        /// <summary>
+        /// Checks whether <paramref name="jwt"/> is valid or not. A JWT is considered invalid
+        /// if it has expired, is found in the JWT blacklist, or has been tampered with.
+        /// This method is useful in filters.
+        /// </summary>
+        /// <param name="jwt"></param>
+        /// <returns></returns>
+        public async Task<bool> CheckIfJWTIsValid(string jwt)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            string secret = this.config["JWT:Secret"];
+            var issuer = this.config["JWT:ValidIssuer"];
+            var audience = this.config["JWT:ValidAudience"];
+
+            try
+            {
+                handler.ValidateToken(jwt, new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience =  true,
+                    ValidateIssuerSigningKey = true,
+                    ClockSkew = TimeSpan.Zero,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),
+                    ValidIssuer = issuer,
+                    ValidAudience = audience,
+                }, out SecurityToken validatedToken);
+
+                
+
+                bool isBlacklisted = await this.blacklist.FindJWT(jwt) != null;
+                return !isBlacklisted;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

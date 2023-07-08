@@ -19,6 +19,8 @@ using QuizWorld.Infrastructure.Data.Contracts;
 using QuizWorld.Infrastructure.Data.Services.JsonWebToken;
 using QuizWorld.Infrastructure.Data.Services.JsonwebToken;
 using QuizWorld.Infrastructure.AuthConfig;
+using Microsoft.AspNetCore.Authorization;
+using QuizWorld.Infrastructure.Filters.GuestsOnly;
 
 namespace QuizWorld.Web
 {
@@ -36,12 +38,14 @@ namespace QuizWorld.Web
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             });
 
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddHostedService<IndexCreationService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddSingleton(new RedisConnectionProvider(builder.Configuration["REDIS_CONNECTION_STRING"]));
             builder.Services.AddSingleton<IJwtService, JwtService>();
             builder.Services.AddSingleton<IJwtBlacklist, JwtBlacklistService>();
             builder.Services.AddScoped<AppJwtBearerEvents>();
+            builder.Services.AddSingleton<GuestsOnlyFilter>();
 
             builder.Services.AddDbContext<QuizWorldDbContext>(options =>
             {

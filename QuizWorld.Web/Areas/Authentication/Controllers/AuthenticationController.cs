@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Win32;
 using QuizWorld.Common.Constants.InvalidActionsMessages;
 using QuizWorld.Infrastructure.Data.Contracts;
+using QuizWorld.Infrastructure.Filters.GuestsOnly;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.ViewModels.Common;
 using QuizWorld.Web.Contracts;
@@ -27,7 +29,6 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
             this.userService = userService;
         }
 
-        [AllowAnonymous]
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] RegisterViewModel register)
@@ -67,6 +68,7 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
         }
 
         [AllowAnonymous]
+        [GuestsOnly]
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginViewModel login)
