@@ -1,10 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using QuizWorld.Infrastructure.Data.Contracts;
+﻿using QuizWorld.Web.Contracts.JsonWebToken;
 using QuizWorld.Infrastructure.Data.Redis.Models;
 using Redis.OM;
 using Redis.OM.Searching;
 
-namespace QuizWorld.Infrastructure.Data.Services.JsonwebToken
+namespace QuizWorld.Web.Services.JsonWebToken
 {
     /// <summary>
     /// A service to manage a Redis-based of JWTs. A blacklisted JWT will be rejected

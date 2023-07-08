@@ -14,13 +14,10 @@ using QuizWorld.Web.Contracts;
 using QuizWorld.Web.Services;
 using Redis.OM.Skeleton.HostedServices;
 using Redis.OM;
-using Redis.OM.Contracts;
-using QuizWorld.Infrastructure.Data.Contracts;
-using QuizWorld.Infrastructure.Data.Services.JsonWebToken;
-using QuizWorld.Infrastructure.Data.Services.JsonwebToken;
-using QuizWorld.Infrastructure.AuthConfig;
-using Microsoft.AspNetCore.Authorization;
+using QuizWorld.Web.Contracts.JsonWebToken;
+using QuizWorld.Web.Services.JsonWebToken;
 using QuizWorld.Infrastructure.Filters.GuestsOnly;
+using QuizWorld.Infrastructure.AuthConfig;
 
 namespace QuizWorld.Web
 {

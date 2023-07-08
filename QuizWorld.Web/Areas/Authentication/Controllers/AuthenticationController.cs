@@ -1,14 +1,11 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Win32;
 using QuizWorld.Common.Constants.InvalidActionsMessages;
-using QuizWorld.Infrastructure.Data.Contracts;
+using QuizWorld.Web.Contracts.JsonWebToken;
 using QuizWorld.Infrastructure.Filters.GuestsOnly;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.ViewModels.Common;
 using QuizWorld.Web.Contracts;
-using System.Net;
 using static QuizWorld.Common.Constants.InvalidActionsMessages.InvalidActionsMessages;
 
 namespace QuizWorld.Web.Areas.Authentication.Controllers

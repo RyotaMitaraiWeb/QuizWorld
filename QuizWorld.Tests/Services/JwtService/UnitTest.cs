@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Moq;
-using QuizWorld.Infrastructure.Data.Contracts;
-using QuizWorld.Infrastructure.Data.Services.JsonWebToken;
+using QuizWorld.Web.Contracts.JsonWebToken;
+using QuizWorld.Web.Services.JsonWebToken;
 using QuizWorld.ViewModels.Authentication;
 using System;
 using System.Collections.Generic;
@@ -52,7 +52,7 @@ namespace QuizWorld.Tests.Services.JwtServiceUnitTests
         {
             this.configMock
                 .SetupGet(c => c["JWT:Secret"])
-                .Returns("aswenwe12tasgq3qwsas3t");
+                .Returns("aswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3t");
 
 
             this.configMock
@@ -87,7 +87,7 @@ namespace QuizWorld.Tests.Services.JwtServiceUnitTests
         {
             this.configMock
                 .SetupGet(c => c["JWT:Secret"])
-                .Returns("aswenwe12tasgq3qwsas3t");
+                .Returns("aswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3t");
 
 
             this.configMock
@@ -167,7 +167,7 @@ namespace QuizWorld.Tests.Services.JwtServiceUnitTests
 
             this.configMock
                 .SetupGet(c => c["JWT:Secret"])
-                .Returns("aswenwe12tasgq3qwsas3t");
+                .Returns("aswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3t");
 
             this.configMock
                 .SetupGet(c => c["JWT:ValidIssuer"])
@@ -199,7 +199,7 @@ namespace QuizWorld.Tests.Services.JwtServiceUnitTests
 
             this.configMock
                 .SetupGet(c => c["JWT:Secret"])
-                .Returns("aswenwe12tasgq3qwsas3t");
+                .Returns("aswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3t");
 
             this.configMock
                 .SetupGet(c => c["JWT:ValidIssuer"])
@@ -232,7 +232,7 @@ namespace QuizWorld.Tests.Services.JwtServiceUnitTests
             // Act as if the client tampered with the JWT and thus changed its secret
             this.configMock
                 .SetupGet(c => c["JWT:Secret"])
-                .Returns("aswenwe12tasgq3qwsas3t");
+                .Returns("aswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3t");
 
             this.configMock
                 .SetupGet(c => c["JWT:ValidIssuer"])

@@ -1,19 +1,9 @@
 using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-using QuizWorld.Infrastructure.Data.Contracts;
 using QuizWorld.Infrastructure.Data.Entities;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.Web.Contracts;
-using Redis.OM;
-using Redis.OM.Contracts;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+using QuizWorld.Web.Contracts.JsonWebToken;
+
 
 namespace QuizWorld.Web.Services
 {

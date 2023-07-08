@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Moq;
-using QuizWorld.Infrastructure.Data.Contracts;
+using QuizWorld.Web.Contracts.JsonWebToken;
 using QuizWorld.Infrastructure.Filters.GuestsOnly;
 using System;
 using System.Collections.Generic;
