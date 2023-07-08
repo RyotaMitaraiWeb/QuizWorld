@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using QuizWorld.Infrastructure.Data.Contracts;
@@ -26,13 +26,21 @@ namespace QuizWorld.Infrastructure.Filters.GuestsOnly
 
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-            string? bearer = http.HttpContext?.Request.Headers.Authorization.FirstOrDefault();
-            string token = jwtService.RemoveBearer(bearer);
-
-            bool isValid = await jwtService.CheckIfJWTIsValid(token);
-            if (isValid)
+            try
             {
-                context.Result = new ForbidResult("Bearer");
+                string? bearer = http.HttpContext?.Request.Headers.Authorization.FirstOrDefault();
+                string token = jwtService.RemoveBearer(bearer);
+
+                bool isValid = await jwtService.CheckIfJWTIsValid(token);
+                if (isValid)
+                {
+                    context.Result = new ForbidResult("Bearer");
+                    return;
+                }
+            }
+            catch
+            {
+                context.Result = new StatusCodeResult(503);
                 return;
             }
         }
