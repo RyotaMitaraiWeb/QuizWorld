@@ -1,17 +1,13 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using QuizWorld.Infrastructure.Data.Contracts;
+using QuizWorld.Web.Contracts.JsonWebToken;
 using QuizWorld.ViewModels.Authentication;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace QuizWorld.Infrastructure.Data.Services.JsonWebToken
+namespace QuizWorld.Web.Services.JsonWebToken
 {
     /// <summary>
     /// A service to work with JWTs. It allows you to decode JWTs and turn objects into JWTs. It

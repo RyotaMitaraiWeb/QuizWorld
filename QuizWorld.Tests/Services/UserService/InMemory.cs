@@ -1,15 +1,7 @@
-using Microsoft.Extensions.Configuration;
 using Moq;
-using QuizWorld.Infrastructure;
-using QuizWorld.Infrastructure.Data.Contracts;
+using QuizWorld.Web.Contracts.JsonWebToken;
 using QuizWorld.ViewModels.Authentication;
-using QuizWorld.Web.Contracts;
 using QuizWorld.Web.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QuizWorld.Tests.Services.UserServiceTest
 {

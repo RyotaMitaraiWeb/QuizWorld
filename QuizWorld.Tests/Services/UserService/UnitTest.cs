@@ -1,12 +1,10 @@
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
-using QuizWorld.Infrastructure.Data.Contracts;
+using QuizWorld.Web.Contracts.JsonWebToken;
 using QuizWorld.Infrastructure.Data.Entities;
 using QuizWorld.ViewModels.Authentication;
-using QuizWorld.Web.Contracts;
 using QuizWorld.Web.Services;
 
 namespace QuizWorld.Tests.Services.UserServiceTest

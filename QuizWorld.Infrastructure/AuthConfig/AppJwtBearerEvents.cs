@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using QuizWorld.Infrastructure.Data.Contracts;
+using QuizWorld.Web.Contracts.JsonWebToken;
 using System;
 using System.Collections.Generic;
 using System.Linq;

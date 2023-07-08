@@ -2,7 +2,7 @@ using Azure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using QuizWorld.Infrastructure.Data.Contracts;
+using QuizWorld.Web.Contracts.JsonWebToken;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.Web.Areas.Authentication.Controllers;
 using QuizWorld.Web.Contracts;

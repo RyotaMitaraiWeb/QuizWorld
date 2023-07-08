@@ -1,4 +1,4 @@
-﻿namespace QuizWorld.Infrastructure.Data.Contracts
+﻿namespace QuizWorld.Web.Contracts.JsonWebToken
 {
     public interface IJwtBlacklist
     {
