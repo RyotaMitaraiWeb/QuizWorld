@@ -19,7 +19,6 @@ using QuizWorld.Infrastructure.Data.Contracts;
 using QuizWorld.Infrastructure.Data.Services.JsonWebToken;
 using QuizWorld.Infrastructure.Data.Services.JsonwebToken;
 using QuizWorld.Infrastructure.AuthConfig;
-using QuizWorld.Infrastructure.AuthConfig.Policies;
 using Microsoft.AspNetCore.Authorization;
 using QuizWorld.Infrastructure.Filters.GuestsOnly;
 
