@@ -43,9 +43,15 @@ namespace QuizWorld.Tests.Validators.HasEnoughAnswersUnitTests
         }
 
         [Test]
-        public void Test_HasEnoughAnswersConsidersItAnErrorIfSingleChoiceQuestionHasTooFewAnswers()
+        [TestCase("single", 1)]
+        [TestCase("single", 11)]
+        [TestCase("multi", 1)]
+        [TestCase("multi", 11)]
+        [TestCase("text", 0)]
+        [TestCase("text", 16)]
+        public void Test_HasEnoughAnswersConsidersItAnErrorIfAnswersAmountIsNotInRange(string type, int amount)
         {
-            var question = this.generateQuestion("single", 1);
+            var question = this.generateQuestion(type, amount);
             var context = new ValidationContext(question);
 
             try
@@ -64,113 +70,15 @@ namespace QuizWorld.Tests.Validators.HasEnoughAnswersUnitTests
         }
 
         [Test]
-        public void Test_HasEnoughAnswersConsidersItAnErrorIfMultipleChoiceQuestionHasTooFewAnswers()
+        [TestCase("single", 2)]
+        [TestCase("single", 10)]
+        [TestCase("multi", 2)]
+        [TestCase("multi", 10)]
+        [TestCase("text", 1)]
+        [TestCase("text", 15)]
+        public void Test_HasEnoughAnswersConsidersItASuccessIfQuestionHasEnoughAnswers(string type, int amount)
         {
-            var question = this.generateQuestion("multi", 1);
-            var context = new ValidationContext(question);
-
-            try
-            {
-                validator.Validate(question.Answers, context);
-                Assert.Fail("Validator should have thrown, but passed");
-            }
-            catch (ValidationException)
-            {
-                Assert.Pass();
-            }
-            catch (Exception e)
-            {
-                Assert.Fail("Validator threw an exception that is not a validation one. Message: " + e.Message);
-            }
-        }
-
-        [Test]
-        public void Test_HasEnoughAnswersConsidersItAnErrorIfTextQuestionHasTooFewAnswers()
-        {
-            var question = this.generateQuestion("text", 0);
-            var context = new ValidationContext(question);
-
-            try
-            {
-                validator.Validate(question.Answers, context);
-                Assert.Fail("Validator should have thrown, but passed");
-            }
-            catch (ValidationException)
-            {
-                Assert.Pass();
-            }
-            catch (Exception e)
-            {
-                Assert.Fail("Validator threw an exception that is not a validation one. Message: " + e.Message);
-            }
-        }
-
-        [Test]
-        public void Test_HasEnoughAnswersConsidersItAnErrorIfSingleChoiceQuestionHasTooManyAnswers()
-        {
-            var question = this.generateQuestion("single", 11);
-            var context = new ValidationContext(question);
-
-            try
-            {
-                validator.Validate(question.Answers, context);
-                Assert.Fail("Validator should have thrown, but passed");
-            }
-            catch (ValidationException)
-            {
-                Assert.Pass();
-            }
-            catch (Exception e)
-            {
-                Assert.Fail("Validator threw an exception that is not a validation one. Message: " + e.Message);
-            }
-        }
-
-        [Test]
-        public void Test_HasEnoughAnswersConsidersItAnErrorIfMultipleChoiceQuestionHasTooManyAnswers()
-        {
-            var question = this.generateQuestion("multiple", 11);
-            var context = new ValidationContext(question);
-
-            try
-            {
-                validator.Validate(question.Answers, context);
-                Assert.Fail("Validator should have thrown, but passed");
-            }
-            catch (ValidationException)
-            {
-                Assert.Pass();
-            }
-            catch (Exception e)
-            {
-                Assert.Fail("Validator threw an exception that is not a validation one. Message: " + e.Message);
-            }
-        }
-
-        [Test]
-        public void Test_HasEnoughAnswersConsidersItAnErrorIfTextQuestionHasTooManyAnswers()
-        {
-            var question = this.generateQuestion("text", 16);
-            var context = new ValidationContext(question);
-
-            try
-            {
-                validator.Validate(question.Answers, context);
-                Assert.Fail("Validator should have thrown, but passed");
-            }
-            catch (ValidationException)
-            {
-                Assert.Pass();
-            }
-           
-        }
-
-        [Test]
-        [TestCase(2)]
-        [TestCase(10)]
-        public void Test_HasEnoughAnswersConsidersItASuccessIfSingleChoiceQuestionHasEnoughAnswers(int amount)
-        {
-            var question = this.generateQuestion("single", amount);
+            var question = this.generateQuestion(type, amount);
             var context = new ValidationContext(question);
 
             try
@@ -182,47 +90,6 @@ namespace QuizWorld.Tests.Validators.HasEnoughAnswersUnitTests
             {
                 Assert.Fail("A validation exception was thrown. Mesasge: " + e.Message);
             }
-            
-        }
-
-        [Test]
-        [TestCase(2)]
-        [TestCase(10)]
-        public void Test_HasEnoughAnswersConsidersItASuccessIfMultipleChoiceQuestionHasEnoughAnswers(int amount)
-        {
-            var question = this.generateQuestion("multi", amount);
-            var context = new ValidationContext(question);
-
-            try
-            {
-                validator.Validate(question.Answers, context);
-                Assert.Pass();
-            }
-            catch (ValidationException e)
-            {
-                Assert.Fail("A validation exception was thrown. Mesasge: " + e.Message);
-            }
-           
-        }
-
-        [Test]
-        [TestCase(1)]
-        [TestCase(15)]
-        public void Test_HasEnoughAnswersConsidersItASuccessIfTextQuestionHasEnoughAnswers(int amount)
-        {
-            var question = this.generateQuestion("text", amount);
-            var context = new ValidationContext(question);
-
-            try
-            {
-                validator.Validate(question.Answers, context);
-                Assert.Pass();
-            }
-            catch (ValidationException e)
-            {
-                Assert.Fail("A validation exception was thrown. Mesasge: " + e.Message);
-            }
-
             
         }
 
@@ -246,7 +113,7 @@ namespace QuizWorld.Tests.Validators.HasEnoughAnswersUnitTests
         [Test]
         public void Test_HasEnoughAnswersConsidersItAnErrorIfPassedNull()
         {
-            var question = this.generateQuestion("invalid", 5);
+            var question = this.generateQuestion("single", 5);
             var context = new ValidationContext(question);
 
             try
@@ -263,7 +130,7 @@ namespace QuizWorld.Tests.Validators.HasEnoughAnswersUnitTests
         [Test]
         public void Test_HasEnoughAnswersConsidersItAnErrorIfQuestionTypeIsNull()
         {
-            var question = this.generateQuestion("invalid", 5);
+            var question = this.generateQuestion("single", 5);
             question.Type = null;
             var context = new ValidationContext(question);
 
