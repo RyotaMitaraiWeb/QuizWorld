@@ -35,6 +35,7 @@ namespace QuizWorld.Common.Constants.ValidationRules
         {
             public const int MinimumAmountOfAnswers = 2;
             public const int MaximumAmountOfAnswers = 10;
+            public const int MinimumAmountOfCorrectAnswers = 1;
         }
 
         public static class Text
