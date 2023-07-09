@@ -20,6 +20,7 @@ namespace QuizWorld.ViewModels.Question
         public string Type { get; set; } = "single";
 
         [HasEnoughAnswers]
+        [CorrectAndWrongAnswersAmount]
         public IEnumerable<CreateAnswerViewModel> Answers { get; set; } = Enumerable.Empty<CreateAnswerViewModel>();
 
         //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
