@@ -1,4 +1,5 @@
-﻿using QuizWorld.ViewModels.Quiz;
+﻿using QuizWorld.Infrastructure;
+using QuizWorld.ViewModels.Quiz;
 using QuizWorld.Web.Contracts.Quiz;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,12 @@ namespace QuizWorld.Web.Services.Quiz
     /// </summary>
     public class QuizService : IQuizService
     {
+        private readonly IRepository repository;
+        public QuizService(IRepository repository)
+        {
+            this.repository = repository;
+        }
+
         public Task<int> CreateQuiz(CreateQuizViewModel quiz, string userId)
         {
             throw new NotImplementedException();
