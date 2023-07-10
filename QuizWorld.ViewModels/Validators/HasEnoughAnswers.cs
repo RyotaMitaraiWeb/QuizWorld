@@ -1,4 +1,5 @@
-﻿using QuizWorld.Common.Constants.ValidationErrorMessages;
+﻿using QuizWorld.Common.Constants.Types;
+using QuizWorld.Common.Constants.ValidationErrorMessages;
 using QuizWorld.Common.Constants.ValidationRules;
 using QuizWorld.ViewModels.Answer;
 using System;
@@ -16,7 +17,7 @@ namespace QuizWorld.ViewModels.Validators
     /// </summary>
     public class HasEnoughAnswers : ValidationAttribute
     {
-        private string? questionType { get; set; } = "single";
+        private QuestionTypes? questionType { get; set; } = QuestionTypes.SingleChoice;
 
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
@@ -26,21 +27,22 @@ namespace QuizWorld.ViewModels.Validators
             }
 
             var typeProperty = validationContext.ObjectType.GetProperty("Type");
-            this.questionType = typeProperty?.GetValue(validationContext.ObjectInstance, null) as string;
+            var type = typeProperty?.GetValue(validationContext.ObjectInstance, null);
 
-            if (this.questionType == null)
+            if (type == null)
             {
+
                 return new ValidationResult("Property \"Type\" is missing.");
+
             }
 
-
-
+            this.questionType = (QuestionTypes) type;
 
             return this.questionType switch
             {
-                "single" => this.ValidateAmountOfAnswersForSingleChoiceQuestion(answers),
-                "multi" => this.ValidateAmountOfAnswersForMultipleChoiceQuestion(answers),
-                "text" => this.ValidateAmountOfAnswersForTextQuestion(answers),
+                QuestionTypes.SingleChoice => this.ValidateAmountOfAnswersForSingleChoiceQuestion(answers),
+                QuestionTypes.MultipleChoice => this.ValidateAmountOfAnswersForMultipleChoiceQuestion(answers),
+                QuestionTypes.Text => this.ValidateAmountOfAnswersForTextQuestion(answers),
                 _ => new ValidationResult("Cannot validate the amount of answers because the question type is invalid"),
             };
         }

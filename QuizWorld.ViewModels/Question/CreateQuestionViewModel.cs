@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using QuizWorld.Common.Constants.Types;
 using QuizWorld.Common.Constants.ValidationErrorMessages;
 using QuizWorld.Common.Constants.ValidationRules;
 using QuizWorld.ViewModels.Answer;
@@ -17,7 +18,7 @@ namespace QuizWorld.ViewModels.Question
         [MaxLength(QuestionValidationRules.Prompt.MaxLength, ErrorMessage = QuestionValidationErrorMessages.Prompt.IsTooLong)]
         public string Prompt { get; set; } = string.Empty;
 
-        public string Type { get; set; } = "single";
+        public QuestionTypes Type { get; set; }
 
         [HasEnoughAnswers]
         [CorrectAndWrongAnswersAmount]

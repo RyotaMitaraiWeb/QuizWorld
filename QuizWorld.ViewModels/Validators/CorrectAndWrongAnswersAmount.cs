@@ -1,6 +1,7 @@
 ﻿using QuizWorld.ViewModels.Answer;
 using System.ComponentModel.DataAnnotations;
 using QuizWorld.Common.Constants.ValidationErrorMessages;
+using QuizWorld.Common.Constants.Types;
 
 namespace QuizWorld.ViewModels.Validators
 {
@@ -13,7 +14,7 @@ namespace QuizWorld.ViewModels.Validators
     /// </summary>
     public class CorrectAndWrongAnswersAmount : ValidationAttribute
     {
-        private string? questionType { get; set; } = "single";
+        private QuestionTypes? questionType { get; set; } = QuestionTypes.SingleChoice;
 
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
@@ -23,19 +24,25 @@ namespace QuizWorld.ViewModels.Validators
             }
 
             var typeProperty = validationContext.ObjectType.GetProperty("Type");
-            this.questionType = typeProperty?.GetValue(validationContext.ObjectInstance, null) as string;
 
-            if (this.questionType == null)
+
+            var questionType = typeProperty?.GetValue(validationContext.ObjectInstance, null);
+
+            if (questionType == null)
             {
+
                 return new ValidationResult("Property \"Type\" is missing.");
+
             }
+
+            this.questionType = (QuestionTypes)questionType;
 
 
             return this.questionType switch
             {
-                "single" => this.ValidateForSingleChoiceQuestion(answers),
-                "multi" => this.ValidateForMultipleChoiceQuestion(answers),
-                "text" => this.ValidateForTextQuestion(answers),
+                QuestionTypes.SingleChoice => this.ValidateForSingleChoiceQuestion(answers),
+                QuestionTypes.MultipleChoice => this.ValidateForMultipleChoiceQuestion(answers),
+                QuestionTypes.Text => this.ValidateForTextQuestion(answers),
                 _ => new ValidationResult("Cannot validate the amount of answers because the question type is invalid"),
             };
 
