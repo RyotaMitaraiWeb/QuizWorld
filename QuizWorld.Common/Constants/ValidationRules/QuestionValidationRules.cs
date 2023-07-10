@@ -13,12 +13,18 @@ namespace QuizWorld.Common.Constants.ValidationRules
     /// </summary>
     public static class QuestionValidationRules
     {
-        public static readonly string[] AllowedTypes = new string[]
-        {
-            QuestionTypes.MultipleChoice,
-            QuestionTypes.SingleChoice,
-            QuestionTypes.Text,
-        };
+        /// <summary>
+        /// Enum question types presented as keys derived from the types' short names.
+        /// This makes it easier for clients to send the required type, which will be converted to an
+        /// enum with model binding.
+        /// </summary>
+        public static readonly Dictionary<string, QuestionTypes> AllowedTypes =
+            new()
+            {
+                { QuestionTypesShortNames.SingleChoice, QuestionTypes.SingleChoice },
+                { QuestionTypesShortNames.MultipleChoice, QuestionTypes.MultipleChoice },
+                { QuestionTypesShortNames.Text, QuestionTypes.Text }
+            };
 
         public static class Prompt
         {
