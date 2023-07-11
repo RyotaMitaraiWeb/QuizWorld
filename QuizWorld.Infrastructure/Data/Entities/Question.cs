@@ -38,6 +38,8 @@ namespace QuizWorld.Infrastructure.Data.Entities
         public int QuizId { get; set; }
         public Quiz Quiz { get; set; } = null!;
 
+        [Comment("The index of the question for the given quiz, used to reliably preserve the order that the creator wants")]
+        public int Order { get; set; }
         public IEnumerable<Answer> Answers { get; set; } = null!;
     }
 }

@@ -33,10 +33,17 @@ namespace QuizWorld.Infrastructure.Data.Entities
         [Comment("The version of the quiz. The version starts at 1 and increments every time the quiz is updated. When the quiz is retrieved, only questions that match the quiz's version will be included")]
         public int Version { get; set; } = 1;
 
+        [Comment("In instant mode, the user can check if their answer is correct as soon as they give one. If not in instant mode, the user has to answer all questions before grading them")]
         public bool InstantMode { get; set; }
 
+        [Comment("The date on which the quiz was created.")]
+        public DateTime CreatedOn { get; set; }
+
+        [Comment("The date on which the quiz was last updated. Equal to CreatedOn if it has never been updated.")]
+        public DateTime UpdatedOn { get; set; }
+
         [Comment("The ID of the user that created the quiz")]
-        [ForeignKey(nameof(ApplicationUser))]
+        [ForeignKey(nameof(Creator))]
         public Guid CreatorId { get; set; }
         public ApplicationUser Creator { get; set; } = null!;
 
