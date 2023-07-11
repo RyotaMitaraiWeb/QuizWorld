@@ -162,6 +162,7 @@ namespace QuizWorld.Tests
                 Title = "Cities/Capitals trivia",
                 NormalizedTitle = "CITIES/CAPITALS TRIVIA",
                 Description = "A small quiz about cities and capital cities",
+                Version = 2,
                 InstantMode = true,
                 CreatorId = this.User.Id,
                 CreatedOn = date,
@@ -180,6 +181,7 @@ namespace QuizWorld.Tests
             {
                 Prompt = "What is the capital of Mongolia?",
                 QuestionTypeId = 1,
+                Version = 2,
                 Order = 1,
                 Answers = new[]
                 {
@@ -200,6 +202,7 @@ namespace QuizWorld.Tests
             {
                 Prompt = "What are the capitals of South Africa?",
                 QuestionTypeId = 2,
+                Version = 2,
                 Order = 2,
                 Answers = new[]
                 {
@@ -230,6 +233,7 @@ namespace QuizWorld.Tests
             {
                 Prompt = "Name one of the only sovereign city-states in modern times (do not use articles like \"the\")",
                 QuestionTypeId = 2,
+                Version = 2,
                 Order = 2,
                 Answers = new[]
                 {
@@ -262,6 +266,48 @@ namespace QuizWorld.Tests
                     {
                         Correct = true,
                         Value = "Republic of Singapore"
+                    }
+                }
+            });
+
+            // this is a question that has existed in the quiz, but has been removed with an update.
+            questions.Add(new Question()
+            {
+                Prompt = "What does \"D.C.\" stand for in the capital city of the United States of America?",
+                QuestionTypeId = 1,
+                Version = 1,
+                Order = 2,
+                Answers = new[]
+                {
+                    new Answer()
+                    {
+                        Correct = true,
+                        Value = "District of Columbia"
+                    },
+                    new Answer()
+                    {
+                        Correct = false,
+                        Value = "Dirty Cuffs"
+                    },
+                    new Answer()
+                    {
+                        Correct = false,
+                        Value = "It does not stand for anything"
+                    },
+                    new Answer()
+                    {
+                        Correct = false,
+                        Value = "Delaware Cubs"
+                    },
+                    new Answer()
+                    {
+                        Correct = false,
+                        Value = "Democratic Country"
+                    },
+                    new Answer()
+                    {
+                        Correct = false,
+                        Value = "Don't come"
                     }
                 }
             });
