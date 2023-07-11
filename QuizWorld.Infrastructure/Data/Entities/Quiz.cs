@@ -42,6 +42,9 @@ namespace QuizWorld.Infrastructure.Data.Entities
         [Comment("The date on which the quiz was last updated. Equal to CreatedOn if it has never been updated.")]
         public DateTime UpdatedOn { get; set; }
 
+        [Comment("If marked as deleted, the quiz will not be retrieved at all")]
+        public bool IsDeleted { get; set; }
+
         [Comment("The ID of the user that created the quiz")]
         [ForeignKey(nameof(Creator))]
         public Guid CreatorId { get; set; }
