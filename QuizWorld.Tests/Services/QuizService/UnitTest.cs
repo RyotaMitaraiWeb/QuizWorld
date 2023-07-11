@@ -5,7 +5,7 @@ using QuizWorld.Infrastructure.Data.Entities;
 using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Question;
 using QuizWorld.ViewModels.Quiz;
-using QuizWorld.Web.Services.Quiz;
+using QuizWorld.Web.Services.QuizService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,7 +59,7 @@ namespace QuizWorld.Tests.Services.QuizServiceUnitTests
         }
 
         [Test]
-        public async Task Test_CreateQuizReturnsTheIdOfTheQuizIfSuccessful()
+        public async Task Test_CreateQuizReturnsTheIdOfTheQuizWhenPassedAStringIdAndIsSuccessful()
         {
             var quiz = new CreateQuizViewModel()
             {
@@ -69,12 +69,23 @@ namespace QuizWorld.Tests.Services.QuizServiceUnitTests
                 Questions = this.generateQuestions(3, 2)
             };
 
-            //this.repositoryMock
-            //    .Setup(r => r.AddAsync(It.IsAny<Quiz>()))
-            //    .Callback
+            var result = await this.service.CreateQuiz(quiz, new Guid());
+            Assert.That(result, Is.EqualTo(0));
+        }
 
-            var result = await this.service.CreateQuiz(quiz, "a");
-            Assert.That(result, Is.EqualTo(1));
+        [Test]
+        public async Task Test_CreateQuizReturnsTheIdOfTheQuizWhenPassedAGuidAndIsSuccessful()
+        {
+            var quiz = new CreateQuizViewModel()
+            {
+                Title = "some title",
+                Description = "some description",
+                InstantMode = true,
+                Questions = this.generateQuestions(3, 2)
+            };
+
+            var result = await this.service.CreateQuiz(quiz, new Guid());
+            Assert.That(result, Is.EqualTo(0));
         }
     }
 }
