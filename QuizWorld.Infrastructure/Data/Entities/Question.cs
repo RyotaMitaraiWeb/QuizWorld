@@ -40,6 +40,6 @@ namespace QuizWorld.Infrastructure.Data.Entities
 
         [Comment("The index of the question for the given quiz, used to reliably preserve the order that the creator wants")]
         public int Order { get; set; }
-        public IEnumerable<Answer> Answers { get; set; } = null!;
+        public ICollection<Answer> Answers { get; set; } = new List<Answer>();
     }
 }

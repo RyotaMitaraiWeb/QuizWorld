@@ -43,13 +43,13 @@ namespace QuizWorld.Infrastructure.Data.Entities
         public DateTime UpdatedOn { get; set; }
 
         [Comment("If marked as deleted, the quiz will not be retrieved at all")]
-        public bool IsDeleted { get; set; }
+        public bool IsDeleted { get; set; } = false;
 
         [Comment("The ID of the user that created the quiz")]
         [ForeignKey(nameof(Creator))]
         public Guid CreatorId { get; set; }
         public ApplicationUser Creator { get; set; } = null!;
 
-        public IEnumerable<Question> Questions { get; set; } = Enumerable.Empty<Question>();
+        public ICollection<Question> Questions { get; set; } = new List<Question>();
     }
 }
