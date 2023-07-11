@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using NUnit.Framework.Internal;
 using Microsoft.Extensions.Logging;
 using Moq;
+using QuizWorld.Infrastructure;
+using QuizWorld.Common.Constants.Types;
 
 namespace QuizWorld.Tests
 {
@@ -23,6 +25,11 @@ namespace QuizWorld.Tests
         public UserManager<ApplicationUser> userManager;
 
         /// <summary>
+        /// Pass this to your service so that it can access the database.
+        /// </summary>
+        public Repository repository;
+
+        /// <summary>
         /// Creates the database and seeds it with some data. Each database name is
         /// guaranteed to be random, preventing race conditions.
         /// </summary>
@@ -35,6 +42,8 @@ namespace QuizWorld.Tests
         public ApplicationUser Admin { get; private set; }
         public ApplicationUser Moderator { get; private set; }
         public ApplicationUser User { get; private set; }
+
+        public Quiz Quiz { get; private set; }
 
         
         public QuizWorldDbContext CreateDbContext()
@@ -62,6 +71,8 @@ namespace QuizWorld.Tests
                 userStore, null, hasher, null, 
                 new IPasswordValidator<ApplicationUser>[] { passwordValidator }, 
                 normalizer, null, null, logger.Object);
+
+            this.repository = new Repository(dbContext);
 
 
             dbContext.Roles.Add(new IdentityRole<Guid>()
@@ -102,6 +113,35 @@ namespace QuizWorld.Tests
                 NormalizedUserName = "MODERATOR1"
             };
 
+            this.repository.AddAsync(new QuestionType()
+            {
+                Id = 1,
+                Type = QuestionTypes.SingleChoice,
+                ShortName = QuestionTypesShortNames.SingleChoice,
+                FullName = QuestionTypesFullNames.SingleChoice,
+            }).Wait();
+
+            this.repository.AddAsync(new QuestionType()
+            {
+                Id = 2,
+                Type = QuestionTypes.MultipleChoice,
+                ShortName = QuestionTypesShortNames.MultipleChoice,
+                FullName = QuestionTypesFullNames.MultipleChoice,
+            }).Wait();
+
+            this.repository.AddAsync(new QuestionType()
+            {
+                Id = 3,
+                Type = QuestionTypes.Text,
+                ShortName = QuestionTypesShortNames.Text,
+                FullName = QuestionTypesFullNames.Text,
+            }).Wait();
+
+            this.repository.SaveChangesAsync().Wait();
+
+            this.Quiz = this.CreateSeededQuiz();
+
+
             this.userManager.CreateAsync(this.User, "123456").Wait();
             this.userManager.CreateAsync(this.Moderator, "123456").Wait();
             this.userManager.CreateAsync(this.Admin, "123456").Wait();
@@ -110,6 +150,123 @@ namespace QuizWorld.Tests
             this.userManager.AddToRolesAsync(this.Moderator, new string[] { "User", "Moderator" }).Wait();
             this.userManager.AddToRolesAsync(this.Admin, new string[] { "User", "Moderator", "Administrator" }).Wait();
 
+            this.repository.AddAsync(this.Quiz).Wait();
+            this.repository.SaveChangesAsync().Wait();
+        }
+
+        private Quiz CreateSeededQuiz()
+        {
+            var date = DateTime.Now;
+            var quiz = new Quiz()
+            {
+                Title = "Cities/Capitals trivia",
+                NormalizedTitle = "CITIES/CAPITALS TRIVIA",
+                Description = "A small quiz about cities and capital cities",
+                InstantMode = true,
+                CreatorId = this.User.Id,
+                CreatedOn = date,
+                UpdatedOn = date,
+                Questions = this.CreateQuestions().ToList()
+            };
+
+            return quiz;
+            
+        }
+
+        private IEnumerable<Question> CreateQuestions()
+        {
+            var questions = new List<Question>();
+            questions.Add(new Question()
+            {
+                Prompt = "What is the capital of Mongolia?",
+                QuestionTypeId = 1,
+                Order = 1,
+                Answers = new[]
+                {
+                    new Answer()
+                    {
+                        Correct = true,
+                        Value = "Ulaanbaatar",
+                    },
+                    new Answer()
+                    {
+                        Correct = false,
+                        Value = "Kathmandu",
+                    }
+                }
+            });
+
+            questions.Add(new Question()
+            {
+                Prompt = "What are the capitals of South Africa?",
+                QuestionTypeId = 2,
+                Order = 2,
+                Answers = new[]
+                {
+                    new Answer()
+                    {
+                        Correct = true,
+                        Value = "Pretoria"
+                    },
+                    new Answer()
+                    {
+                        Correct = true,
+                        Value = "Cape Town"
+                    },
+                    new Answer()
+                    {
+                        Correct = true,
+                        Value = "Bloemfontein"
+                    },
+                    new Answer()
+                    {
+                        Correct = false,
+                        Value = "Johannesburg"
+                    }
+                }
+            });
+
+            questions.Add(new Question()
+            {
+                Prompt = "Name one of the only sovereign city-states in modern times (do not use articles like \"the\")",
+                QuestionTypeId = 2,
+                Order = 2,
+                Answers = new[]
+                {
+                    new Answer()
+                    {
+                        Correct = true,
+                        Value = "Vatican City"
+                    },
+                    new Answer()
+                    {
+                        Correct = true,
+                        Value = "Vatican City State"
+                    },
+                    new Answer()
+                    {
+                        Correct = true,
+                        Value = "Monaco"
+                    },
+                    new Answer()
+                    {
+                        Correct = true,
+                        Value = "Principality of Monaco"
+                    },
+                    new Answer()
+                    {
+                        Correct = true,
+                        Value = "Singapore"
+                    },
+                    new Answer()
+                    {
+                        Correct = true,
+                        Value = "Republic of Singapore"
+                    }
+                }
+            });
+
+            return questions;
         }
     }
     /// <summary>
