@@ -11,7 +11,7 @@ namespace QuizWorld.Web.Contracts.Quiz
     {
         Task<int> CreateQuiz(CreateQuizViewModel quiz, string userId);
         Task<int> CreateQuiz(CreateQuizViewModel quiz, Guid userId);
-        Task<QuizViewModel> GetQuizById(int id);
+        Task<QuizViewModel?> GetQuizById(int id);
 
         Task<int> DeleteQuizById(int id);
         Task<int> EditQuizById(int id);

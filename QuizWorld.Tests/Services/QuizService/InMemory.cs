@@ -104,6 +104,36 @@ namespace QuizWorld.Tests.Services.QuizServiceInMemoryTests
             });
         }
 
+        [Test]
+        public async Task Test_GetQuizByIdRetrievesTheQuizWithTheGivenIdAndIncludesOnlyTheQuestionsThatMatchItsVersion()
+        {
+            var entity = this.testDB.Quiz;
+            var quiz = await this.service.GetQuizById(entity.Id);
+            Assert.Multiple(() =>
+            {
+                Assert.That(quiz.Title, Is.EqualTo(entity.Title));
+                Assert.That(quiz.Description, Is.EqualTo(entity.Description));
+                Assert.That(quiz.InstantMode, Is.EqualTo(entity.InstantMode));
+                Assert.That(quiz.Id, Is.EqualTo(entity.Id));
+                Assert.That(quiz.Version, Is.EqualTo(entity.Version));
+
+                var questions = quiz.Questions.ToArray();
+                var answers = questions[0].Answers.ToArray();
+
+                // The quiz has four in the datbase, one of which does not match the version
+                Assert.That(questions, Has.Length.EqualTo(3));
+                Assert.That(questions[0].Type, Is.EqualTo(QuestionTypesShortNames.SingleChoice));
+                Assert.That(answers, Has.Length.EqualTo(2));
+            });
+        }
+
+        [Test]
+        public async Task Test_GetQuizByIdReturnsNullIfItCannotFindTheQuiz()
+        {
+            var quiz = await this.service.GetQuizById(0);
+            Assert.That(quiz, Is.Null);
+        }
+
         private CreateQuizViewModel CreateQuizModel()
         {
             return new CreateQuizViewModel()

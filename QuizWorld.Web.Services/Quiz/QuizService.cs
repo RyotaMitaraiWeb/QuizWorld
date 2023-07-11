@@ -1,4 +1,5 @@
-﻿using QuizWorld.Infrastructure;
+﻿using Microsoft.EntityFrameworkCore;
+using QuizWorld.Infrastructure;
 using QuizWorld.Infrastructure.Data.Entities;
 using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Question;
@@ -81,9 +82,35 @@ namespace QuizWorld.Web.Services.QuizService
             throw new NotImplementedException();
         }
 
-        public Task<QuizViewModel> GetQuizById(int id)
+        public Task<QuizViewModel?> GetQuizById(int id)
         {
-            throw new NotImplementedException();
+            var quiz = this.repository
+                .AllReadonly<Quiz>(q => q.Id == id)
+                .Select(q => new QuizViewModel()
+                {
+                    Id = q.Id,
+                    Title = q.Title,
+                    Description = q.Description,
+                    Version = q.Version,
+                    InstantMode = q.InstantMode,
+                    Questions = q.Questions
+                        .Where(question => question.Version == q.Version)
+                        .Select(question => new QuestionViewModel()
+                    {
+                        Prompt = question.Prompt,
+                        Id = question.Id.ToString(),
+                        Type = question.QuestionType.ShortName,
+                        Answers = question.Answers.Select(a => new AnswerViewModel()
+                        {
+                            Value = a.Value,
+                            Id = a.Id.ToString(),
+                        })
+                    })
+                })
+                .FirstOrDefaultAsync();
+
+            return quiz;
+
         }
 
         public Task<IEnumerable<CatalogueQuizViewModel>> GetQuizzesByQuery(string query, int page, string category, string order)
