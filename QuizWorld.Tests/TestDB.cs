@@ -166,7 +166,7 @@ namespace QuizWorld.Tests
                 InstantMode = true,
                 CreatorId = this.User.Id,
                 CreatedOn = date,
-                UpdatedOn = date,
+                UpdatedOn = date.AddDays(1),
                 Questions = this.CreateQuestions().ToList()
             };
 
