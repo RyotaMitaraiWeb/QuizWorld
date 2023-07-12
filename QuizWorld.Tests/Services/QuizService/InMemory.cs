@@ -270,6 +270,22 @@ namespace QuizWorld.Tests.Services.QuizServiceInMemoryTests
             Assert.That(notEditedQuiz.Title, Is.EqualTo(this.testDB.DeletedQuiz.Title));
         }
 
+        [Test]
+        public async Task Test_GetAllQuizzesCorrectlyRetrievesAListOfQuizzesBasedOnParameters()
+        {
+            var result = await this.service.GetAllQuizzes(2, "createdOn", "desc", 1);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Total, Is.EqualTo(2));
+                var quizzes = result.Quizzes;
+
+                Assert.That(quizzes.Count, Is.EqualTo(1));
+                var quiz = quizzes.First();
+                Assert.That(quiz.Title, Is.EqualTo(this.testDB.NonInstantQuiz.Title));
+            });
+        }
+
         private CreateQuizViewModel CreateQuizModel()
         {
             return new CreateQuizViewModel()

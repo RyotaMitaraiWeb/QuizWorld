@@ -15,9 +15,9 @@ namespace QuizWorld.Web.Contracts.Quiz
 
         Task<int?> DeleteQuizById(int id);
         Task<int?> EditQuizById(int id, EditQuizViewModel quiz);
-        Task<IEnumerable<CatalogueQuizViewModel>> GetAllQuizzes(int page, string category, string order);
-        Task<IEnumerable<CatalogueQuizViewModel>> GetUserQuizzes(string userId, int page, string category, string order);
-        Task<IEnumerable<CatalogueQuizViewModel>> GetUserQuizzes(Guid userId, int page, string category, string order);
-        Task<IEnumerable<CatalogueQuizViewModel>> GetQuizzesByQuery(string query, int page, string category, string order);
+        Task<CatalogueQuizViewModel> GetAllQuizzes(int page, string category, string order, int pageSize);
+        Task<CatalogueQuizViewModel> GetUserQuizzes(string userId, int page, string category, string order);
+        Task<CatalogueQuizViewModel> GetUserQuizzes(Guid userId, int page, string category, string order);
+        Task<CatalogueQuizViewModel> GetQuizzesByQuery(string query, int page, string category, string order);
     }
 }

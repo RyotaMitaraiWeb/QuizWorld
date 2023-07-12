@@ -113,9 +113,45 @@ namespace QuizWorld.Web.Services.QuizService
 
         }
 
-        public Task<IEnumerable<CatalogueQuizViewModel>> GetAllQuizzes(int page, string category, string order)
+        /// <summary>
+        /// Retrieves a catalogue of quizzes that have not been deleted and the total amount of quizzes.
+        /// Parameters control how the result will be paginated and sorted.
+        /// </summary>
+        /// <param name="page">The requested page</param>
+        /// <param name="category">Category by which the result will be sorted</param>
+        /// <param name="order">The order by which the result will be sorted</param>
+        /// <param name="pageSize">The number of quizzes that will be retrieved</param>
+        /// <returns>A model that contains the total amount of non-deleted quizzes and the catalogue</returns>
+        public async Task<CatalogueQuizViewModel> GetAllQuizzes(int page, string category, string order, int pageSize = 6)
         {
-            throw new NotImplementedException();
+            var query = this.repository
+                .AllReadonly<Quiz>()
+                .Where(q => !q.IsDeleted);
+
+
+            int total = await query.CountAsync();
+            var quizzes = await query
+                .SortByOptions(category, order)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(q => new CatalogueQuizItemViewModel()
+                {
+                    Id = q.Id,
+                    Title = q.Title,
+                    Description = q.Description,
+                    InstantMode = q.InstantMode,
+                    CreatedOn = q.CreatedOn,
+                    UpdatedOn = q.UpdatedOn,
+                })
+                .ToListAsync();
+
+            var catalogue = new CatalogueQuizViewModel()
+            {
+                Total = total,
+                Quizzes = quizzes,
+            };
+
+            return catalogue;
         }
 
         public Task<QuizViewModel?> GetQuizById(int id)
@@ -152,17 +188,17 @@ namespace QuizWorld.Web.Services.QuizService
 
         }
 
-        public Task<IEnumerable<CatalogueQuizViewModel>> GetQuizzesByQuery(string query, int page, string category, string order)
+        public Task<CatalogueQuizViewModel> GetQuizzesByQuery(string query, int page, string category, string order)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<CatalogueQuizViewModel>> GetUserQuizzes(string userId, int page, string category, string order)
+        public Task<CatalogueQuizViewModel> GetUserQuizzes(string userId, int page, string category, string order)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<CatalogueQuizViewModel>> GetUserQuizzes(Guid userId, int page, string category, string order)
+        public Task<CatalogueQuizViewModel> GetUserQuizzes(Guid userId, int page, string category, string order)
         {
             throw new NotImplementedException();
         }
