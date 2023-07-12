@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QuizWorld.Infrastructure;
 using QuizWorld.Infrastructure.Data.Entities;
+using QuizWorld.Infrastructure.Extensions;
 using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Question;
 using QuizWorld.ViewModels.Quiz;
@@ -101,11 +102,13 @@ namespace QuizWorld.Web.Services.QuizService
                             Prompt = question.Prompt,
                             Id = question.Id.ToString(),
                             Type = question.QuestionType.ShortName,
-                            Answers = question.Answers.Select(a => new AnswerViewModel()
+                            Answers = question.Answers
+                                .Select(a => new AnswerViewModel()
                             {
                                 Value = a.Value,
                                 Id = a.Id.ToString(),
                             })
+                                .Shuffle()
                         })
                 })
                 .FirstOrDefaultAsync();
