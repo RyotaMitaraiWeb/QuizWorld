@@ -44,7 +44,8 @@ namespace QuizWorld.Tests
         public ApplicationUser User { get; private set; }
 
         public Quiz Quiz { get; private set; }
-
+        public Quiz DeletedQuiz { get; private set; }
+        public Quiz NonInstantQuiz { get; private set; }
         
         public QuizWorldDbContext CreateDbContext()
         {
@@ -140,7 +141,8 @@ namespace QuizWorld.Tests
             this.repository.SaveChangesAsync().Wait();
 
             this.Quiz = this.CreateSeededQuiz();
-
+            this.DeletedQuiz = this.CreateSeededQuiz(true);
+            this.NonInstantQuiz = this.CreateSeededQuiz(false, false);
 
             this.userManager.CreateAsync(this.User, "123456").Wait();
             this.userManager.CreateAsync(this.Moderator, "123456").Wait();
@@ -151,10 +153,12 @@ namespace QuizWorld.Tests
             this.userManager.AddToRolesAsync(this.Admin, new string[] { "User", "Moderator", "Administrator" }).Wait();
 
             this.repository.AddAsync(this.Quiz).Wait();
+            this.repository.AddAsync(this.DeletedQuiz).Wait();
+            this.repository.AddAsync(this.NonInstantQuiz).Wait();
             this.repository.SaveChangesAsync().Wait();
         }
 
-        private Quiz CreateSeededQuiz()
+        private Quiz CreateSeededQuiz(bool deleted = false, bool instantMode = true)
         {
             var date = DateTime.Now;
             var quiz = new Quiz()
@@ -163,8 +167,9 @@ namespace QuizWorld.Tests
                 NormalizedTitle = "CITIES/CAPITALS TRIVIA",
                 Description = "A small quiz about cities and capital cities",
                 Version = 2,
-                InstantMode = true,
+                InstantMode = instantMode,
                 CreatorId = this.User.Id,
+                IsDeleted = deleted,
                 CreatedOn = date,
                 UpdatedOn = date.AddDays(1),
                 Questions = this.CreateQuestions().ToList()
