@@ -11,7 +11,6 @@ namespace QuizWorld.ViewModels.Quiz
     /// </summary>
     public class EditQuizViewModel
     {
-        public int Id { get; set; }
         [Required(ErrorMessage = QuizValidationErrorMessages.Title.IsEmpty)]
         [MinLength(QuizValidationRules.Title.MinLength, ErrorMessage = QuizValidationErrorMessages.Title.IsTooShort)]
         [MaxLength(QuizValidationRules.Title.MaxLength, ErrorMessage = QuizValidationErrorMessages.Title.IsTooLong)]
