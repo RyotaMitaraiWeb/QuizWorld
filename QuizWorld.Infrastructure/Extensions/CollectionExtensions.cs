@@ -1,4 +1,5 @@
-﻿using QuizWorld.Infrastructure.Data.Entities;
+﻿using QuizWorld.Common.Constants.Sorting;
+using QuizWorld.Infrastructure.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,26 +45,26 @@ namespace QuizWorld.Infrastructure.Extensions
         /// <param name="order">The order by which the query will be sorted</param>
         /// <returns>A sorted query</returns>
         /// <exception cref="ArgumentException"></exception>
-        public static IOrderedQueryable<Quiz> SortByOptions(this IQueryable<Quiz> query, string category, string order)
+        public static IOrderedQueryable<Quiz> SortByOptions(this IQueryable<Quiz> query, SortingCategories category, SortingOrders order)
         {
-            if (order == "asc")
+            if (order == SortingOrders.Ascending)
             {
                 return category switch
                 {
-                    "title" => query.OrderBy(q => q.NormalizedTitle).ThenBy(q => q.CreatedOn),
-                    "createdOn" => query.OrderBy(q => q.CreatedOn),
-                    "updatedOn" => query.OrderBy(q => q.UpdatedOn),
+                    SortingCategories.Title => query.OrderBy(q => q.NormalizedTitle).ThenBy(q => q.CreatedOn),
+                    SortingCategories.CreatedOn => query.OrderBy(q => q.CreatedOn),
+                    SortingCategories.UpdatedOn => query.OrderBy(q => q.UpdatedOn),
                     _ => throw new ArgumentException("Category is invalid"),
                 };
             }
 
-            else if (order == "desc")
+            else if (order == SortingOrders.Descending)
             {
                 return category switch
                 {
-                    "title" => query.OrderByDescending(q => q.NormalizedTitle),
-                    "createdOn" => query.OrderByDescending(q => q.CreatedOn),
-                    "updatedOn" => query.OrderByDescending(q => q.UpdatedOn),
+                    SortingCategories.Title => query.OrderByDescending(q => q.NormalizedTitle),
+                    SortingCategories.CreatedOn => query.OrderByDescending(q => q.CreatedOn),
+                    SortingCategories.UpdatedOn => query.OrderByDescending(q => q.UpdatedOn),
                     _ => throw new ArgumentException("Category is invalid"),
                 };
             }

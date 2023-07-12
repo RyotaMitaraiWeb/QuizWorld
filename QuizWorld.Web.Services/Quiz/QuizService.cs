@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Infrastructure;
 using QuizWorld.Infrastructure.Data.Entities;
 using QuizWorld.Infrastructure.Extensions;
@@ -122,7 +123,7 @@ namespace QuizWorld.Web.Services.QuizService
         /// <param name="order">The order by which the result will be sorted</param>
         /// <param name="pageSize">The number of quizzes that will be retrieved</param>
         /// <returns>A model that contains the total amount of non-deleted quizzes and the catalogue</returns>
-        public async Task<CatalogueQuizViewModel> GetAllQuizzes(int page, string category, string order, int pageSize = 6)
+        public async Task<CatalogueQuizViewModel> GetAllQuizzes(int page, SortingCategories category, SortingOrders order, int pageSize = 6)
         {
             var query = this.repository
                 .AllReadonly<Quiz>()
@@ -188,17 +189,17 @@ namespace QuizWorld.Web.Services.QuizService
 
         }
 
-        public Task<CatalogueQuizViewModel> GetQuizzesByQuery(string query, int page, string category, string order)
+        public Task<CatalogueQuizViewModel> GetQuizzesByQuery(string query, int page, SortingCategories category, SortingOrders order)
         {
             throw new NotImplementedException();
         }
 
-        public Task<CatalogueQuizViewModel> GetUserQuizzes(string userId, int page, string category, string order)
+        public Task<CatalogueQuizViewModel> GetUserQuizzes(string userId, int page, SortingCategories category, SortingOrders order)
         {
             throw new NotImplementedException();
         }
 
-        public Task<CatalogueQuizViewModel> GetUserQuizzes(Guid userId, int page, string category, string order)
+        public Task<CatalogueQuizViewModel> GetUserQuizzes(Guid userId, int page, SortingCategories category, SortingOrders order)
         {
             throw new NotImplementedException();
         }

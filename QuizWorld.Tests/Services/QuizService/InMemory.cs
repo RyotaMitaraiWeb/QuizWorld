@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Common.Constants.Types;
 using QuizWorld.Infrastructure;
 using QuizWorld.Infrastructure.Data.Entities;
@@ -273,7 +274,7 @@ namespace QuizWorld.Tests.Services.QuizServiceInMemoryTests
         [Test]
         public async Task Test_GetAllQuizzesCorrectlyRetrievesAListOfQuizzesBasedOnParameters()
         {
-            var result = await this.service.GetAllQuizzes(2, "createdOn", "desc", 1);
+            var result = await this.service.GetAllQuizzes(2, SortingCategories.CreatedOn, SortingOrders.Descending, 1);
 
             Assert.Multiple(() =>
             {

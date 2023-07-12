@@ -1,6 +1,7 @@
 ﻿using Microsoft.Identity.Client;
 using MockQueryable.Moq;
 using Moq;
+using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Common.Constants.Types;
 using QuizWorld.Infrastructure;
 using QuizWorld.Infrastructure.Data.Entities;
@@ -399,7 +400,7 @@ namespace QuizWorld.Tests.Services.QuizServiceUnitTests
                 .Setup(r => r.AllReadonly<Quiz>())
                 .Returns(mockList);
 
-            var result = await this.service.GetAllQuizzes(2, "title", "desc", 2);
+            var result = await this.service.GetAllQuizzes(2, SortingCategories.Title, SortingOrders.Descending, 2);
             Assert.Multiple(() =>
             {
                 Assert.That(result.Total, Is.EqualTo(4));

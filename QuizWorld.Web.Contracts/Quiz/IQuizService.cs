@@ -1,4 +1,5 @@
-﻿using QuizWorld.ViewModels.Quiz;
+﻿using QuizWorld.Common.Constants.Sorting;
+using QuizWorld.ViewModels.Quiz;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,9 @@ namespace QuizWorld.Web.Contracts.Quiz
 
         Task<int?> DeleteQuizById(int id);
         Task<int?> EditQuizById(int id, EditQuizViewModel quiz);
-        Task<CatalogueQuizViewModel> GetAllQuizzes(int page, string category, string order, int pageSize);
-        Task<CatalogueQuizViewModel> GetUserQuizzes(string userId, int page, string category, string order);
-        Task<CatalogueQuizViewModel> GetUserQuizzes(Guid userId, int page, string category, string order);
-        Task<CatalogueQuizViewModel> GetQuizzesByQuery(string query, int page, string category, string order);
+        Task<CatalogueQuizViewModel> GetAllQuizzes(int page, SortingCategories category, SortingOrders order, int pageSize);
+        Task<CatalogueQuizViewModel> GetUserQuizzes(string userId, int page, SortingCategories category, SortingOrders order);
+        Task<CatalogueQuizViewModel> GetUserQuizzes(Guid userId, int page, SortingCategories category, SortingOrders order);
+        Task<CatalogueQuizViewModel> GetQuizzesByQuery(string query, int page, SortingCategories category, SortingOrders order);
     }
 }
