@@ -13,7 +13,7 @@ namespace QuizWorld.Web.Contracts.Quiz
         Task<int> CreateQuiz(CreateQuizViewModel quiz, Guid userId);
         Task<QuizViewModel?> GetQuizById(int id);
 
-        Task<int> DeleteQuizById(int id);
+        Task<int?> DeleteQuizById(int id);
         Task<int> EditQuizById(int id);
         Task<IEnumerable<CatalogueQuizViewModel>> GetAllQuizzes(int page, string category, string order);
         Task<IEnumerable<CatalogueQuizViewModel>> GetUserQuizzes(string userId, int page, string category, string order);

@@ -34,7 +34,7 @@ namespace QuizWorld.Tests.Services.QuizServiceInMemoryTests
             var quiz = this.CreateQuizModel();
 
             var result = await this.service.CreateQuiz(quiz, this.testDB.User.Id);
-            Assert.That(result, Is.EqualTo(2));
+            Assert.That(result, Is.EqualTo(4));
 
             var entity = await this.repository.
                 AllReadonly<Quiz>()
@@ -72,7 +72,7 @@ namespace QuizWorld.Tests.Services.QuizServiceInMemoryTests
             var quiz = this.CreateQuizModel();
 
             var result = await this.service.CreateQuiz(quiz, this.testDB.User.Id.ToString());
-            Assert.That(result, Is.EqualTo(2));
+            Assert.That(result, Is.EqualTo(4));
 
             var entity = await this.repository.
                 AllReadonly<Quiz>()
@@ -132,6 +132,30 @@ namespace QuizWorld.Tests.Services.QuizServiceInMemoryTests
         {
             var quiz = await this.service.GetQuizById(0);
             Assert.That(quiz, Is.Null);
+        }
+
+        [Test]
+        public async Task Test_DeleteQuizByIdDeletesAQuizSuccessfully()
+        {
+            var result = await this.service.DeleteQuizById(this.testDB.Quiz.Id);
+            Assert.That(result, Is.EqualTo(this.testDB.Quiz.Id));
+
+            var quiz = await this.repository.GetByIdAsync<Quiz>(this.testDB.Quiz.Id);
+            Assert.That(quiz.IsDeleted, Is.True);
+        }
+
+        [Test]
+        public async Task Test_DeleteQuizByIdReturnsNullIfQuizDoesNotExist()
+        {
+            var result = await this.service.DeleteQuizById(0);
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public async Task Test_DeleteQuizByIdReturnsNullIfQuizIsAlreadyDeleted()
+        {
+            var result = await this.service.DeleteQuizById(this.testDB.DeletedQuiz.Id);
+            Assert.That(result, Is.Null);
         }
 
         private CreateQuizViewModel CreateQuizModel()

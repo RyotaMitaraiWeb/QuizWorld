@@ -124,11 +124,11 @@ namespace QuizWorld.Tests.Services.QuizServiceUnitTests
             };
 
             var mockQuiz = testQuiz.BuildMock();
-            
+
             this.repositoryMock
                 .Setup(r => r.AllReadonly(It.IsAny<Expression<Func<Quiz, bool>>>()))
                 .Returns(mockQuiz);
-                    
+
             var result = await this.service.GetQuizById(1);
             Assert.Multiple(() =>
             {
@@ -151,6 +151,99 @@ namespace QuizWorld.Tests.Services.QuizServiceUnitTests
                 .Returns(mockQuiz);
 
             var result = await this.service.GetQuizById(1);
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public async Task Test_DeleteQuizByIdReturnsTheIdOfTheQuizIfSuccessful()
+        {
+            var testQuiz = new List<Quiz>()
+            {
+                new Quiz()
+                {
+                    Id = 1,
+                    Title = "some title",
+                    Description = "some description",
+                    InstantMode = true,
+                    Version = 1,
+                    Questions = new List<Question>()
+                    {
+                        new Question()
+                        {
+                            Prompt = "a",
+                            Id = Guid.NewGuid(),
+                            Version = 1,
+                            Answers = new List<Answer>()
+                            {
+                                new Answer()
+                                {
+                                    Value = "a",
+                                    Correct = true,
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var mockQuiz = testQuiz.BuildMock();
+
+            this.repositoryMock
+                .Setup(r => r.GetByIdAsync<Quiz>(1))
+                .ReturnsAsync(testQuiz.First());
+
+            var result = await this.service.DeleteQuizById(1);
+            Assert.That(result, Is.EqualTo(1));
+        }
+
+        [Test]
+        public async Task Test_DeleteQuizByIdReturnsNullIfItCannotFindAQuiz()
+        {
+            var quiz = new List<Quiz>();
+            this.repositoryMock
+                .Setup(r => r.GetByIdAsync<Quiz>(1))
+                .ReturnsAsync(() => null);
+
+            var result = await this.service.DeleteQuizById(1);
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public async Task Test_DeleteQuizByIdReturnsNullIfQuizHasAlreadyBeenDeleted()
+        {
+            var testQuiz = new Quiz()
+            {
+                Id = 1,
+                Title = "some title",
+                Description = "some description",
+                InstantMode = true,
+                Version = 1,
+                IsDeleted = true,
+                Questions = new List<Question>()
+                    {
+                        new Question()
+                        {
+                            Prompt = "a",
+                            Id = Guid.NewGuid(),
+                            Version = 1,
+                            Answers = new List<Answer>()
+                            {
+                                new Answer()
+                                {
+                                    Value = "a",
+                                    Correct = true,
+                                }
+                            }
+                        }
+                    }
+
+            };
+
+            this.repositoryMock
+                .Setup(r => r.GetByIdAsync<Quiz>(1))
+                .ReturnsAsync(testQuiz);
+
+            var result = await this.service.DeleteQuizById(1);
             Assert.That(result, Is.Null);
         }
     }

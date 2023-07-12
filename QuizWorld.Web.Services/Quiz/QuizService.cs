@@ -68,9 +68,23 @@ namespace QuizWorld.Web.Services.QuizService
             return entity.Id;
         }
 
-        public Task<int> DeleteQuizById(int id)
+        /// <summary>
+        /// Sets the "IsDeleted" column of the quiz to true.
+        /// </summary>
+        /// <param name="id">The ID of the quiz</param>
+        /// <returns>The ID of the quiz if successful or null if quiz does not exist or has already been deleted.</returns>
+        public async Task<int?> DeleteQuizById(int id)
         {
-            throw new NotImplementedException();
+            var quiz = await this.repository.GetByIdAsync<Quiz>(id);
+            if (quiz == null || quiz.IsDeleted)
+            {
+                return null;
+            }
+
+            quiz.IsDeleted = true;
+
+            await this.repository.SaveChangesAsync();
+            return id;
         }
 
         public Task<int> EditQuizById(int id)
