@@ -104,10 +104,10 @@ namespace QuizWorld.Web.Services.QuizService
                             Type = question.QuestionType.ShortName,
                             Answers = question.Answers
                                 .Select(a => new AnswerViewModel()
-                            {
-                                Value = a.Value,
-                                Id = a.Id.ToString(),
-                            })
+                                {
+                                    Value = a.Value,
+                                    Id = a.Id.ToString(),
+                                })
                                 .Shuffle()
                         })
                 })
