@@ -246,5 +246,115 @@ namespace QuizWorld.Tests.Services.QuizServiceUnitTests
             var result = await this.service.DeleteQuizById(1);
             Assert.That(result, Is.Null);
         }
+
+        [Test]
+        public async Task Test_EditQuizByIdReturnsTheIdOfTheQuizIfSuccessful()
+        {
+            var testQuiz = new Quiz()
+            {
+                Id = 1,
+                Title = "some title",
+                Description = "some description",
+                InstantMode = true,
+                Version = 1,
+                IsDeleted = false,
+                Questions = new List<Question>()
+                    {
+                        new Question()
+                        {
+                            Prompt = "a",
+                            Id = Guid.NewGuid(),
+                            Version = 1,
+                            Answers = new List<Answer>()
+                            {
+                                new Answer()
+                                {
+                                    Value = "a",
+                                    Correct = true,
+                                }
+                            }
+                        }
+                    }
+
+            };
+
+            var quiz = new EditQuizViewModel()
+            {
+                Title = "some title",
+                Description = "some description",
+                Questions = this.generateQuestions(4, 2)
+            };
+
+            this.repositoryMock
+                .Setup(r => r.GetByIdAsync<Quiz>(1))
+                .ReturnsAsync(testQuiz);
+
+            var result = await this.service.EditQuizById(1, quiz);
+            Assert.That(result, Is.EqualTo(1));
+        }
+
+        [Test]
+        public async Task Test_EditQuizByIdReturnsNullIfQuizIsDeleted()
+        {
+            var testQuiz = new Quiz()
+            {
+                Id = 1,
+                Title = "some title",
+                Description = "some description",
+                InstantMode = true,
+                Version = 1,
+                IsDeleted = true,
+                Questions = new List<Question>()
+                    {
+                        new Question()
+                        {
+                            Prompt = "a",
+                            Id = Guid.NewGuid(),
+                            Version = 1,
+                            Answers = new List<Answer>()
+                            {
+                                new Answer()
+                                {
+                                    Value = "a",
+                                    Correct = true,
+                                }
+                            }
+                        }
+                    }
+
+            };
+
+            var quiz = new EditQuizViewModel()
+            {
+                Title = "some title",
+                Description = "some description",
+                Questions = this.generateQuestions(4, 2)
+            };
+
+            this.repositoryMock
+                .Setup(r => r.GetByIdAsync<Quiz>(1))
+                .ReturnsAsync(testQuiz);
+
+            var result = await this.service.EditQuizById(1, quiz);
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public async Task Test_EditQuizByIdReturnsNullIfQuizDoesNotExist()
+        {
+            var quiz = new EditQuizViewModel()
+            {
+                Title = "some title",
+                Description = "some description",
+                Questions = this.generateQuestions(4, 2)
+            };
+
+            this.repositoryMock
+                .Setup(r => r.GetByIdAsync<Quiz>(1))
+                .ReturnsAsync(() => null);
+
+            var result = await this.service.EditQuizById(1, quiz);
+            Assert.That(result, Is.Null);
+        }
     }
 }

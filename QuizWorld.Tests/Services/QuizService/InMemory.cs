@@ -158,6 +158,118 @@ namespace QuizWorld.Tests.Services.QuizServiceInMemoryTests
             Assert.That(result, Is.Null);
         }
 
+        [Test]
+        public async Task Test_EditQuizByIdUpdatesAQuizSuccessfully()
+        {
+            var quiz = new EditQuizViewModel()
+            {
+                Title = "new title for quiz",
+                Description = "new description for quiz",
+                Questions = new List<CreateQuestionViewModel>()
+                {
+                    new CreateQuestionViewModel()
+                    {
+                        Prompt = "Demo prompt",
+                        Type = QuestionTypes.Text,
+                        Answers = new List<CreateAnswerViewModel>()
+                        {
+                            new CreateAnswerViewModel()
+                            {
+                                Value = "demo answer",
+                                Correct = true,
+                            }
+                        }
+                    }
+                }
+            };
+
+            var result = await this.service.EditQuizById(this.testDB.Quiz.Id, quiz);
+            Assert.That(result, Is.EqualTo(this.testDB.Quiz.Id));
+
+            var editedQuiz = await this.repository
+                .AllReadonly<Quiz>(q => q.Id == result && !q.IsDeleted)
+                .Include(q => q.Questions)
+                .ThenInclude(q => q.Answers)
+                .Include(q => q.Questions)
+                .ThenInclude(q => q.QuestionType)
+                .FirstOrDefaultAsync();
+            Assert.Multiple(() =>
+            {
+                Assert.That(editedQuiz.Title, Is.EqualTo(quiz.Title));
+                Assert.That(editedQuiz.Description, Is.EqualTo(quiz.Description));
+                Assert.That(editedQuiz.Version, Is.EqualTo(3));
+                Assert.That(editedQuiz.UpdatedOn, Is.Not.EqualTo(editedQuiz.CreatedOn));
+                var questions = editedQuiz.Questions.Where(q => q.Version == editedQuiz.Version).ToArray();
+                Assert.That(questions, Has.Length.EqualTo(1));
+
+                var question = questions[0];
+                Assert.That(question.Prompt, Is.EqualTo("Demo prompt"));
+                Assert.That(question.Answers, Has.Count.EqualTo(1));
+                Assert.That(question.QuizId, Is.EqualTo(result));
+            });
+        }
+
+        [Test]
+        public async Task Test_EditQuizByIdReturnsNullIfQuizDoesNotExist()
+        {
+            var quiz = new EditQuizViewModel()
+            {
+                Title = "new title for quiz",
+                Description = "new description for quiz",
+                Questions = new List<CreateQuestionViewModel>()
+                {
+                    new CreateQuestionViewModel()
+                    {
+                        Prompt = "Demo prompt",
+                        Type = QuestionTypes.Text,
+                        Answers = new List<CreateAnswerViewModel>()
+                        {
+                            new CreateAnswerViewModel()
+                            {
+                                Value = "demo answer",
+                                Correct = true,
+                            }
+                        }
+                    }
+                }
+            };
+
+            var result = await this.service.EditQuizById(0, quiz);
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public async Task Test_EditQuizByIdReturnsNullIfQuizIsDeleted()
+        {
+            var quiz = new EditQuizViewModel()
+            {
+                Title = "new title for quiz",
+                Description = "new description for quiz",
+                Questions = new List<CreateQuestionViewModel>()
+                {
+                    new CreateQuestionViewModel()
+                    {
+                        Prompt = "Demo prompt",
+                        Type = QuestionTypes.Text,
+                        Answers = new List<CreateAnswerViewModel>()
+                        {
+                            new CreateAnswerViewModel()
+                            {
+                                Value = "demo answer",
+                                Correct = true,
+                            }
+                        }
+                    }
+                }
+            };
+
+            var result = await this.service.EditQuizById(this.testDB.DeletedQuiz.Id, quiz);
+            Assert.That(result, Is.Null);
+
+            var notEditedQuiz = await this.repository.GetByIdAsync<Quiz>(this.testDB.DeletedQuiz.Id);
+            Assert.That(notEditedQuiz.Title, Is.EqualTo(this.testDB.DeletedQuiz.Title));
+        }
+
         private CreateQuizViewModel CreateQuizModel()
         {
             return new CreateQuizViewModel()

@@ -87,9 +87,30 @@ namespace QuizWorld.Web.Services.QuizService
             return id;
         }
 
-        public Task<int> EditQuizById(int id)
+        public async Task<int?> EditQuizById(int id, EditQuizViewModel quiz)
         {
-            throw new NotImplementedException();
+            var quizEntity = await this.repository.GetByIdAsync<Quiz>(id);
+            if (quizEntity == null || quizEntity.IsDeleted)
+            {
+                return null;
+            }
+
+            quizEntity.Title = quiz.Title;
+            quizEntity.NormalizedTitle = quiz.Title.ToUpper();
+            quizEntity.Version++;
+            quizEntity.Description = quiz.Description;
+            quizEntity.UpdatedOn = DateTime.Now;
+
+            var questions = this.CreateQuestions(quiz.Questions, quizEntity.Version);
+            
+            foreach (var question in questions)
+            {
+                quizEntity.Questions.Add(question);
+            }
+
+            await this.repository.SaveChangesAsync();
+            return id;
+
         }
 
         public Task<IEnumerable<CatalogueQuizViewModel>> GetAllQuizzes(int page, string category, string order)
@@ -146,7 +167,7 @@ namespace QuizWorld.Web.Services.QuizService
             throw new NotImplementedException();
         }
 
-        private IEnumerable<Question> CreateQuestions(IEnumerable<CreateQuestionViewModel> questionModels)
+        private IEnumerable<Question> CreateQuestions(IEnumerable<CreateQuestionViewModel> questionModels, int version = 1)
         {
             var questions = new List<Question>();
             var questionsArray = questionModels.ToArray();
@@ -161,7 +182,7 @@ namespace QuizWorld.Web.Services.QuizService
                 {
                     Prompt = question.Prompt,
                     QuestionTypeId = typeId,
-                    Version = 1,
+                    Version = version,
                     Order = i + 1,
                     Answers = this.CreateAnswers(question.Answers).ToList()
                 };
