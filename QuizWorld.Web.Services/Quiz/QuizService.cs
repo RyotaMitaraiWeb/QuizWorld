@@ -86,7 +86,7 @@ namespace QuizWorld.Web.Services.QuizService
         public Task<QuizViewModel?> GetQuizById(int id)
         {
             var quiz = this.repository
-                .AllReadonly<Quiz>(q => q.Id == id)
+                .AllReadonly<Quiz>(q => q.Id == id && !q.IsDeleted)
                 .Select(q => new QuizViewModel()
                 {
                     Id = q.Id,
