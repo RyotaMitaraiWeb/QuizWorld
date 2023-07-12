@@ -95,17 +95,18 @@ namespace QuizWorld.Web.Services.QuizService
                     InstantMode = q.InstantMode,
                     Questions = q.Questions
                         .Where(question => question.Version == q.Version)
+                        .OrderBy(question => question.Order)
                         .Select(question => new QuestionViewModel()
-                    {
-                        Prompt = question.Prompt,
-                        Id = question.Id.ToString(),
-                        Type = question.QuestionType.ShortName,
-                        Answers = question.Answers.Select(a => new AnswerViewModel()
                         {
-                            Value = a.Value,
-                            Id = a.Id.ToString(),
+                            Prompt = question.Prompt,
+                            Id = question.Id.ToString(),
+                            Type = question.QuestionType.ShortName,
+                            Answers = question.Answers.Select(a => new AnswerViewModel()
+                            {
+                                Value = a.Value,
+                                Id = a.Id.ToString(),
+                            })
                         })
-                    })
                 })
                 .FirstOrDefaultAsync();
 
