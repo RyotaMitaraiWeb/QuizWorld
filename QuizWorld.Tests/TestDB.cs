@@ -164,7 +164,7 @@ namespace QuizWorld.Tests
             var quiz = new Quiz()
             {
                 Title = "Cities/Capitals trivia",
-                NormalizedTitle = "CITIES/CAPITALS TRIVIA",
+                NormalizedTitle = "CITIES/CAPITALSTRIVIA",
                 Description = "A small quiz about cities and capital cities",
                 Version = 2,
                 InstantMode = instantMode,

@@ -23,7 +23,7 @@ namespace QuizWorld.Infrastructure.Data.Entities
         [MaxLength(QuizValidationRules.Title.MaxLength, ErrorMessage = QuizValidationErrorMessages.Title.IsTooLong)]
         public string Title { get; set; } = null!;
 
-        [Comment("The title of the quiz with all letters uppercased. Used for searching")]
+        [Comment("The title of the quiz with all letters uppercased and spaces removed. Used for searching and sorting")]
         public string NormalizedTitle { get; set; } = null!;
 
         [Required(ErrorMessage = QuizValidationErrorMessages.Description.IsEmpty)]
