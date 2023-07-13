@@ -97,7 +97,7 @@ namespace QuizWorld.Web.Services.QuizService
             }
 
             quizEntity.Title = quiz.Title;
-            quizEntity.NormalizedTitle = quiz.Title.ToUpper();
+            quizEntity.NormalizedTitle = quiz.Title.Normalized();
             quizEntity.Version++;
             quizEntity.Description = quiz.Description;
             quizEntity.UpdatedOn = DateTime.Now;
@@ -189,19 +189,73 @@ namespace QuizWorld.Web.Services.QuizService
 
         }
 
-        public Task<CatalogueQuizViewModel> GetQuizzesByQuery(string query, int page, SortingCategories category, SortingOrders order)
+        public Task<CatalogueQuizViewModel> GetQuizzesByQuery(string query, int page, SortingCategories category, SortingOrders order, int pageSize = 6)
         {
             throw new NotImplementedException();
         }
 
-        public Task<CatalogueQuizViewModel> GetUserQuizzes(string userId, int page, SortingCategories category, SortingOrders order)
+        /// <summary>
+        /// Returns a paginated and sorted catalogue of the quizzes that belong to the user with the given ID and a total count of the user's quizzes.
+        /// </summary>
+        /// <param name="userId">The ID of the user. The ID will be parsed into a GUID.</param>
+        /// <param name="page">The current page</param>
+        /// <param name="category">The category by which the result will be sorted</param>
+        /// <param name="order">The order in which the result will be sorted</param>
+        /// <param name="pageSize">The amount of quizzes to be retrieved</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public async Task<CatalogueQuizViewModel> GetUserQuizzes(string userId, int page, SortingCategories category, SortingOrders order, int pageSize = 6)
         {
-            throw new NotImplementedException();
+            bool successfulParse = Guid.TryParse(userId, out Guid id);
+
+            if (!successfulParse)
+            {
+                throw new ArgumentException("The provided ID is invalid");
+            }
+
+            return await this.GetUserQuizzes(id, page, category, order, pageSize);
         }
 
-        public Task<CatalogueQuizViewModel> GetUserQuizzes(Guid userId, int page, SortingCategories category, SortingOrders order)
+        /// <summary>
+        /// Returns a paginated and sorted catalogue of the quizzes that belong to the user with the given ID and a total count of the user's quizzes.
+        /// </summary>
+        /// <param name="userId">The ID of the user</param>
+        /// <param name="page">The current page</param>
+        /// <param name="category">The category by which the result will be sorted</param>
+        /// <param name="order">The order in which the result will be sorted</param>
+        /// <param name="pageSize">The amount of quizzes to be retrieved</param>
+        /// <returns></returns>
+        public async Task<CatalogueQuizViewModel> GetUserQuizzes(Guid userId, int page, SortingCategories category, SortingOrders order, int pageSize = 6)
         {
-            throw new NotImplementedException();
+            var query = this.repository
+                .AllReadonly<Quiz>()
+                .Where(q => q.CreatorId == userId && !q.IsDeleted);
+
+            int total = await query.CountAsync();
+
+            var quizzes = await query
+                .SortByOptions(category, order)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(q => new CatalogueQuizItemViewModel()
+                {
+                    Id = q.Id,
+                    Title = q.Title,
+                    Description = q.Description,
+                    InstantMode = q.InstantMode,
+                    CreatedOn = q.CreatedOn,
+                    UpdatedOn = q.UpdatedOn,
+                })
+                .ToListAsync();
+
+            var catalogue = new CatalogueQuizViewModel()
+            {
+                Total = total,
+                Quizzes = quizzes,
+            };
+
+            return catalogue;
+
         }
 
         private IEnumerable<Question> CreateQuestions(IEnumerable<CreateQuestionViewModel> questionModels, int version = 1)

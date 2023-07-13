@@ -22,6 +22,7 @@ namespace QuizWorld.Tests.Services.QuizServiceUnitTests
     {
         public QuizService service;
         public Mock<IRepository> repositoryMock;
+        public Guid randomGuid = Guid.NewGuid();
 
         private IEnumerable<CreateAnswerViewModel> generateAnswers(int amount)
         {
@@ -412,6 +413,137 @@ namespace QuizWorld.Tests.Services.QuizServiceUnitTests
 
                 Assert.That(quiz1.Title, Is.EqualTo("b"));
                 Assert.That(quiz2.Title, Is.EqualTo("a"));
+            });
+        }
+
+        [Test]
+        [TestCase("00000000-0000-0000-0000-000000000000")]
+        public async Task Test_GetUserQuizzesReturnsAListOfQuizzesAndCorrectTotalCountWithStringId(string query)
+        {
+            var date = DateTime.Now;
+            var list = new List<Quiz>()
+            {
+                new Quiz()
+                {
+                    CreatorId = Guid.Parse(query),
+                    Title = "abcd",
+                    CreatedOn = date.AddDays(1),
+                    UpdatedOn = date.AddDays(2),
+                    NormalizedTitle = "ABCD",
+                },
+                new Quiz()
+                {
+                    CreatorId = Guid.Parse(query),
+                    Title = "acd",
+                    CreatedOn = date.AddDays(3),
+                    UpdatedOn = date.AddDays(3),
+                    NormalizedTitle = "ACD",
+                },
+                new Quiz()
+                {
+                    CreatorId = Guid.Parse(query),
+                    Title = "ADC",
+                    CreatedOn = date,
+                    UpdatedOn = date,
+                    NormalizedTitle = "ADC",
+                },
+                new Quiz()
+                {
+                    Title = "d",
+                    CreatedOn = date.AddDays(-1),
+                    UpdatedOn = date,
+                    NormalizedTitle = "D",
+                },
+            };
+
+            var mockList = list.BuildMock();
+
+            this.repositoryMock
+                .Setup(r => r.AllReadonly<Quiz>())
+                .Returns(mockList);
+
+            var result = await this.service.GetUserQuizzes(query, 2, SortingCategories.Title, SortingOrders.Descending, 2);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Total, Is.EqualTo(4));
+                var quizzes = result.Quizzes.ToArray();
+
+                Assert.That(quizzes, Has.Length.EqualTo(2));
+                var quiz1 = quizzes[0];
+                var quiz2 = quizzes[1];
+
+                Assert.That(quiz1.Title, Is.EqualTo("acd"));
+                Assert.That(quiz2.Title, Is.EqualTo("abcd"));
+            });
+        }
+
+        [Test]
+        public async Task Test_GetUserQuizzesReturnsAListOfQuizzesAndCorrectTotalCountWithGuid()
+        {
+            Guid query = Guid.NewGuid();
+            var date = DateTime.Now;
+            var list = new List<Quiz>()
+            {
+                new Quiz()
+                {
+                    CreatorId = query,
+                    Title = "abcd",
+                    CreatedOn = date.AddDays(1),
+                    UpdatedOn = date.AddDays(2),
+                    NormalizedTitle = "ABCD",
+                },
+                new Quiz()
+                {
+                    CreatorId = query,
+                    Title = "acd",
+                    CreatedOn = date.AddDays(3),
+                    UpdatedOn = date.AddDays(3),
+                    NormalizedTitle = "ACD",
+                },
+                new Quiz()
+                {
+                    CreatorId = query,
+                    Title = "ADC",
+                    CreatedOn = date,
+                    UpdatedOn = date,
+                    NormalizedTitle = "ADC",
+                },
+                new Quiz()
+                {
+                    CreatorId = query,
+                    Title = "ABAC",
+                    CreatedOn = date,
+                    UpdatedOn = date,
+                    NormalizedTitle = "ABAC",
+                },
+
+                new Quiz()
+                {
+                    Title = "d",
+                    CreatedOn = date.AddDays(-1),
+                    UpdatedOn = date,
+                    NormalizedTitle = "D",
+                },
+            };
+
+            var mockList = list.BuildMock();
+
+            this.repositoryMock
+                .Setup(r => r.AllReadonly<Quiz>())
+                .Returns(mockList);
+
+            var result = await this.service.GetUserQuizzes(query, 2, SortingCategories.Title, SortingOrders.Descending, 2);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Total, Is.EqualTo(4));
+                var quizzes = result.Quizzes.ToArray();
+
+                Assert.That(quizzes, Has.Length.EqualTo(2));
+                var quiz1 = quizzes[0];
+                var quiz2 = quizzes[1];
+
+                Assert.That(quiz1.Title, Is.EqualTo("acd"));
+                Assert.That(quiz2.Title, Is.EqualTo("abcd"));
             });
         }
     }

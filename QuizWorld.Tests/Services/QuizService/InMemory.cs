@@ -287,6 +287,44 @@ namespace QuizWorld.Tests.Services.QuizServiceInMemoryTests
             });
         }
 
+        [Test]
+        public async Task Test_GetUserQuizzesCorrectlyRetrievesAListOfQuizzesBasedOnParametersAndIfPassedAStringId()
+        {
+            var result = await this.service.GetUserQuizzes(this.testDB.User.Id.ToString(), 2, SortingCategories.CreatedOn, SortingOrders.Descending, 1);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Total, Is.EqualTo(2));
+                var quizzes = result.Quizzes;
+
+                Assert.That(quizzes.Count, Is.EqualTo(1));
+                var quiz = quizzes.First();
+                Assert.That(quiz.Title, Is.EqualTo(this.testDB.NonInstantQuiz.Title));
+            });
+
+            var result2 = await this.service.GetUserQuizzes(this.testDB.Moderator.Id.ToString(), 2, SortingCategories.CreatedOn, SortingOrders.Descending, 1);
+            Assert.That(result2.Total, Is.Zero);
+        }
+
+        [Test]
+        public async Task Test_GetUserQuizzesCorrectlyRetrievesAListOfQuizzesBasedOnParametersAndIfPassedAGuid()
+        {
+            var result = await this.service.GetUserQuizzes(this.testDB.User.Id.ToString(), 2, SortingCategories.CreatedOn, SortingOrders.Descending, 1);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Total, Is.EqualTo(2));
+                var quizzes = result.Quizzes;
+
+                Assert.That(quizzes.Count, Is.EqualTo(1));
+                var quiz = quizzes.First();
+                Assert.That(quiz.Title, Is.EqualTo(this.testDB.NonInstantQuiz.Title));
+            });
+
+            var result2 = await this.service.GetUserQuizzes(this.testDB.Moderator.Id, 2, SortingCategories.CreatedOn, SortingOrders.Descending, 1);
+            Assert.That(result2.Total, Is.Zero);
+        }
+
         private CreateQuizViewModel CreateQuizModel()
         {
             return new CreateQuizViewModel()
