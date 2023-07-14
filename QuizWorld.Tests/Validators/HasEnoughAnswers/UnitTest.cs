@@ -1,4 +1,6 @@
-﻿using QuizWorld.ViewModels.Answer;
+using QuizWorld.Common.Constants.Types;
+using QuizWorld.Infrastructure.Data.Entities;
+using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Question;
 using QuizWorld.ViewModels.Validators;
 using System.ComponentModel.DataAnnotations;
@@ -25,14 +27,14 @@ namespace QuizWorld.Tests.Validators.HasEnoughAnswersUnitTests
             return answers;
         }
 
-        private CreateQuestionViewModel generateQuestion(string questionType, int amount)
+        private CreateQuestionViewModel generateQuestion(QuestionTypes type, int amount)
         {
             var answers = this.generateAnswers(amount);
             return new CreateQuestionViewModel()
             {
                 Prompt = "valid prompt",
                 Answers = answers,
-                Type = questionType
+                Type = type
             };
         }
 
@@ -43,13 +45,13 @@ namespace QuizWorld.Tests.Validators.HasEnoughAnswersUnitTests
         }
 
         [Test]
-        [TestCase("single", 1)]
-        [TestCase("single", 11)]
-        [TestCase("multi", 1)]
-        [TestCase("multi", 11)]
-        [TestCase("text", 0)]
-        [TestCase("text", 16)]
-        public void Test_HasEnoughAnswersConsidersItAnErrorIfAnswersAmountIsNotInRange(string type, int amount)
+        [TestCase(QuestionTypes.SingleChoice, 1)]
+        [TestCase(QuestionTypes.SingleChoice, 11)]
+        [TestCase(QuestionTypes.MultipleChoice, 1)]
+        [TestCase(QuestionTypes.MultipleChoice, 11)]
+        [TestCase(QuestionTypes.Text, 0)]
+        [TestCase(QuestionTypes.Text, 16)]
+        public void Test_HasEnoughAnswersConsidersItAnErrorIfAnswersAmountIsNotInRange(QuestionTypes type, int amount)
         {
             var question = this.generateQuestion(type, amount);
             var context = new ValidationContext(question);
@@ -70,13 +72,13 @@ namespace QuizWorld.Tests.Validators.HasEnoughAnswersUnitTests
         }
 
         [Test]
-        [TestCase("single", 2)]
-        [TestCase("single", 10)]
-        [TestCase("multi", 2)]
-        [TestCase("multi", 10)]
-        [TestCase("text", 1)]
-        [TestCase("text", 15)]
-        public void Test_HasEnoughAnswersConsidersItASuccessIfQuestionHasEnoughAnswers(string type, int amount)
+        [TestCase(QuestionTypes.SingleChoice, 2)]
+        [TestCase(QuestionTypes.SingleChoice, 10)]
+        [TestCase(QuestionTypes.MultipleChoice, 2)]
+        [TestCase(QuestionTypes.MultipleChoice, 10)]
+        [TestCase(QuestionTypes.Text, 1)]
+        [TestCase(QuestionTypes.Text, 15)]
+        public void Test_HasEnoughAnswersConsidersItASuccessIfQuestionHasEnoughAnswers(QuestionTypes type, int amount)
         {
             var question = this.generateQuestion(type, amount);
             var context = new ValidationContext(question);
@@ -94,44 +96,9 @@ namespace QuizWorld.Tests.Validators.HasEnoughAnswersUnitTests
         }
 
         [Test]
-        public void Test_HasEnoughAnswersConsidersItAnErrorIfTheTypeIsInvalid()
-        {
-            var question = this.generateQuestion("invalid", 5);
-            var context = new ValidationContext(question);
-
-            try
-            {
-                validator.Validate(question.Answers, context);
-                Assert.Fail("Validator should have thrown, but passed");
-            }
-            catch (ValidationException)
-            {
-                Assert.Pass();
-            }
-        }
-
-        [Test]
         public void Test_HasEnoughAnswersConsidersItAnErrorIfPassedNull()
         {
-            var question = this.generateQuestion("single", 5);
-            var context = new ValidationContext(question);
-
-            try
-            {
-                validator.Validate(null, context);
-                Assert.Fail("Validator should have thrown, but passed");
-            }
-            catch (ValidationException)
-            {
-                Assert.Pass();
-            }
-        }
-
-        [Test]
-        public void Test_HasEnoughAnswersConsidersItAnErrorIfQuestionTypeIsNull()
-        {
-            var question = this.generateQuestion("single", 5);
-            question.Type = null;
+            var question = this.generateQuestion(QuestionTypes.SingleChoice, 5);
             var context = new ValidationContext(question);
 
             try
