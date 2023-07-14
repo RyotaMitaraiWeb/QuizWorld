@@ -542,8 +542,8 @@ namespace QuizWorld.Tests.Services.QuizServiceUnitTests
                 var quiz1 = quizzes[0];
                 var quiz2 = quizzes[1];
 
-                Assert.That(quiz1.Title, Is.EqualTo("acd"));
-                Assert.That(quiz2.Title, Is.EqualTo("abcd"));
+                Assert.That(quiz1.Title, Is.EqualTo("abcd"));
+                Assert.That(quiz2.Title, Is.EqualTo("ABAC"));
             });
         }
 
