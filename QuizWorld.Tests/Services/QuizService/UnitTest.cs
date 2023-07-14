@@ -360,7 +360,11 @@ namespace QuizWorld.Tests.Services.QuizServiceUnitTests
         }
 
         [Test]
-        public async Task Test_GetAllQuizzesReturnsAListOfQuizzesAndCorrectTotalCount()
+        [TestCase(2, SortingCategories.Title, SortingOrders.Ascending, "c", 2, 4)]
+        [TestCase(1, SortingCategories.CreatedOn, SortingOrders.Descending, "c", 2, 4)]
+        [TestCase(1, SortingCategories.UpdatedOn, SortingOrders.Ascending, "b", 2, 4)]
+        public async Task Test_GetAllQuizzesReturnsAListOfQuizzesAndCorrectTotalCount(int page, SortingCategories category, SortingOrders order,
+            string expectedTitle, int expectedLength, int expectedTotal)
         {
             var date = DateTime.Now;
             var list = new List<Quiz>()
@@ -401,31 +405,34 @@ namespace QuizWorld.Tests.Services.QuizServiceUnitTests
                 .Setup(r => r.AllReadonly<Quiz>())
                 .Returns(mockList);
 
-            var result = await this.service.GetAllQuizzes(2, SortingCategories.Title, SortingOrders.Descending, 2);
+            var result = await this.service.GetAllQuizzes(page, category, order, 2);
             Assert.Multiple(() =>
             {
-                Assert.That(result.Total, Is.EqualTo(4));
+                Assert.That(result.Total, Is.EqualTo(expectedTotal));
                 var quizzes = result.Quizzes.ToArray();
 
-                Assert.That(quizzes, Has.Length.EqualTo(2));
+                Assert.That(quizzes, Has.Length.EqualTo(expectedLength));
                 var quiz1 = quizzes[0];
-                var quiz2 = quizzes[1];
 
-                Assert.That(quiz1.Title, Is.EqualTo("b"));
-                Assert.That(quiz2.Title, Is.EqualTo("a"));
+                Assert.That(quiz1.Title, Is.EqualTo(expectedTitle));
             });
         }
 
         [Test]
-        [TestCase("00000000-0000-0000-0000-000000000000")]
-        public async Task Test_GetUserQuizzesReturnsAListOfQuizzesAndCorrectTotalCountWithStringId(string query)
+        [TestCase("00000000-0000-0000-0000-000000000000", 2, SortingCategories.Title, SortingOrders.Descending, "abcd", 1, 3)]
+        [TestCase("00000000-0000-0000-0000-000000000000", 1, SortingCategories.CreatedOn, SortingOrders.Descending, "acd", 2, 3)]
+        [TestCase("00000000-0000-0000-0000-000000000000", 1, SortingCategories.UpdatedOn, SortingOrders.Ascending, "ADC", 2, 3)]
+        public async Task Test_GetUserQuizzesReturnsAListOfQuizzesAndCorrectTotalCountWithStringId(
+            string id, int page, SortingCategories category, SortingOrders order,
+            string expectedTitle, int expectedLength, int expectedTotal
+            )
         {
             var date = DateTime.Now;
             var list = new List<Quiz>()
             {
                 new Quiz()
                 {
-                    CreatorId = Guid.Parse(query),
+                    CreatorId = Guid.Parse(id),
                     Title = "abcd",
                     CreatedOn = date.AddDays(1),
                     UpdatedOn = date.AddDays(2),
@@ -433,7 +440,7 @@ namespace QuizWorld.Tests.Services.QuizServiceUnitTests
                 },
                 new Quiz()
                 {
-                    CreatorId = Guid.Parse(query),
+                    CreatorId = Guid.Parse(id),
                     Title = "acd",
                     CreatedOn = date.AddDays(3),
                     UpdatedOn = date.AddDays(3),
@@ -441,7 +448,7 @@ namespace QuizWorld.Tests.Services.QuizServiceUnitTests
                 },
                 new Quiz()
                 {
-                    CreatorId = Guid.Parse(query),
+                    CreatorId = Guid.Parse(id),
                     Title = "ADC",
                     CreatedOn = date,
                     UpdatedOn = date,
@@ -449,6 +456,7 @@ namespace QuizWorld.Tests.Services.QuizServiceUnitTests
                 },
                 new Quiz()
                 {
+                    CreatorId = Guid.Parse("74c700a6-77fc-404d-b039-6e36cd90eb9a"),
                     Title = "d",
                     CreatedOn = date.AddDays(-1),
                     UpdatedOn = date,
@@ -462,20 +470,20 @@ namespace QuizWorld.Tests.Services.QuizServiceUnitTests
                 .Setup(r => r.AllReadonly<Quiz>())
                 .Returns(mockList);
 
-            var result = await this.service.GetUserQuizzes(query, 2, SortingCategories.Title, SortingOrders.Descending, 2);
+            var result = await this.service.GetUserQuizzes(id, page, category, order, 2);
             Assert.Multiple(() =>
             {
-                Assert.That(result.Total, Is.EqualTo(4));
+                Assert.That(result.Total, Is.EqualTo(expectedTotal));
                 var quizzes = result.Quizzes.ToArray();
 
-                Assert.That(quizzes, Has.Length.EqualTo(2));
+                Assert.That(quizzes, Has.Length.EqualTo(expectedLength));
                 var quiz1 = quizzes[0];
-                var quiz2 = quizzes[1];
+                
 
-                Assert.That(quiz1.Title, Is.EqualTo("acd"));
-                Assert.That(quiz2.Title, Is.EqualTo("abcd"));
+                Assert.That(quiz1.Title, Is.EqualTo(expectedTitle));
             });
         }
+
 
         [Test]
         public async Task Test_GetUserQuizzesReturnsAListOfQuizzesAndCorrectTotalCountWithGuid()
@@ -548,9 +556,12 @@ namespace QuizWorld.Tests.Services.QuizServiceUnitTests
         }
 
         [Test]
-        [TestCase("a")]
-        [TestCase("A")]
-        public async Task Test_GetQuizzesByQueryReturnsAListOfQuizzesAndCorrectTotalCount(string query)
+        [TestCase("a", 2, SortingCategories.Title, SortingOrders.Descending, "a", 1, 3)]
+        [TestCase("A", 1, SortingCategories.CreatedOn, SortingOrders.Ascending, "a", 2, 3)]
+        [TestCase("A a", 1, SortingCategories.UpdatedOn, SortingOrders.Descending, "A AA", 2, 2)]
+        public async Task Test_GetQuizzesByQueryReturnsAListOfQuizzesAndCorrectTotalCount(
+            string query, int page, SortingCategories category, SortingOrders order,
+            string expectedTitle, int expectedLength, int expectedTotal)
         {
             var date = DateTime.Now;
             var list = new List<Quiz>()
@@ -564,7 +575,7 @@ namespace QuizWorld.Tests.Services.QuizServiceUnitTests
                 },
                 new Quiz()
                 {
-                    Title = "AAA",
+                    Title = "A AA",
                     CreatedOn = date.AddDays(3),
                     UpdatedOn = date.AddDays(3),
                     NormalizedTitle = "AAA",
@@ -583,6 +594,14 @@ namespace QuizWorld.Tests.Services.QuizServiceUnitTests
                     UpdatedOn = date,
                     NormalizedTitle = "D",
                 },
+                new Quiz()
+                {
+                    Title = "a",
+                    CreatedOn = date,
+                    UpdatedOn = date,
+                    NormalizedTitle = "A",
+                    IsDeleted = true,
+                }
             };
 
             var mockList = list.BuildMock();
@@ -591,17 +610,17 @@ namespace QuizWorld.Tests.Services.QuizServiceUnitTests
                 .Setup(r => r.AllReadonly<Quiz>())
                 .Returns(mockList);
 
-            var result = await this.service.GetQuizzesByQuery(query, 2, SortingCategories.Title, SortingOrders.Descending, 2);
+            var result = await this.service.GetQuizzesByQuery(query, page, category, order, 2);
             Assert.Multiple(() =>
             {
-                Assert.That(result.Total, Is.EqualTo(3));
+                Assert.That(result.Total, Is.EqualTo(expectedTotal));
                 var quizzes = result.Quizzes.ToArray();
-
-                Assert.That(quizzes, Has.Length.EqualTo(1));
+                Assert.That(quizzes, Has.Length.EqualTo(expectedLength));
+                
                 var quiz1 = quizzes[0];
                 
 
-                Assert.That(quiz1.Title, Is.EqualTo("a"));
+                Assert.That(quiz1.Title, Is.EqualTo(expectedTitle));
             });
         }
     }
