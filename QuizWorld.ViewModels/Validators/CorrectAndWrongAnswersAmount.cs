@@ -1,4 +1,4 @@
-﻿using QuizWorld.ViewModels.Answer;
+using QuizWorld.ViewModels.Answer;
 using System.ComponentModel.DataAnnotations;
 using QuizWorld.Common.Constants.ValidationErrorMessages;
 using QuizWorld.Common.Constants.Types;

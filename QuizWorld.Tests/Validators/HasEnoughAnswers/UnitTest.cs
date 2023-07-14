@@ -1,4 +1,4 @@
-﻿using QuizWorld.Common.Constants.Types;
+using QuizWorld.Common.Constants.Types;
 using QuizWorld.Infrastructure.Data.Entities;
 using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Question;
