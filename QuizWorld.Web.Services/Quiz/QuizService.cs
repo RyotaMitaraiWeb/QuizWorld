@@ -189,9 +189,45 @@ namespace QuizWorld.Web.Services.QuizService
 
         }
 
-        public Task<CatalogueQuizViewModel> GetQuizzesByQuery(string query, int page, SortingCategories category, SortingOrders order, int pageSize = 6)
+        /// <summary>
+        /// Retrieves a paginated and sorted catalogue of quizzes whose title contains the given <paramref name="query"/> and the total amount of such quizzes.
+        /// </summary>
+        /// <param name="query">The string to be searched. The search is case insensitive and ignores spaces.</param>
+        /// <param name="page">The current page</param>
+        /// <param name="category">Category by which the result will be sorted</param>
+        /// <param name="order">The order by which the result will be sorted</param>
+        /// <param name="pageSize">The number of quizzes that will be retrieved</param>
+        /// <returns>A model that contains the total amount of quizzes whose title contains the given <paramref name="query"/> and the catalogue</returns>
+        public async Task<CatalogueQuizViewModel> GetQuizzesByQuery(string query, int page, SortingCategories category, SortingOrders order, int pageSize = 6)
         {
-            throw new NotImplementedException();
+            var queryList = this.repository
+                .AllReadonly<Quiz>()
+                .Where(q => !q.IsDeleted && q.NormalizedTitle.Contains(query.Normalized()));
+
+            int total = await queryList.CountAsync();
+
+            var quizzes = await queryList
+                .SortByOptions(category, order)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(q => new CatalogueQuizItemViewModel()
+                {
+                    Id = q.Id,
+                    Title = q.Title,
+                    Description = q.Description,
+                    InstantMode = q.InstantMode,
+                    CreatedOn = q.CreatedOn,
+                    UpdatedOn = q.UpdatedOn,
+                })
+                .ToListAsync();
+
+            var catalogue = new CatalogueQuizViewModel()
+            {
+                Total = total,
+                Quizzes = quizzes,
+            };
+
+            return catalogue;
         }
 
         /// <summary>

@@ -546,5 +546,63 @@ namespace QuizWorld.Tests.Services.QuizServiceUnitTests
                 Assert.That(quiz2.Title, Is.EqualTo("abcd"));
             });
         }
+
+        [Test]
+        [TestCase("a")]
+        [TestCase("A")]
+        public async Task Test_GetQuizzesByQueryReturnsAListOfQuizzesAndCorrectTotalCount(string query)
+        {
+            var date = DateTime.Now;
+            var list = new List<Quiz>()
+            {
+                new Quiz()
+                {
+                    Title = "aA",
+                    CreatedOn = date.AddDays(1),
+                    UpdatedOn = date.AddDays(2),
+                    NormalizedTitle = "AA",
+                },
+                new Quiz()
+                {
+                    Title = "AAA",
+                    CreatedOn = date.AddDays(3),
+                    UpdatedOn = date.AddDays(3),
+                    NormalizedTitle = "AAA",
+                },
+                new Quiz()
+                {
+                    Title = "a",
+                    CreatedOn = date,
+                    UpdatedOn = date,
+                    NormalizedTitle = "A",
+                },
+                new Quiz()
+                {
+                    Title = "d",
+                    CreatedOn = date.AddDays(-1),
+                    UpdatedOn = date,
+                    NormalizedTitle = "D",
+                },
+            };
+
+            var mockList = list.BuildMock();
+
+            this.repositoryMock
+                .Setup(r => r.AllReadonly<Quiz>())
+                .Returns(mockList);
+
+            var result = await this.service.GetQuizzesByQuery(query, 2, SortingCategories.Title, SortingOrders.Descending, 2);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Total, Is.EqualTo(3));
+                var quizzes = result.Quizzes.ToArray();
+
+                Assert.That(quizzes, Has.Length.EqualTo(1));
+                var quiz1 = quizzes[0];
+                
+
+                Assert.That(quiz1.Title, Is.EqualTo("a"));
+            });
+        }
     }
 }

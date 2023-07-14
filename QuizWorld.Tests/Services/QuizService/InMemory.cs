@@ -325,6 +325,29 @@ namespace QuizWorld.Tests.Services.QuizServiceInMemoryTests
             Assert.That(result2.Total, Is.Zero);
         }
 
+        [Test]
+        [TestCase("trivia")]
+        [TestCase("TRIVIA")]
+        [TestCase("trIViA")]
+        [TestCase("Capitals trivia")]
+        public async Task Test_GetQuizzesByQueryCorrectlyRetrievesAListOfQuizzesBasedOnParameters(string query)
+        {
+            var result = await this.service.GetQuizzesByQuery(query, 2, SortingCategories.CreatedOn, SortingOrders.Descending, 1);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Total, Is.EqualTo(2));
+                var quizzes = result.Quizzes;
+
+                Assert.That(quizzes.Count, Is.EqualTo(1));
+                var quiz = quizzes.First();
+                Assert.That(quiz.Title, Is.EqualTo(this.testDB.NonInstantQuiz.Title));
+            });
+
+            var result2 = await this.service.GetQuizzesByQuery("NONEXISTANT QUIZ", 2, SortingCategories.CreatedOn, SortingOrders.Descending, 1);
+            Assert.That(result2.Quizzes.Count, Is.Zero);
+        }
+
         private CreateQuizViewModel CreateQuizModel()
         {
             return new CreateQuizViewModel()
