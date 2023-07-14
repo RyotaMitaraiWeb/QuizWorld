@@ -2,6 +2,7 @@ using QuizWorld.Common.Constants.Types;
 using QuizWorld.Infrastructure.Data.Entities;
 using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Question;
+using QuizWorld.ViewModels.Quiz;
 using QuizWorld.ViewModels.Validators;
 using System.ComponentModel.DataAnnotations;
 
