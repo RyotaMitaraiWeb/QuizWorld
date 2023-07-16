@@ -32,9 +32,15 @@ namespace QuizWorld.Web.Services.QuizService
         /// <param name="quiz">The model of the quiz that will be created</param>
         /// <param name="userId">The ID of the creator. This will be converted to a Guid.</param>
         /// <returns>The ID of the created quiz if successful.</returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public async Task<int> CreateQuiz(CreateQuizViewModel quiz, string userId)
         {
-            var id = new Guid(userId);
+            bool isGuid = Guid.TryParse(userId, out var id);
+            if (!isGuid)
+            {
+                throw new InvalidOperationException("User ID is malformed (not a GUID)");
+            }
+
             return await this.CreateQuiz(quiz, id);
         }
 
