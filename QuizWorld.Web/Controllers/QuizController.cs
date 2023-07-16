@@ -71,6 +71,26 @@ namespace QuizWorld.Web.Controllers
             }
         }
 
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            try
+            {
+                var result = await this.quizService.DeleteQuizById(id);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                return NoContent();
+            }
+            catch
+            {
+                return StatusCode(503);
+            }
+        }
+
         //[HttpPost]
         //[AllowAnonymous]
         //[Route("create")]

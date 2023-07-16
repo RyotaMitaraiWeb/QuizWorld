@@ -166,5 +166,42 @@ namespace QuizWorld.Tests.Controllers.QuizControllerUnitTests
             Assert.That(response, Is.TypeOf<StatusCodeResult>());
 
         }
+
+        [Test]
+        public async Task Test_DeleteReturnsNoContentIfDeleteQuizByIdReturnsAnId()
+        {
+            this.quizServiceMock
+                .Setup(qs => qs.DeleteQuizById(1))
+                .ReturnsAsync(1);
+
+
+            var response = await this.controller.Delete(1);
+            Assert.That(response, Is.TypeOf<NoContentResult>());
+
+        }
+
+        [Test]
+        public async Task Test_DeleteReturnsNotFoundIfDeleteQuizByIdReturnsNull()
+        {
+            this.quizServiceMock
+                .Setup(qs => qs.DeleteQuizById(1))
+                .ReturnsAsync(() => null);
+
+
+            var response = await this.controller.Delete(1);
+            Assert.That(response, Is.TypeOf<NotFoundResult>());
+        }
+
+        [Test]
+        public async Task Test_DeleteReturnsServiceUnavailableIfDeleteQuizByIdThrows()
+        {
+            this.quizServiceMock
+                .Setup(qs => qs.DeleteQuizById(1))
+                .ThrowsAsync(new Exception());
+
+
+            var response = await this.controller.Delete(1);
+            Assert.That(response, Is.TypeOf<StatusCodeResult>());
+        }
     }
 }
