@@ -91,6 +91,26 @@ namespace QuizWorld.Web.Controllers
             }
         }
 
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<ActionResult> Edit([FromBody] EditQuizViewModel quiz, int id)
+        {
+            try
+            {
+                var result = await this.quizService.EditQuizById(id, quiz);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                return NoContent();
+            }
+            catch
+            {
+                return StatusCode(503);
+            }
+        }
+
         //[HttpPost]
         //[AllowAnonymous]
         //[Route("create")]

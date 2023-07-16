@@ -24,6 +24,7 @@ namespace QuizWorld.Tests.Controllers.QuizControllerUnitTests
         public UserViewModel user;
 
         public CreateQuizViewModel createQuizViewModel;
+        public EditQuizViewModel editQuizViewModel;
 
         [SetUp]
         public void Setup()
@@ -60,6 +61,13 @@ namespace QuizWorld.Tests.Controllers.QuizControllerUnitTests
                         },
                     },
                 },
+            };
+
+            this.editQuizViewModel = new EditQuizViewModel()
+            {
+                Title = "new title quiz",
+                Description = "new description quiz",
+                Questions = this.createQuizViewModel.Questions,
             };
         }
 
@@ -201,6 +209,39 @@ namespace QuizWorld.Tests.Controllers.QuizControllerUnitTests
 
 
             var response = await this.controller.Delete(1);
+            Assert.That(response, Is.TypeOf<StatusCodeResult>());
+        }
+
+        [Test]
+        public async Task Test_EditReturnsNoContentIfEditQuizByIdReturnsAnId()
+        {
+            this.quizServiceMock
+                .Setup(qs => qs.EditQuizById(1, this.editQuizViewModel))
+                .ReturnsAsync(1);
+
+            var response = await this.controller.Edit(this.editQuizViewModel, 1);
+            Assert.That(response, Is.TypeOf<NoContentResult>());
+        }
+
+        [Test]
+        public async Task Test_EditReturnsNotFoundIfEditQuizByIdReturnsNull()
+        {
+            this.quizServiceMock
+                .Setup(qs => qs.EditQuizById(1, this.editQuizViewModel))
+                .ReturnsAsync(() => null);
+
+            var response = await this.controller.Edit(this.editQuizViewModel, 1);
+            Assert.That(response, Is.TypeOf<NotFoundResult>());
+        }
+
+        [Test]
+        public async Task Test_EditReturnsServiceUnavailableIfEditQuizByIdThrows()
+        {
+            this.quizServiceMock
+                .Setup(qs => qs.EditQuizById(1, this.editQuizViewModel))
+                .ThrowsAsync(new Exception());
+
+            var response = await this.controller.Edit(this.editQuizViewModel, 1);
             Assert.That(response, Is.TypeOf<StatusCodeResult>());
         }
     }
