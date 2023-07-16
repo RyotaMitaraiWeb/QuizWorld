@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
+using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Common.Constants.Types;
 using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Authentication;
@@ -25,6 +26,7 @@ namespace QuizWorld.Tests.Controllers.QuizControllerUnitTests
 
         public CreateQuizViewModel createQuizViewModel;
         public EditQuizViewModel editQuizViewModel;
+        public CatalogueQuizViewModel catalogue;
 
         [SetUp]
         public void Setup()
@@ -68,6 +70,23 @@ namespace QuizWorld.Tests.Controllers.QuizControllerUnitTests
                 Title = "new title quiz",
                 Description = "new description quiz",
                 Questions = this.createQuizViewModel.Questions,
+            };
+
+            this.catalogue = new CatalogueQuizViewModel()
+            {
+                Total = 3,
+                Quizzes = new List<CatalogueQuizItemViewModel>()
+                {
+                    new CatalogueQuizItemViewModel()
+                    {
+                        Title = "test",
+                        Description = "a",
+                        CreatedOn = DateTime.Now,
+                        UpdatedOn = DateTime.Now,
+                        Id = 1,
+                        InstantMode = true,
+                    }
+                }
             };
         }
 
@@ -242,6 +261,37 @@ namespace QuizWorld.Tests.Controllers.QuizControllerUnitTests
                 .ThrowsAsync(new Exception());
 
             var response = await this.controller.Edit(this.editQuizViewModel, 1);
+            Assert.That(response, Is.TypeOf<StatusCodeResult>());
+        }
+
+        [Test]
+        public async Task Test_GetAllReturnsOkWithACatalogueIfGetAllQuizzesDoesNotThrow()
+        {
+            this.quizServiceMock
+                .Setup(qs => qs.GetAllQuizzes(1, SortingCategories.Title, SortingOrders.Ascending, 6))
+                .ReturnsAsync(this.catalogue);
+
+            var response = await this.controller.GetAll(1, SortingCategories.Title, SortingOrders.Ascending) as OkObjectResult;
+            var value = response.Value as CatalogueQuizViewModel;
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(value.Total, Is.EqualTo(3));
+                var quiz = value.Quizzes.First();
+
+                Assert.That(quiz.Title, Is.EqualTo("test"));
+                Assert.That(quiz.Id, Is.EqualTo(1));
+            });
+        }
+
+        [Test]
+        public async Task Test_GetAllReturnsServiceUnavailableIfGetAllQuizzesThrows()
+        {
+            this.quizServiceMock
+                .Setup(qs => qs.GetAllQuizzes(1, SortingCategories.Title, SortingOrders.Ascending, 6))
+                .ThrowsAsync(new Exception());
+
+            var response = await this.controller.GetAll(1, SortingCategories.Title, SortingOrders.Ascending);
             Assert.That(response, Is.TypeOf<StatusCodeResult>());
         }
     }

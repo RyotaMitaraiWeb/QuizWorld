@@ -25,6 +25,24 @@ namespace QuizWorld.Web.Controllers
             this.jwtService = jwtService;
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("all")]
+        public async Task<ActionResult> GetAll(
+            [ModelBinder(BinderType = typeof(PaginationModelBinder))] int page,
+            [ModelBinder(BinderType = typeof(SortingCategoryModelBinder))] SortingCategories category,
+            [ModelBinder(BinderType = typeof(SortingOrderModelBinder))] SortingOrders order)
+        {
+            try
+            {
+                var catalogue = await this.quizService.GetAllQuizzes(page, category, order, 6);
+                return Ok(catalogue);
+            }
+            catch
+            {
+                return StatusCode(503);
+            }
+        }
 
         [HttpPost]
         [Route("create")]
