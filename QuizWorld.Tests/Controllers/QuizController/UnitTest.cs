@@ -122,5 +122,49 @@ namespace QuizWorld.Tests.Controllers.QuizControllerUnitTests
 
             Assert.That(response, Is.TypeOf<UnauthorizedResult>());
         }
+
+        [Test]
+        public async Task Test_GetReturnsOkWithTheReturnedQuiz()
+        {
+            this.quizServiceMock
+                .Setup(qs => qs.GetQuizById(1))
+                .ReturnsAsync(new QuizViewModel { Id = 1, Title = "test" });
+
+
+            var response = await this.controller.Get(1) as OkObjectResult;
+            var value = response.Value as QuizViewModel;
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(value.Title, Is.EqualTo("test"));
+                Assert.That(value.Id, Is.EqualTo(1));
+            });
+        }
+
+        [Test]
+        public async Task Test_GetReturnsNotFoundIfGetQuizReturnsNull()
+        {
+            this.quizServiceMock
+                .Setup(qs => qs.GetQuizById(1))
+                .ReturnsAsync(() => null);
+
+
+            var response = await this.controller.Get(1);
+            Assert.That(response, Is.TypeOf<NotFoundResult>());
+            
+        }
+
+        [Test]
+        public async Task Test_GetReturnsServiceUnavailableIfGetQuizThrows()
+        {
+            this.quizServiceMock
+                .Setup(qs => qs.GetQuizById(1))
+                .ThrowsAsync(new Exception());
+
+
+            var response = await this.controller.Get(1);
+            Assert.That(response, Is.TypeOf<StatusCodeResult>());
+
+        }
     }
 }

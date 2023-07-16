@@ -50,6 +50,27 @@ namespace QuizWorld.Web.Controllers
             }
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("{id}")]
+        public async Task<ActionResult> Get(int id)
+        {
+            try
+            {
+                var quiz = await this.quizService.GetQuizById(id);
+                if (quiz == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(quiz);
+            }
+            catch
+            {
+                return StatusCode(503);
+            }
+        }
+
         //[HttpPost]
         //[AllowAnonymous]
         //[Route("create")]
