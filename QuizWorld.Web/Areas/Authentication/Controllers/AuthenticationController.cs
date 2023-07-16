@@ -27,6 +27,8 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
+        [GuestsOnly]
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] RegisterViewModel register)
         {
