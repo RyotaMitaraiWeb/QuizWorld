@@ -68,6 +68,26 @@ namespace QuizWorld.Web.Controllers
             }
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("/search")]
+        public async Task<ActionResult> Search(
+            [ModelBinder(BinderType = typeof(PaginationModelBinder))] int page,
+            [ModelBinder(BinderType = typeof(SortingCategoryModelBinder))] SortingCategories category,
+            [ModelBinder(BinderType = typeof(SortingOrderModelBinder))] SortingOrders order,
+            [FromQuery] string search)
+        {
+            try
+            {
+                var catalogue = await this.quizService.GetQuizzesByQuery(search, page, category, order, 6);
+                return Ok(catalogue);
+            }
+            catch
+            {
+                return StatusCode(503);
+            }
+        }
+
         [HttpPost]
         [Route("create")]
         public async Task<ActionResult> Create([FromBody] CreateQuizViewModel quiz, [FromHeader(Name = "Authorization")] string? token)

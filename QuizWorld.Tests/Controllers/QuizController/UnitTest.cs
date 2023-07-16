@@ -336,5 +336,36 @@ namespace QuizWorld.Tests.Controllers.QuizControllerUnitTests
             var response = await this.controller.GetUserQuizzes(1, SortingCategories.Title, SortingOrders.Ascending, "a");
             Assert.That(response, Is.TypeOf<BadRequestResult>());
         }
+
+        [Test]
+        public async Task Test_SearchReturnsOkWithACatalogueIfGetQuizzesByQueryDoesNotThrow()
+        {
+            this.quizServiceMock
+                .Setup(qs => qs.GetQuizzesByQuery("e", 1, SortingCategories.Title, SortingOrders.Ascending, 6))
+                .ReturnsAsync(this.catalogue);
+
+            var response = await this.controller.Search(1, SortingCategories.Title, SortingOrders.Ascending, "e") as OkObjectResult;
+            var value = response.Value as CatalogueQuizViewModel;
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(value.Total, Is.EqualTo(3));
+                var quiz = value.Quizzes.First();
+
+                Assert.That(quiz.Title, Is.EqualTo("test"));
+                Assert.That(quiz.Id, Is.EqualTo(1));
+            });
+        }
+
+        [Test]
+        public async Task Test_SearchReturnsServiceUnavailableIfGetQuizzesByQueryThrowsAnException()
+        {
+            this.quizServiceMock
+                .Setup(qs => qs.GetQuizzesByQuery("e", 1, SortingCategories.Title, SortingOrders.Ascending, 6))
+                .ThrowsAsync(new Exception());
+
+            var response = await this.controller.Search(1, SortingCategories.Title, SortingOrders.Ascending, "e");
+            Assert.That(response, Is.TypeOf<StatusCodeResult>());
+        }
     }
 }
