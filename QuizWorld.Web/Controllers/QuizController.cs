@@ -134,6 +134,7 @@ namespace QuizWorld.Web.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Policy = "CanDeleteQuiz", AuthenticationSchemes = "Bearer")]
         [Route("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
@@ -154,6 +155,7 @@ namespace QuizWorld.Web.Controllers
         }
 
         [HttpPut]
+        [Authorize(Policy = "CanEditQuiz", AuthenticationSchemes = "Bearer")]
         [Route("{id}")]
         public async Task<ActionResult> Edit([FromBody] EditQuizViewModel quiz, int id)
         {
