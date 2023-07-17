@@ -174,22 +174,5 @@ namespace QuizWorld.Web.Controllers
                 return StatusCode(503);
             }
         }
-
-        //[HttpPost]
-        //[AllowAnonymous]
-        //[Route("create")]
-        //public CreateQuizViewModel Create([FromBody] CreateQuizViewModel quiz)
-        //{
-        //    return quiz;
-        //}
-
-        [HttpGet]
-        [AllowAnonymous]
-        [Route("page")]
-        public object Page([ModelBinder(BinderType = typeof(SortingOrderModelBinder))] SortingOrders order)
-        {
-
-            return order;
-        }
     }
 }
