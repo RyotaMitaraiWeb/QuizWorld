@@ -20,6 +20,7 @@ namespace QuizWorld.Infrastructure.Data
         {
             base.OnModelCreating(builder);
             builder.ApplyConfiguration(new RoleConfigurer());
+            builder.ApplyConfiguration(new QuestionTypesConfigurer());
         }
 
         public DbSet<Quiz> Quizzes { get; set; }
