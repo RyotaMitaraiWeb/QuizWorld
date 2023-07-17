@@ -18,6 +18,12 @@ using QuizWorld.Web.Contracts.JsonWebToken;
 using QuizWorld.Web.Services.JsonWebToken;
 using QuizWorld.Infrastructure.Filters.GuestsOnly;
 using QuizWorld.Infrastructure.AuthConfig;
+using QuizWorld.Infrastructure.AuthConfig.CanPerformOwnerAction;
+using QuizWorld.Web.Contracts.Quiz;
+using QuizWorld.Web.Services.QuizService;
+using QuizWorld.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Policy;
 
 namespace QuizWorld.Web
 {
@@ -36,6 +42,7 @@ namespace QuizWorld.Web
             });
 
             builder.Services.AddHttpContextAccessor();
+            builder.Services.AddLogging();
             builder.Services.AddHostedService<IndexCreationService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddSingleton(new RedisConnectionProvider(builder.Configuration["REDIS_CONNECTION_STRING"]));
@@ -43,6 +50,9 @@ namespace QuizWorld.Web
             builder.Services.AddSingleton<IJwtBlacklist, JwtBlacklistService>();
             builder.Services.AddScoped<AppJwtBearerEvents>();
             builder.Services.AddSingleton<GuestsOnlyFilter>();
+            builder.Services.AddScoped<IRepository, Repository>();
+            builder.Services.AddScoped<IQuizService, QuizService>();
+            builder.Services.AddScoped<IAuthorizationHandler, CanPerformOwnerActionHandler>();
 
             builder.Services.AddDbContext<QuizWorldDbContext>(options =>
             {
@@ -127,6 +137,18 @@ namespace QuizWorld.Web
                         },
                         Array.Empty<string>()
                     }
+                });
+            });
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("CanEditQuiz", policy =>
+                {
+                    policy.Requirements.Add(new CanPerformOwnerActionRequirement("Moderator"));
+                });
+                options.AddPolicy("CanDeleteQuiz", policy =>
+                {
+                    policy.Requirements.Add(new CanPerformOwnerActionRequirement("Moderator"));
                 });
             });
 
