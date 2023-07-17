@@ -89,7 +89,6 @@ namespace QuizWorld.Web.Controllers
         }
 
         [HttpPost]
-        [Route("create")]
         public async Task<ActionResult> Create([FromBody] CreateQuizViewModel quiz, [FromHeader(Name = "Authorization")] string? token)
         {
             try
