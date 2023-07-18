@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace QuizWorld.ViewModels.Question
@@ -14,5 +15,8 @@ namespace QuizWorld.ViewModels.Question
     {
         public string Id { get; set; } = string.Empty;
         public IEnumerable<AnswerViewModel> Answers = Enumerable.Empty<AnswerViewModel>();
+
+        [JsonIgnore]
+        public bool InstantMode;
     }
 }
