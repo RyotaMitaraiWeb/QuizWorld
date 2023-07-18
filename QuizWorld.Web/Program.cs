@@ -24,6 +24,7 @@ using QuizWorld.Web.Services.QuizService;
 using QuizWorld.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
+using QuizWorld.Web.Services.GradeService;
 
 namespace QuizWorld.Web
 {
@@ -52,6 +53,7 @@ namespace QuizWorld.Web
             builder.Services.AddSingleton<GuestsOnlyFilter>();
             builder.Services.AddScoped<IRepository, Repository>();
             builder.Services.AddScoped<IQuizService, QuizService>();
+            builder.Services.AddScoped<IGradeService, GradeService>();
             builder.Services.AddScoped<IAuthorizationHandler, CanPerformOwnerActionHandler>();
 
             builder.Services.AddDbContext<QuizWorldDbContext>(options =>
