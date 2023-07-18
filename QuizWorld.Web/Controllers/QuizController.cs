@@ -46,7 +46,7 @@ namespace QuizWorld.Web.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        [Route("/user/{id}")]
+        [Route("user/{id}")]
         public async Task<ActionResult> GetUserQuizzes(
             [ModelBinder(BinderType = typeof(PaginationModelBinder))] int page,
             [ModelBinder(BinderType = typeof(SortingCategoryModelBinder))] SortingCategories category,
