@@ -52,7 +52,7 @@ namespace QuizWorld.Tests.Services.GradeServiceUnitTests
             Assert.Multiple(() =>
             {
                 Assert.That(result.Answers.Count(), Is.EqualTo(1));
-                Assert.That(result.Answers.First().Id.ToString(), Is.EqualTo(id));
+                Assert.That(result.Answers.First().Value, Is.EqualTo("c"));
             });
         }
 
@@ -68,7 +68,7 @@ namespace QuizWorld.Tests.Services.GradeServiceUnitTests
             Assert.Multiple(() =>
             {
                 Assert.That(result.Answers.Count(), Is.EqualTo(1));
-                Assert.That(result.Answers.First().Id.ToString(), Is.EqualTo(id.ToString()));
+                Assert.That(result.Answers.First().Value, Is.EqualTo("c"));
             });
         }
 
@@ -177,13 +177,13 @@ namespace QuizWorld.Tests.Services.GradeServiceUnitTests
                         new Answer()
                         {
                             Id = Guid.NewGuid(),
-                            Value = "a",
+                            Value = "c",
                             Correct = true,
                         },
                         new Answer()
                         {
                             Id = Guid.NewGuid(),
-                            Value = "b",
+                            Value = "d",
                             Correct = false,
                         }
                     }

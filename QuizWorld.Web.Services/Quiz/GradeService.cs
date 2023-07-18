@@ -1,4 +1,7 @@
-﻿using QuizWorld.Infrastructure;
+﻿using Microsoft.EntityFrameworkCore;
+using QuizWorld.Infrastructure;
+using QuizWorld.Infrastructure.Data.Entities;
+using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Question;
 using QuizWorld.Web.Contracts.Quiz;
 using System;
@@ -19,14 +22,47 @@ namespace QuizWorld.Web.Services.GradeService
         {
             this.repository = repository;
         }
-        public Task<GradedQuestionViewModel> GetCorrectAnswersForQuestionById(Guid questionId, int version)
+        public async Task<GradedQuestionViewModel?> GetCorrectAnswersForQuestionById(Guid questionId, int version)
         {
-            throw new NotImplementedException();
+            var question = await this.repository
+                .AllReadonly<Question>()
+                .Where(q => q.Id == questionId && q.Version == version && !q.Quiz.IsDeleted)
+                .Select(q => new GradedQuestionViewModel()
+                {
+                    Id = q.Id.ToString(),
+                    Answers = q.Answers
+                        .Where(a => a.Correct)
+                        .Select(a => new AnswerViewModel()
+                        {
+                            Id = a.Id.ToString(),
+                            Value = a.Value,
+                        }),
+                    InstantMode = q.Quiz.InstantMode,
+                })
+                .FirstOrDefaultAsync();
+
+            if (question == null)
+            {
+                return null;
+            }
+
+            if (!question.InstantMode)
+            {
+                throw new InvalidOperationException("This question cannot be graded individually because the quiz is not in instant mode");
+            }
+
+            return question;
         }
 
-        public Task<GradedQuestionViewModel> GetCorrectAnswersForQuestionById(string questionId, int version)
+        public async Task<GradedQuestionViewModel?> GetCorrectAnswersForQuestionById(string questionId, int version)
         {
-            throw new NotImplementedException();
+            bool isGuid = Guid.TryParse(questionId, out Guid id);
+            if (!isGuid)
+            {
+                throw new ArgumentException("questionId is an invalid GUID");
+            }
+
+            return await this.GetCorrectAnswersForQuestionById(id, version);
         }
 
         public Task<IEnumerable<GradedQuestionViewModel>> GetCorrectAnswersForQuestionsByQuizId(int quizId, int version)
