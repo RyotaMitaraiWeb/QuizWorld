@@ -9,8 +9,8 @@ namespace QuizWorld.Web.Contracts.Quiz
 {
     public interface IGradeService
     {
-        Task<GradedQuestionViewModel> GetCorrectAnswersForQuestionById(Guid questionId, int version);
-        Task<GradedQuestionViewModel> GetCorrectAnswersForQuestionById(string questionId, int version);
+        Task<GradedQuestionViewModel?> GetCorrectAnswersForQuestionById(Guid questionId, int version);
+        Task<GradedQuestionViewModel?> GetCorrectAnswersForQuestionById(string questionId, int version);
 
         Task<IEnumerable<GradedQuestionViewModel>> GetCorrectAnswersForQuestionsByQuizId(int quizId, int version);
     }
