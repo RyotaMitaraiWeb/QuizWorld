@@ -70,7 +70,7 @@ namespace QuizWorld.Web.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        [Route("/search")]
+        [Route("search")]
         public async Task<ActionResult> Search(
             [ModelBinder(BinderType = typeof(PaginationModelBinder))] int page,
             [ModelBinder(BinderType = typeof(SortingCategoryModelBinder))] SortingCategories category,
