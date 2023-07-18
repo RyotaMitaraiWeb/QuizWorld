@@ -22,6 +22,15 @@ namespace QuizWorld.Web.Services.GradeService
         {
             this.repository = repository;
         }
+
+        /// <summary>
+        /// Gets the correct answers for the question with the given <paramref name="questionId"/> and the given <paramref name="version"/>.
+        /// Throws InvalidOperationException if the quiz is not in instant mode.
+        /// </summary>
+        /// <param name="questionId">The ID of the question to be graded</param>
+        /// <param name="version">The version of the question whose answers will be retrieved</param>
+        /// <returns>A view model of a graded question or null if the question does not exist or the quiz is deleted</returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public async Task<GradedQuestionViewModel?> GetCorrectAnswersForQuestionById(Guid questionId, int version)
         {
             var question = await this.repository
@@ -54,6 +63,15 @@ namespace QuizWorld.Web.Services.GradeService
             return question;
         }
 
+        /// <summary>
+        /// Gets the correct answers for the question with the given <paramref name="questionId"/> and the given <paramref name="version"/>.
+        /// Throws InvalidOperationException if the quiz is not in instant mode.
+        /// </summary>
+        /// <param name="questionId">The ID of the question to be graded</param>
+        /// <param name="version">The version of the question whose answers will be retrieved</param>
+        /// <returns>A view model of a graded question or null if the question does not exist or the quiz is deleted</returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="ArgumentException"></exception>
         public async Task<GradedQuestionViewModel?> GetCorrectAnswersForQuestionById(string questionId, int version)
         {
             bool isGuid = Guid.TryParse(questionId, out Guid id);
