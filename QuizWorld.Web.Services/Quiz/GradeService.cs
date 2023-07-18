@@ -91,7 +91,7 @@ namespace QuizWorld.Web.Services.GradeService
         /// <param name="version">The version of the questions that have to be retrieved.</param>
         /// <returns>A list of graded questions or null if the list is empty.</returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public async Task<IEnumerable<GradedQuestionViewModel>> GetCorrectAnswersForQuestionsByQuizId(int quizId, int version)
+        public async Task<IEnumerable<GradedQuestionViewModel>?> GetCorrectAnswersForQuestionsByQuizId(int quizId, int version)
         {
             var questions = await this.repository
                 .AllReadonly<Question>()
