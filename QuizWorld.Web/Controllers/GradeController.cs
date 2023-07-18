@@ -19,9 +19,26 @@ namespace QuizWorld.Web.Controllers
 
         [Route("{id}/question")]
         [HttpGet]
-        public Task<ActionResult> GetCorrectAnswersForQuestion(string id, [FromQuery] int version)
+        public async Task<ActionResult> GetCorrectAnswersForQuestion(string id, [FromQuery] int version)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var result = await this.gradeService.GetCorrectAnswersForQuestionById(id, version);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(result);
+            }
+            catch (InvalidOperationException)
+            {
+                return BadRequest();
+            }
+            catch
+            {
+                return StatusCode(503);
+            }
         }
 
         [Route("{id}/quiz")]
