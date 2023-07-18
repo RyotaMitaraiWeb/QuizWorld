@@ -25,6 +25,7 @@ using QuizWorld.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using QuizWorld.Web.Services.GradeService;
+using QuizWorld.Infrastructure.AuthConfig.CanAccessLogs;
 
 namespace QuizWorld.Web
 {
@@ -55,6 +56,7 @@ namespace QuizWorld.Web
             builder.Services.AddScoped<IQuizService, QuizService>();
             builder.Services.AddScoped<IGradeService, GradeService>();
             builder.Services.AddScoped<IAuthorizationHandler, CanPerformOwnerActionHandler>();
+            builder.Services.AddScoped<IAuthorizationHandler, CanAccessLogsHandler>();
 
             builder.Services.AddDbContext<QuizWorldDbContext>(options =>
             {
@@ -148,9 +150,15 @@ namespace QuizWorld.Web
                 {
                     policy.Requirements.Add(new CanPerformOwnerActionRequirement("Moderator"));
                 });
+
                 options.AddPolicy("CanDeleteQuiz", policy =>
                 {
                     policy.Requirements.Add(new CanPerformOwnerActionRequirement("Moderator"));
+                });
+
+                options.AddPolicy("CanAccessLogs", policy =>
+                {
+                    policy.Requirements.Add(new CanAccessLogsRequirement("Administrator"));
                 });
             });
 
