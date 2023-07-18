@@ -91,7 +91,7 @@ namespace QuizWorld.Tests.Controllers.GradeControllerUnitTests
         }
 
         [Test]
-        public async Task Test_GetCorrectAnswersForQuiznReturnsOkWithTheGradedQuestionsFromGradeService()
+        public async Task Test_GetCorrectAnswersForQuizReturnsOkWithTheGradedQuestionsFromGradeService()
         {
             var list = new List<GradedQuestionViewModel> { this.question };
             this.gradeServiceMock
@@ -105,7 +105,7 @@ namespace QuizWorld.Tests.Controllers.GradeControllerUnitTests
         }
 
         [Test]
-        public async Task Test_GetCorrectAnswersForQuiznReturnsBadRequestIfGradeServiceThrowsAnInvalidOperationException()
+        public async Task Test_GetCorrectAnswersForQuizReturnsBadRequestIfGradeServiceThrowsAnInvalidOperationException()
         {
             var list = new List<GradedQuestionViewModel> { this.question };
             this.gradeServiceMock
@@ -117,7 +117,7 @@ namespace QuizWorld.Tests.Controllers.GradeControllerUnitTests
         }
 
         [Test]
-        public async Task Test_GetCorrectAnswersForQuiznReturnsServiceUnavailableIfGradeServiceThrowsAGenericException()
+        public async Task Test_GetCorrectAnswersForQuizReturnsServiceUnavailableIfGradeServiceThrowsAGenericException()
         {
             var list = new List<GradedQuestionViewModel> { this.question };
             this.gradeServiceMock
@@ -129,7 +129,7 @@ namespace QuizWorld.Tests.Controllers.GradeControllerUnitTests
         }
 
         [Test]
-        public async Task Test_GetCorrectAnswersForQuiznReturnsNotFoundIfGradeServiceReturnsNull()
+        public async Task Test_GetCorrectAnswersForQuizReturnsNotFoundIfGradeServiceReturnsNull()
         {
             var list = new List<GradedQuestionViewModel> { this.question };
             this.gradeServiceMock
