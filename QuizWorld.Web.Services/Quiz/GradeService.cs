@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuizWorld.Web.Services.Quiz
+namespace QuizWorld.Web.Services.GradeService
 {
     /// <summary>
     /// A service for retrieving correct answers of quizzes or questions.
