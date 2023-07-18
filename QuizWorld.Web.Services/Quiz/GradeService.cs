@@ -83,9 +83,44 @@ namespace QuizWorld.Web.Services.GradeService
             return await this.GetCorrectAnswersForQuestionById(id, version);
         }
 
-        public Task<IEnumerable<GradedQuestionViewModel>> GetCorrectAnswersForQuestionsByQuizId(int quizId, int version)
+        /// <summary>
+        /// Gets the correct answers for all questions with the given <paramref name="version"/> of the quiz with the given <paramref name="quizId"/>.
+        /// Throws InvalidOperationException if the quiz is in instant mode.
+        /// </summary>
+        /// <param name="quizId">The ID of the quiz</param>
+        /// <param name="version">The version of the questions that have to be retrieved.</param>
+        /// <returns>A list of graded questions or null if the list is empty.</returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public async Task<IEnumerable<GradedQuestionViewModel>> GetCorrectAnswersForQuestionsByQuizId(int quizId, int version)
         {
-            throw new NotImplementedException();
+            var questions = await this.repository
+                .AllReadonly<Question>()
+                .Where(q => q.QuizId == quizId && q.Version == version && !q.Quiz.IsDeleted)
+                .Select(q => new GradedQuestionViewModel()
+                {
+                    Id = q.Id.ToString(),
+                    Answers = q.Answers
+                        .Where(a => a.Correct)
+                        .Select(a => new AnswerViewModel()
+                        {
+                            Id = a.Id.ToString(),
+                            Value = a.Value,
+                        }),
+                    InstantMode = q.Quiz.InstantMode,
+                })
+                .ToListAsync();
+
+            if (!questions.Any())
+            {
+                return null;
+            }
+
+            if (questions.First().InstantMode)
+            {
+                throw new InvalidOperationException("You cannot grade this quiz's questions at once because the quiz is in instant mode");
+            }
+
+            return questions;
         }
     }
 }

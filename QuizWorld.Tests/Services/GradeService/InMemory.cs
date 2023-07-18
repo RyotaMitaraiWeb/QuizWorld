@@ -75,7 +75,7 @@ namespace QuizWorld.Tests.Services.GradeServiceInMemoryTests
         [TestCase(2, 3)]
         public async Task Test_GetCorrectAnswersForQuestionsByQuizIdReturnsAListOfGradedQuestionsForTheRespectiveVersion(int version, int expectedAmountOfQuestions)
         {
-            var quiz = this.testDb.Quiz;
+            var quiz = this.testDb.NonInstantQuiz;
 
             var result = await this.service.GetCorrectAnswersForQuestionsByQuizId(quiz.Id, version);
 
@@ -98,7 +98,7 @@ namespace QuizWorld.Tests.Services.GradeServiceInMemoryTests
         [Test]
         public async Task Test_GetCorrectAnswersForQuestionsByQuizIdThrowsInvalidOperationExceptionIfTheQuizIsInInstantMode()
         {
-            var quiz = this.testDb.NonInstantQuiz;
+            var quiz = this.testDb.Quiz;
             
 
             try
