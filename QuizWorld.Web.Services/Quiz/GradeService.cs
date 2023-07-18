@@ -1,4 +1,5 @@
-﻿using QuizWorld.ViewModels.Question;
+﻿using QuizWorld.Infrastructure;
+using QuizWorld.ViewModels.Question;
 using QuizWorld.Web.Contracts.Quiz;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,11 @@ namespace QuizWorld.Web.Services.Quiz
     /// </summary>
     public class GradeService : IGradeService
     {
+        private readonly IRepository repository;
+        public GradeService(IRepository repository)
+        {
+            this.repository = repository;
+        }
         public Task<GradedQuestionViewModel> GetCorrectAnswersForQuestionById(Guid questionId, int version)
         {
             throw new NotImplementedException();
