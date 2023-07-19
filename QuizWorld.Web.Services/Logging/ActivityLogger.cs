@@ -1,4 +1,5 @@
-﻿using QuizWorld.Common.Constants.Sorting;
+﻿using Microsoft.EntityFrameworkCore;
+using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Infrastructure;
 using QuizWorld.Infrastructure.Data.Entities.Logging;
 using QuizWorld.ViewModels.Logging;
@@ -46,10 +47,35 @@ namespace QuizWorld.Web.Services.Logging
         /// </summary>
         /// <param name="page">The current page</param>
         /// <param name="order">The order in which the logs will be sorted. All logs are sorted by their date.</param>
+        /// <param name="pageSize">The amount of logs to be taken</param>
         /// <returns>A paginated and sorted list of activity logs.</returns>
-        public Task<IEnumerable<ActivityLogViewModel>> RetrieveLogs(int page, SortingOrders order, int pageSize = 6)
+        public async Task<IEnumerable<ActivityLogViewModel>> RetrieveLogs(int page, SortingOrders order, int pageSize = 6)
         {
-            throw new NotImplementedException();
+            var query = this.repository
+                .AllReadonly<ActivityLog>();
+
+            IQueryable<ActivityLog> sortedQuery;
+            if (order == SortingOrders.Ascending)
+            {
+                sortedQuery = query.OrderBy(al => al.Date);
+            }
+            else
+            {
+                sortedQuery = query.OrderByDescending(al => al.Date);
+            }
+
+            var logs = await sortedQuery
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(al => new ActivityLogViewModel
+                {
+                    Id = al.Id.ToString(),
+                    Message = al.Message,
+                    Date = al.Date,
+                })
+                .ToListAsync();
+
+            return logs;
         }
     }
 }
