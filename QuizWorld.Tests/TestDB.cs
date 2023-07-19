@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using QuizWorld.Infrastructure;
 using QuizWorld.Common.Constants.Types;
+using QuizWorld.Infrastructure.Data.Entities.Logging;
 
 namespace QuizWorld.Tests
 {
@@ -46,7 +47,11 @@ namespace QuizWorld.Tests
         public Quiz Quiz { get; private set; }
         public Quiz DeletedQuiz { get; private set; }
         public Quiz NonInstantQuiz { get; private set; }
-        
+
+        public ActivityLog Log1 { get; set; }
+        public ActivityLog Log2 { get; set; }
+        public ActivityLog Log3 { get; set; }
+
         public QuizWorldDbContext CreateDbContext()
         {
             var optionsBuilder = new DbContextOptionsBuilder<QuizWorldDbContext>();
@@ -156,6 +161,16 @@ namespace QuizWorld.Tests
             this.repository.AddAsync(this.DeletedQuiz).Wait();
             this.repository.AddAsync(this.NonInstantQuiz).Wait();
             this.repository.SaveChangesAsync().Wait();
+
+            var logs = this.CreateLogs().ToArray();
+            var log1 = logs[0];
+            var log2 = logs[1];
+            var log3 = logs[2];
+
+            this.repository.AddAsync(log1).Wait();
+            this.repository.AddAsync(log2).Wait();
+            this.repository.AddAsync(log3).Wait();
+            this.repository.SaveChangesAsync().Wait();
         }
 
         private Quiz CreateSeededQuiz(bool deleted = false, bool instantMode = true)
@@ -177,6 +192,22 @@ namespace QuizWorld.Tests
 
             return quiz;
             
+        }
+
+        private IEnumerable<ActivityLog> CreateLogs()
+        {
+            var logs = new List<ActivityLog>();
+            for (int i = 0; i < 3; i++)
+            {
+                logs.Add(new ActivityLog()
+                {
+                    Id = Guid.NewGuid(),
+                    Message = $"Message #{i + 1}",
+                    Date = DateTime.Now.AddDays(i),
+                });
+            }
+
+            return logs;
         }
 
         private IEnumerable<Question> CreateQuestions()
