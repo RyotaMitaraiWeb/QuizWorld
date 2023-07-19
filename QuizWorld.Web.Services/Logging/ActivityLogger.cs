@@ -1,4 +1,5 @@
 ﻿using QuizWorld.Common.Constants.Sorting;
+using QuizWorld.Infrastructure;
 using QuizWorld.ViewModels.Logging;
 using QuizWorld.Web.Contracts.Logging;
 using System;
@@ -14,6 +15,13 @@ namespace QuizWorld.Web.Services.Logging
     /// </summary>
     public class ActivityLogger : IActivityLogger
     {
+        private readonly IRepository repository;
+
+        public ActivityLogger(IRepository repository)
+        {
+            this.repository = repository;
+        }
+
         /// <summary>
         /// Logs an activity that happened on the given <paramref name="date"/> 
         /// </summary>
