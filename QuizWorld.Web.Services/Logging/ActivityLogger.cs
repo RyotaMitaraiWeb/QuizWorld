@@ -38,7 +38,7 @@ namespace QuizWorld.Web.Services.Logging
         /// <param name="page">The current page</param>
         /// <param name="order">The order in which the logs will be sorted. All logs are sorted by their date.</param>
         /// <returns>A paginated and sorted list of activity logs.</returns>
-        public Task<IEnumerable<ActivityLogViewModel>> RetrieveLogs(int page, SortingOrders order)
+        public Task<IEnumerable<ActivityLogViewModel>> RetrieveLogs(int page, SortingOrders order, int pageSize = 6)
         {
             throw new NotImplementedException();
         }

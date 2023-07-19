@@ -33,7 +33,7 @@ namespace QuizWorld.Tests.Services.ActivityLoggerUnitTests
                 .Setup(r => r.AllReadonly<ActivityLog>())
                 .Returns(this.GenerateMockLogs(3));
 
-            var result = await this.logger.RetrieveLogs(1, order);
+            var result = await this.logger.RetrieveLogs(1, order, 1);
 
             Assert.That(result.Count(), Is.EqualTo(1));
 
