@@ -1,9 +1,11 @@
 ﻿using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Infrastructure;
+using QuizWorld.Infrastructure.Data.Entities.Logging;
 using QuizWorld.ViewModels.Logging;
 using QuizWorld.Web.Contracts.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,9 +29,16 @@ namespace QuizWorld.Web.Services.Logging
         /// </summary>
         /// <param name="message">The content of the log</param>
         /// <param name="date">The date on which the activity happened</param>
-        public Task LogActivity(string message, DateTime date)
+        public async Task LogActivity(string message, DateTime date)
         {
-            throw new NotImplementedException();
+            var log = new ActivityLog()
+            {
+                Message = message,
+                Date = date,
+            };
+
+            await this.repository.AddAsync(log);
+            await this.repository.SaveChangesAsync();
         }
 
         /// <summary>
