@@ -18,12 +18,20 @@ namespace QuizWorld.Web.Areas.Logging.Controllers
 
         [HttpGet]
         [Authorize(Policy = "CanAccessLogs", AuthenticationSchemes = "Bearer")]
-        public Task<ActionResult> GetLogs(
+        public async Task<ActionResult> GetLogs(
             [ModelBinder(BinderType = typeof(PaginationModelBinder))] int page,
             [ModelBinder(BinderType = typeof(SortingOrderModelBinder))] SortingOrders order
             )
         {
-            throw new NotImplementedException();
+            try
+            {
+                var result = await this.logger.RetrieveLogs(page, order, 20);
+                return Ok(result);
+            }
+            catch
+            {
+                return NotFound();
+            }
         }
     }
 }

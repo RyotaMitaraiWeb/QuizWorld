@@ -39,11 +39,9 @@ namespace QuizWorld.Tests.Controllers.ActivityLogsControllerUnitTests
                 }
             };
 
-            var mock = list.BuildMock();
-
             this.loggerMock
-                .Setup(l => l.RetrieveLogs(1, SortingOrders.Ascending, 6))
-                .ReturnsAsync(mock);
+                .Setup(l => l.RetrieveLogs(1, SortingOrders.Ascending, 20))
+                .ReturnsAsync(list);
 
             var result = await this.controller.GetLogs(1, SortingOrders.Ascending) as OkObjectResult;
             var value = result.Value as List<ActivityLogViewModel>;
@@ -55,7 +53,7 @@ namespace QuizWorld.Tests.Controllers.ActivityLogsControllerUnitTests
         public async Task Test_GetLogsReturnsNotFoundIfLoggerThrows()
         {
             this.loggerMock
-                .Setup(l => l.RetrieveLogs(1, SortingOrders.Ascending, 6))
+                .Setup(l => l.RetrieveLogs(1, SortingOrders.Ascending, 20))
                 .ThrowsAsync(new Exception());
 
             var result = await this.controller.GetLogs(1, SortingOrders.Ascending);
