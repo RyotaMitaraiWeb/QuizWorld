@@ -26,6 +26,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using QuizWorld.Web.Services.GradeService;
 using QuizWorld.Infrastructure.AuthConfig.CanAccessLogs;
+using QuizWorld.Web.Contracts.Logging;
+using QuizWorld.Web.Services.Logging;
 
 namespace QuizWorld.Web
 {
@@ -55,6 +57,7 @@ namespace QuizWorld.Web
             builder.Services.AddScoped<IRepository, Repository>();
             builder.Services.AddScoped<IQuizService, QuizService>();
             builder.Services.AddScoped<IGradeService, GradeService>();
+            builder.Services.AddScoped<IActivityLogger, ActivityLogger>();
             builder.Services.AddScoped<IAuthorizationHandler, CanPerformOwnerActionHandler>();
             builder.Services.AddScoped<IAuthorizationHandler, CanAccessLogsHandler>();
 
