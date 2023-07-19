@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using QuizWorld.Infrastructure.Data.Entities;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.Web.Contracts.JsonWebToken;
+using QuizWorld.Web.Contracts.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,16 +28,19 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanPerformOwnerAction
         private readonly IJwtService jwtService;
         private readonly IRepository repository;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IActivityLogger logger;
         public CanPerformOwnerActionHandler(
             IHttpContextAccessor http,
             IJwtService jwtService,
             IRepository repository,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            IActivityLogger logger)
         {
             this.http = http;
             this.jwtService = jwtService;
             this.repository = repository;
             this.userManager = userManager;
+            this.logger = logger;
         }
         /// <summary>
         /// Checks if the user is authorized to perform the requested action. A user is authorized
@@ -88,6 +93,11 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanPerformOwnerAction
                     {
                         if (requirement.RolesThatCanPerformAction.Contains(role))
                         {
+                            string? route = this.http.HttpContext?.Request.GetEncodedPathAndQuery();
+                            string? method = this.http.HttpContext?.Request.Method;
+                            await this.logger.LogActivity(
+                                $"{applicationUser.NormalizedUserName} sent a {method} request to {route}",
+                                DateTime.Now);
                             context.Succeed(requirement);
                             return;
                         }
