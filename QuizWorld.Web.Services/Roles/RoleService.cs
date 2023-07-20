@@ -1,4 +1,9 @@
-﻿using QuizWorld.ViewModels.UserList;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using QuizWorld.Common.Constants.Roles;
+using QuizWorld.Infrastructure.Data.Entities;
+using QuizWorld.Infrastructure.Data.Entities.Identity;
+using QuizWorld.ViewModels.UserList;
 using QuizWorld.Web.Contracts.Roles;
 using System;
 using System.Collections.Generic;
@@ -8,8 +13,19 @@ using System.Threading.Tasks;
 
 namespace QuizWorld.Web.Services.RoleService
 {
+    /// <summary>
+    /// Manages users' roles and information related to that.
+    /// </summary>
     public class RoleService : IRoleService
     {
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly RoleManager<IdentityRole<Guid>> roleManager;
+
+        public RoleService(UserManager<ApplicationUser> userManager)
+        {
+            this.userManager = userManager;
+        }
+
         /// <summary>
         /// Retrieves a paginated list of users that have the specified role.
         /// </summary>
@@ -17,9 +33,24 @@ namespace QuizWorld.Web.Services.RoleService
         /// <param name="page">The current page</param>
         /// <param name="pageSize">The amount of users that will be retrieved</param>
         /// <returns>A paginated list of users sorted by their usernames in an alphabetical order.</returns>
-        public Task<IEnumerable<ListUserViewModel>?> GetUsersOfRole(string role, int page, int pageSize = 20)
+        public async Task<IEnumerable<ListUserViewModel>?> GetUsersOfRole(string role, int page, int pageSize = 20)
         {
-            throw new NotImplementedException();
+            if (!Roles.RolesThatCanBeGivenOrRemoved.Contains(role))
+            {
+                throw new ArgumentException("The provided role does not exist!");
+            }
+
+            var users = await this.userManager.Users
+                .Where(u => u.UserRoles.Where(ur => ur.Role.Name == role).Any())
+                .Select(u => new ListUserViewModel()
+                {
+                    Username = u.UserName,
+                    Id = u.Id.ToString(),
+                    Roles = this.GenerateRoleString(u.UserRoles)
+                })
+                .ToListAsync();
+
+            return users;
         }
 
         /// <summary>
@@ -64,6 +95,23 @@ namespace QuizWorld.Web.Services.RoleService
         public Task<Guid?> RemoveRoleFromUser(Guid userId, string role)
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Generates a string of roles, separated by a comma and space, ordered alphabetically. The role
+        /// "User" is removed if there are other roles present.
+        /// </summary>
+        /// <param name="usersRoles"></param>
+        /// <returns></returns>
+        private string GenerateRoleString(ICollection<ApplicationUserRole> usersRoles)
+        {
+            var roles = usersRoles.Select(ur => ur.Role.Name).ToList();
+            if (roles.Count > 1)
+            {
+                roles.Remove(Roles.User);
+            }
+
+            return String.Join(", ", roles.OrderBy(r => r));
         }
     }
 }
