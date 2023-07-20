@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using QuizWorld.Infrastructure.Data.Entities;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.Web.Contracts;
