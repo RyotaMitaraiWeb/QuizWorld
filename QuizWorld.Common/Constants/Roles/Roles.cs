@@ -34,5 +34,10 @@ namespace QuizWorld.Common.Constants.Roles
         {
             Moderator, User 
         };
+
+        public readonly static string[] AvailableRoles = new[]
+        {
+            Admin, Moderator, User
+        };
     }
 }

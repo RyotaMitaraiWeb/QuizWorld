@@ -33,15 +33,19 @@ namespace QuizWorld.Web.Services.RoleService
         /// <param name="page">The current page</param>
         /// <param name="pageSize">The amount of users that will be retrieved</param>
         /// <returns>A paginated list of users sorted by their usernames in an alphabetical order.</returns>
+        /// <exception cref="ArgumentException"></exception>
         public async Task<IEnumerable<ListUserViewModel>?> GetUsersOfRole(string role, int page, int pageSize = 20)
         {
-            if (!Roles.RolesThatCanBeGivenOrRemoved.Contains(role))
+            if (!Roles.AvailableRoles.Contains(role))
             {
                 throw new ArgumentException("The provided role does not exist!");
             }
 
             var users = await this.userManager.Users
                 .Where(u => u.UserRoles.Where(ur => ur.Role.Name == role).Any())
+                .OrderBy(u => u.UserName)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .Select(u => new ListUserViewModel()
                 {
                     Username = u.UserName,
