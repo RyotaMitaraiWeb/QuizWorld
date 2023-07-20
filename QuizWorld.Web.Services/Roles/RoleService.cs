@@ -57,28 +57,6 @@ namespace QuizWorld.Web.Services.RoleService
                 })
                 .ToListAsync();
 
-
-            //IQueryable<ApplicationUser> sortedQuery;
-            //if (order == SortingOrders.Ascending)
-            //{
-            //    sortedQuery = query.OrderBy(u => u.UserName);
-            //}
-            //else
-            //{
-            //    sortedQuery = query.OrderByDescending(u => u.UserName);
-            //}
-
-            //var users = await sortedQuery
-            //    .Skip((page - 1) * pageSize)
-            //    .Take(pageSize)
-            //    .Select(u => new ListUserViewModel()
-            //    {
-            //        Username = u.UserName,
-            //        Id = u.Id.ToString(),
-            //        Roles = this.GenerateRoleString(u.UserRoles)
-            //    })
-            //    .ToListAsync();
-
             return users;
         }
 
