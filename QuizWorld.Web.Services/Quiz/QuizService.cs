@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Infrastructure;
-using QuizWorld.Infrastructure.Data.Entities;
+using QuizWorld.Infrastructure.Data.Entities.Quiz;
 using QuizWorld.Infrastructure.Extensions;
 using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Question;

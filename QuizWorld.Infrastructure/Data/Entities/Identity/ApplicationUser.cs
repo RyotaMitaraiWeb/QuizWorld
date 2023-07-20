@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuizWorld.Infrastructure.Data.Entities
+namespace QuizWorld.Infrastructure.Data.Entities.Identity
 {
     /// <summary>
     /// This entity replaces the standard IdentityUser by using GUID IDs instead of the standard
@@ -17,7 +17,7 @@ namespace QuizWorld.Infrastructure.Data.Entities
     {
         public ApplicationUser()
         {
-            this.Id = Guid.NewGuid();
+            Id = Guid.NewGuid();
         }
 
 

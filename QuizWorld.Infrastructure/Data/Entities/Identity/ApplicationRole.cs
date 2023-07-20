@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuizWorld.Infrastructure.Data.Entities
+namespace QuizWorld.Infrastructure.Data.Entities.Identity
 {
     /// <summary>
     /// Replaces the standard IdentityRole by replacing the primary key with a GUID
@@ -14,7 +14,7 @@ namespace QuizWorld.Infrastructure.Data.Entities
     {
         public ApplicationRole()
         {
-            this.Id = Guid.NewGuid();
+            Id = Guid.NewGuid();
         }
 
         public virtual ICollection<ApplicationUserRole> UserRoles { get; set; }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuizWorld.Infrastructure.Data.Entities
+namespace QuizWorld.Infrastructure.Data.Entities.Identity
 {
     /// <summary>
     /// Mapping table for users and roles.

@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuizWorld.Infrastructure.Data.Entities
+namespace QuizWorld.Infrastructure.Data.Entities.Quiz
 {
     [Comment("A question in the given quiz.")]
     public class Question

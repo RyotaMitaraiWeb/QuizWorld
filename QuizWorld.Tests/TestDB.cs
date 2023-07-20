@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using QuizWorld.Infrastructure.Data;
-using QuizWorld.Infrastructure.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using NUnit.Framework.Internal;
 using Microsoft.Extensions.Logging;
@@ -9,6 +8,8 @@ using Moq;
 using QuizWorld.Infrastructure;
 using QuizWorld.Common.Constants.Types;
 using QuizWorld.Infrastructure.Data.Entities.Logging;
+using QuizWorld.Infrastructure.Data.Entities.Identity;
+using QuizWorld.Infrastructure.Data.Entities.Quiz;
 
 namespace QuizWorld.Tests
 {

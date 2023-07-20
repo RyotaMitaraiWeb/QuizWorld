@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using QuizWorld.Infrastructure.Data.Entities;
+using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Infrastructure.Data.Entities.Logging;
+using QuizWorld.Infrastructure.Data.Entities.Quiz;
 using System;
 using System.Collections.Generic;
 using System.Linq;
