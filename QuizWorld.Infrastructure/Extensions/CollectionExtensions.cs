@@ -3,6 +3,7 @@ using QuizWorld.Infrastructure.Data.Entities.Quiz;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -47,30 +48,34 @@ namespace QuizWorld.Infrastructure.Extensions
         /// <exception cref="ArgumentException"></exception>
         public static IOrderedQueryable<Quiz> SortByOptions(this IQueryable<Quiz> query, SortingCategories category, SortingOrders order)
         {
+
+            return category switch
+            {
+                SortingCategories.Title => query.SortByOrder(q => q.NormalizedTitle, order),
+                SortingCategories.CreatedOn => query.SortByOrder(q => q.CreatedOn, order),
+                SortingCategories.UpdatedOn => query.SortByOrder(q => q.UpdatedOn, order),
+                _ => throw new ArgumentException("Category is invalid"),
+            };
+        }
+
+        /// <summary>
+        /// Sorts the <paramref name="query"/> in an ascending or descending order by the provided <paramref name="expression"/>
+        /// </summary>
+        /// <typeparam name="TClass">The class of the collection</typeparam>
+        /// <typeparam name="TValue">The type of the value in the expression</typeparam>
+        /// <param name="query">The query to be ordered</param>
+        /// <param name="expression">The expression by which the query will be ordered</param>
+        /// <param name="order">The order in which the query will be sorted</param>
+        /// <returns>A query that is ordered in an ascending or descending order.</returns>
+        public static IOrderedQueryable<TClass> SortByOrder<TClass, TValue>(this IQueryable<TClass> query, Expression<Func<TClass, TValue>> expression, SortingOrders order)
+        {
             if (order == SortingOrders.Ascending)
             {
-                return category switch
-                {
-                    SortingCategories.Title => query.OrderBy(q => q.NormalizedTitle).ThenBy(q => q.CreatedOn),
-                    SortingCategories.CreatedOn => query.OrderBy(q => q.CreatedOn),
-                    SortingCategories.UpdatedOn => query.OrderBy(q => q.UpdatedOn),
-                    _ => throw new ArgumentException("Category is invalid"),
-                };
-            }
-
-            else if (order == SortingOrders.Descending)
-            {
-                return category switch
-                {
-                    SortingCategories.Title => query.OrderByDescending(q => q.NormalizedTitle),
-                    SortingCategories.CreatedOn => query.OrderByDescending(q => q.CreatedOn),
-                    SortingCategories.UpdatedOn => query.OrderByDescending(q => q.UpdatedOn),
-                    _ => throw new ArgumentException("Category is invalid"),
-                };
+                return query.OrderBy(expression);
             }
             else
             {
-                throw new ArgumentException("Order is invalid");
+                return query.OrderByDescending(expression);
             }
         }
     }

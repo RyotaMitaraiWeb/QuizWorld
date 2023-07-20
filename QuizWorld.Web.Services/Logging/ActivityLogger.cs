@@ -2,6 +2,7 @@
 using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Infrastructure;
 using QuizWorld.Infrastructure.Data.Entities.Logging;
+using QuizWorld.Infrastructure.Extensions;
 using QuizWorld.ViewModels.Logging;
 using QuizWorld.Web.Contracts.Logging;
 using System;
@@ -51,20 +52,9 @@ namespace QuizWorld.Web.Services.Logging
         /// <returns>A paginated and sorted list of activity logs.</returns>
         public async Task<IEnumerable<ActivityLogViewModel>> RetrieveLogs(int page, SortingOrders order, int pageSize = 6)
         {
-            var query = this.repository
-                .AllReadonly<ActivityLog>();
-
-            IQueryable<ActivityLog> sortedQuery;
-            if (order == SortingOrders.Ascending)
-            {
-                sortedQuery = query.OrderBy(al => al.Date);
-            }
-            else
-            {
-                sortedQuery = query.OrderByDescending(al => al.Date);
-            }
-
-            var logs = await sortedQuery
+            var logs = await this.repository
+                .AllReadonly<ActivityLog>()
+                .SortByOrder(al => al.Date, order)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Select(al => new ActivityLogViewModel
@@ -74,6 +64,8 @@ namespace QuizWorld.Web.Services.Logging
                     Date = al.Date,
                 })
                 .ToListAsync();
+
+            
 
             return logs;
         }

@@ -4,6 +4,7 @@ using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Infrastructure.Data.Entities;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
+using QuizWorld.Infrastructure.Extensions;
 using QuizWorld.ViewModels.UserList;
 using QuizWorld.Web.Contracts.Roles;
 using System;
@@ -43,20 +44,9 @@ namespace QuizWorld.Web.Services.RoleService
                 throw new ArgumentException("The provided role does not exist!");
             }
 
-            var query = this.userManager.Users
-                .Where(u => u.UserRoles.Where(ur => ur.Role.Name == role).Any());
-
-            IQueryable<ApplicationUser> sortedQuery;
-            if (order == SortingOrders.Ascending)
-            {
-                sortedQuery = query.OrderBy(u => u.UserName);
-            }
-            else
-            {
-                sortedQuery = query.OrderByDescending(u => u.UserName);
-            }
-
-            var users = await sortedQuery
+            var users = await this.userManager.Users
+                .Where(u => u.UserRoles.Where(ur => ur.Role.Name == role).Any())
+                .SortByOrder(u => u.UserName, order)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Select(u => new ListUserViewModel()
@@ -66,6 +56,28 @@ namespace QuizWorld.Web.Services.RoleService
                     Roles = this.GenerateRoleString(u.UserRoles)
                 })
                 .ToListAsync();
+
+
+            //IQueryable<ApplicationUser> sortedQuery;
+            //if (order == SortingOrders.Ascending)
+            //{
+            //    sortedQuery = query.OrderBy(u => u.UserName);
+            //}
+            //else
+            //{
+            //    sortedQuery = query.OrderByDescending(u => u.UserName);
+            //}
+
+            //var users = await sortedQuery
+            //    .Skip((page - 1) * pageSize)
+            //    .Take(pageSize)
+            //    .Select(u => new ListUserViewModel()
+            //    {
+            //        Username = u.UserName,
+            //        Id = u.Id.ToString(),
+            //        Roles = this.GenerateRoleString(u.UserRoles)
+            //    })
+            //    .ToListAsync();
 
             return users;
         }
