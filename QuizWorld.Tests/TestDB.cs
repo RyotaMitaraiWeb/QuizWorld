@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using QuizWorld.Infrastructure.Data;
-using QuizWorld.Infrastructure.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using NUnit.Framework.Internal;
 using Microsoft.Extensions.Logging;
@@ -9,6 +8,8 @@ using Moq;
 using QuizWorld.Infrastructure;
 using QuizWorld.Common.Constants.Types;
 using QuizWorld.Infrastructure.Data.Entities.Logging;
+using QuizWorld.Infrastructure.Data.Entities.Identity;
+using QuizWorld.Infrastructure.Data.Entities.Quiz;
 
 namespace QuizWorld.Tests
 {
@@ -65,7 +66,10 @@ namespace QuizWorld.Tests
         {
             var hasher = new PasswordHasher<ApplicationUser>();
             var dbContext = this.CreateDbContext();
-            var userStore = new UserStore<ApplicationUser, IdentityRole<Guid>, QuizWorldDbContext, Guid>(dbContext);
+            //var userStore = new UserStore<ApplicationUser, ApplicationRole, QuizWorldDbContext, Guid>(dbContext);
+            var userStore = new UserStore<ApplicationUser, ApplicationRole, QuizWorldDbContext, Guid, IdentityUserClaim<Guid>,
+            ApplicationUserRole, IdentityUserLogin<Guid>,
+            IdentityUserToken<Guid>, IdentityRoleClaim<Guid>>(dbContext);
             var normalizer = new UpperInvariantLookupNormalizer();
 
             var passwordValidator = new CustomPasswordValidator();
@@ -81,19 +85,19 @@ namespace QuizWorld.Tests
             this.repository = new Repository(dbContext);
 
 
-            dbContext.Roles.Add(new IdentityRole<Guid>()
+            dbContext.Roles.Add(new ApplicationRole()
             {
                 Name = "User",
                 NormalizedName = "USER",
             });
 
-            dbContext.Roles.Add(new IdentityRole<Guid>()
+            dbContext.Roles.Add(new ApplicationRole()
             {
                 Name = "Moderator",
                 NormalizedName = "MODERATOR",
             });
 
-            dbContext.Roles.Add(new IdentityRole<Guid>()
+            dbContext.Roles.Add(new ApplicationRole()
             {
                 Name = "Administrator",
                 NormalizedName = "ADMINISTRATOR",

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QuizWorld.Common.Constants.ValidationErrorMessages;
 using QuizWorld.Common.Constants.ValidationRules;
+using QuizWorld.Infrastructure.Data.Entities.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuizWorld.Infrastructure.Data.Entities
+namespace QuizWorld.Infrastructure.Data.Entities.Quiz
 {
     [Comment("A quiz that has many questions, which on their own can have many answers")]
     public class Quiz

@@ -1,0 +1,20 @@
+﻿using QuizWorld.ViewModels.UserList;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace QuizWorld.Web.Contracts.Roles
+{
+    public interface IRoleService
+    {
+        public Task<Guid?> GiveUserRole(Guid userId, string role);
+        public Task<Guid?> GiveUserRole(string userId, string role);
+
+        public Task<Guid?> RemoveRoleFromUser(string userId, string role);
+        public Task<Guid?> RemoveRoleFromUser(Guid userId, string role);
+
+        public Task<IEnumerable<ListUserViewModel>?> GetUsersOfRole(string role, int page, int pageSize);
+    }
+}

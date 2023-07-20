@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuizWorld.Infrastructure.Data.Entities
+namespace QuizWorld.Infrastructure.Data.Entities.Quiz
 {
     [Comment("The type of the question. Questions can be single-choice, multiple-choice, or text-based")]
     public class QuestionType

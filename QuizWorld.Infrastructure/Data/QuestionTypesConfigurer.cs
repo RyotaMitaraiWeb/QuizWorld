@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using QuizWorld.Common.Constants.Types;
-using QuizWorld.Infrastructure.Data.Entities;
+using QuizWorld.Infrastructure.Data.Entities.Quiz;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using QuizWorld.Infrastructure.Data;
-using QuizWorld.Infrastructure.Data.Entities;
 using System.Text;
 using System.Text.Json;
 using Newtonsoft.Json.Converters;
@@ -28,6 +27,7 @@ using QuizWorld.Web.Services.GradeService;
 using QuizWorld.Infrastructure.AuthConfig.CanAccessLogs;
 using QuizWorld.Web.Contracts.Logging;
 using QuizWorld.Web.Services.Logging;
+using QuizWorld.Infrastructure.Data.Entities.Identity;
 
 namespace QuizWorld.Web
 {
@@ -66,7 +66,7 @@ namespace QuizWorld.Web
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
+            builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
                 options.Password.RequiredLength = 6;
                 options.Password.RequireNonAlphanumeric = false;
