@@ -1,4 +1,5 @@
-﻿using QuizWorld.ViewModels.UserList;
+﻿using QuizWorld.Common.Constants.Sorting;
+using QuizWorld.ViewModels.UserList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,6 @@ namespace QuizWorld.Web.Contracts.Roles
         public Task<Guid?> RemoveRoleFromUser(string userId, string role);
         public Task<Guid?> RemoveRoleFromUser(Guid userId, string role);
 
-        public Task<IEnumerable<ListUserViewModel>?> GetUsersOfRole(string role, int page, int pageSize);
+        public Task<IEnumerable<ListUserViewModel>?> GetUsersOfRole(string role, int page, SortingOrders order, int pageSize);
     }
 }

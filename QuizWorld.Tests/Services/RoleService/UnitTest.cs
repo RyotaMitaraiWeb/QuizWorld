@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using MockQueryable.Moq;
 using Moq;
 using QuizWorld.Common.Constants.Roles;
+using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Infrastructure.Data.Entities;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Infrastructure.Extensions;
@@ -45,7 +46,7 @@ namespace QuizWorld.Tests.Services.RoleServiceUnitTests
                 .Setup(um => um.Users)
                 .Returns(this.GenerateUsers());
 
-            var result = await this.service.GetUsersOfRole(Roles.User, 1, 3);
+            var result = await this.service.GetUsersOfRole(Roles.User, 1, SortingOrders.Ascending, 3);
             var users = result.ToArray();
             Assert.That(users, Has.Length.EqualTo(3));
 
@@ -66,7 +67,7 @@ namespace QuizWorld.Tests.Services.RoleServiceUnitTests
         {
             try
             {
-                var result = await this.service.GetUsersOfRole("Janitor", 1, 3);
+                var result = await this.service.GetUsersOfRole("Janitor", 1, SortingOrders.Ascending, 3);
                 Assert.Fail("Method should have thrown but passed");
             }
             catch (ArgumentException)

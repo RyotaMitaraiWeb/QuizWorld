@@ -1,4 +1,5 @@
 ﻿using QuizWorld.Common.Constants.Roles;
+using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Infrastructure;
 using QuizWorld.Web.Services.RoleService;
 using System;
@@ -26,7 +27,7 @@ namespace QuizWorld.Tests.Services.RoleServiceImMemoryTests
         [Test]
         public async Task Test_GetUsersOfRoleCorrectlyRetrievesUsersOfTheSpecifiedRole()
         {
-            var result = await this.service.GetUsersOfRole(Roles.User, 1, 3);
+            var result = await this.service.GetUsersOfRole(Roles.User, 1, SortingOrders.Ascending, 3);
             var users = result.OrderBy(users => users.Username).ToArray();
             Assert.That(users, Has.Length.EqualTo(3));
 
@@ -41,7 +42,7 @@ namespace QuizWorld.Tests.Services.RoleServiceImMemoryTests
                 Assert.That(user.Roles, Is.EqualTo("User"));
             });
 
-            var sortedResult = await this.service.GetUsersOfRole(Roles.Moderator, 2, 1);
+            var sortedResult = await this.service.GetUsersOfRole(Roles.Moderator, 2, SortingOrders.Ascending, 1);
             var user2 = sortedResult.First();
 
             Assert.That(user2.Username, Is.EqualTo("moderator1"));

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using QuizWorld.Common.Constants.Roles;
+using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Infrastructure.Data.Entities;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.ViewModels.UserList;
@@ -32,18 +33,30 @@ namespace QuizWorld.Web.Services.RoleService
         /// <param name="role">The role for which users will be retrieved</param>
         /// <param name="page">The current page</param>
         /// <param name="pageSize">The amount of users that will be retrieved</param>
-        /// <returns>A paginated list of users sorted by their usernames in an alphabetical order.</returns>
+        /// <param name="order">The order in which the users will be sorted. Users are sorted by their username.</param>
+        /// <returns>A paginated list of users sorted by their usernames.</returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<IEnumerable<ListUserViewModel>?> GetUsersOfRole(string role, int page, int pageSize = 20)
+        public async Task<IEnumerable<ListUserViewModel>?> GetUsersOfRole(string role, int page, SortingOrders order, int pageSize = 20)
         {
             if (!Roles.AvailableRoles.Contains(role))
             {
                 throw new ArgumentException("The provided role does not exist!");
             }
 
-            var users = await this.userManager.Users
-                .Where(u => u.UserRoles.Where(ur => ur.Role.Name == role).Any())
-                .OrderBy(u => u.UserName)
+            var query = this.userManager.Users
+                .Where(u => u.UserRoles.Where(ur => ur.Role.Name == role).Any());
+
+            IQueryable<ApplicationUser> sortedQuery;
+            if (order == SortingOrders.Ascending)
+            {
+                sortedQuery = query.OrderBy(u => u.UserName);
+            }
+            else
+            {
+                sortedQuery = query.OrderByDescending(u => u.UserName);
+            }
+
+            var users = await sortedQuery
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Select(u => new ListUserViewModel()
