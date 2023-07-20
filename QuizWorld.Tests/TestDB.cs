@@ -66,7 +66,10 @@ namespace QuizWorld.Tests
         {
             var hasher = new PasswordHasher<ApplicationUser>();
             var dbContext = this.CreateDbContext();
-            var userStore = new UserStore<ApplicationUser, IdentityRole<Guid>, QuizWorldDbContext, Guid>(dbContext);
+            //var userStore = new UserStore<ApplicationUser, ApplicationRole, QuizWorldDbContext, Guid>(dbContext);
+            var userStore = new UserStore<ApplicationUser, ApplicationRole, QuizWorldDbContext, Guid, IdentityUserClaim<Guid>,
+            ApplicationUserRole, IdentityUserLogin<Guid>,
+            IdentityUserToken<Guid>, IdentityRoleClaim<Guid>>(dbContext);
             var normalizer = new UpperInvariantLookupNormalizer();
 
             var passwordValidator = new CustomPasswordValidator();
@@ -82,19 +85,19 @@ namespace QuizWorld.Tests
             this.repository = new Repository(dbContext);
 
 
-            dbContext.Roles.Add(new IdentityRole<Guid>()
+            dbContext.Roles.Add(new ApplicationRole()
             {
                 Name = "User",
                 NormalizedName = "USER",
             });
 
-            dbContext.Roles.Add(new IdentityRole<Guid>()
+            dbContext.Roles.Add(new ApplicationRole()
             {
                 Name = "Moderator",
                 NormalizedName = "MODERATOR",
             });
 
-            dbContext.Roles.Add(new IdentityRole<Guid>()
+            dbContext.Roles.Add(new ApplicationRole()
             {
                 Name = "Administrator",
                 NormalizedName = "ADMINISTRATOR",
