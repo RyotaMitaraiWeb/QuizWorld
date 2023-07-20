@@ -1,5 +1,5 @@
 ﻿using QuizWorld.Common.Constants.Sorting;
-using QuizWorld.Infrastructure.Data.Entities;
+using QuizWorld.Infrastructure.Data.Entities.Quiz;
 using System;
 using System.Collections.Generic;
 using System.Linq;

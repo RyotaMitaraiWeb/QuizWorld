@@ -2,6 +2,7 @@
 using Moq;
 using QuizWorld.Infrastructure;
 using QuizWorld.Infrastructure.Data.Entities;
+using QuizWorld.Infrastructure.Data.Entities.Quiz;
 using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Question;
 using QuizWorld.Web.Services.GradeService;

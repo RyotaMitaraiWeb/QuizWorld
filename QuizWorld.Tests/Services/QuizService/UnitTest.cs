@@ -4,7 +4,7 @@ using Moq;
 using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Common.Constants.Types;
 using QuizWorld.Infrastructure;
-using QuizWorld.Infrastructure.Data.Entities;
+using QuizWorld.Infrastructure.Data.Entities.Quiz;
 using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Question;
 using QuizWorld.ViewModels.Quiz;

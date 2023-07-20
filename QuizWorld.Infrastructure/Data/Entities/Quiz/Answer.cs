@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuizWorld.Infrastructure.Data.Entities
+namespace QuizWorld.Infrastructure.Data.Entities.Quiz
 {
     [Comment("An answer for the given question, which can be correct or wrong. For text questions, all answers should be correct")]
     public class Answer
