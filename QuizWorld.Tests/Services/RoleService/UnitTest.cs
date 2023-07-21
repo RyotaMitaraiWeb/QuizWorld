@@ -9,6 +9,7 @@ using QuizWorld.Infrastructure.Data.Entities;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Infrastructure.Extensions;
 using QuizWorld.Web.Services.RoleService;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +39,7 @@ namespace QuizWorld.Tests.Services.RoleServiceUnitTests
 
             this.service = new RoleService(this.userManagerMock.Object);
         }
+
 
         [Test]
         public async Task Test_GetUsersOfRoleGetsUsersOfTheParticularRoleAndFormatsTheResultCorrectly()
@@ -81,17 +83,235 @@ namespace QuizWorld.Tests.Services.RoleServiceUnitTests
 
         }
 
+
+
+        [Test]
+        public async Task Test_GiveUserRoleReturnsTheGuidOfTheUserIfSuccessful()
+        {
+            var id = Guid.NewGuid();
+            var user = new ApplicationUser()
+            {
+                Id = id,
+            };
+
+            this.userManagerMock
+                .Setup(um => um.FindByIdAsync(id.ToString()))
+                .ReturnsAsync(user);
+
+            this.userManagerMock
+                .Setup(um => um.AddToRoleAsync(user, Roles.Moderator))
+                .ReturnsAsync(IdentityResult.Success);
+
+            var result = await this.service.GiveUserRole(id.ToString(), Roles.Moderator);
+            Assert.That(result, Is.EqualTo(id));
+        }
+
+        [Test]
+        public async Task Test_GiveUserRoleWorksIfPassedAGuid()
+        {
+            var id = Guid.NewGuid();
+            var user = new ApplicationUser()
+            {
+                Id = id,
+            };
+
+            this.userManagerMock
+                .Setup(um => um.FindByIdAsync(id.ToString()))
+                .ReturnsAsync(user);
+
+            this.userManagerMock
+                .Setup(um => um.AddToRoleAsync(user, Roles.Moderator))
+                .ReturnsAsync(IdentityResult.Success);
+
+            var result = await this.service.GiveUserRole(id, Roles.Moderator);
+            Assert.That(result, Is.EqualTo(id));
+        }
+
+        [Test]
+        public async Task Test_GiveUserRoleReturnsNullIfUserManagerReturnsIdentityResultFailed()
+        {
+            var id = new Guid();
+            var user = new ApplicationUser()
+            {
+                Id = id,
+            };
+
+            this.userManagerMock
+                .Setup(um => um.FindByIdAsync(id.ToString()))
+                .ReturnsAsync(user);
+
+            this.userManagerMock
+                .Setup(um => um.AddToRoleAsync(user, Roles.Moderator))
+                .ReturnsAsync(IdentityResult.Failed());
+
+            var result = await this.service.GiveUserRole(id.ToString(), Roles.Moderator);
+
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public async Task Test_GiveUserRoleReturnsNullIfUserManagerCannotFindTheUser()
+        {
+            var id = new Guid();
+            this.userManagerMock
+                .Setup(um => um.FindByIdAsync(id.ToString()))
+                .ReturnsAsync(() => null);
+            try
+            {
+                var result = await this.service.GiveUserRole(id.ToString(), Roles.Moderator);
+                Assert.Fail("Method should have thrown but passed");
+            }
+            catch (ArgumentException)
+            {
+                Assert.Pass();
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("Method did not throw an exception or threw a different type of exception. Message: " + e.Message);
+            }
+        }
+
+        [Test]
+        [TestCase("Janitor")]
+        [TestCase(Roles.Admin)]
+        public async Task Test_GiveUserRoleThrowsArgumentExceptionIfTheRoleIsNotAvailableToBeGiven(string role)
+        {
+            var id = new Guid();
+
+            try
+            {
+                var result = await this.service.GiveUserRole(id.ToString(), role);
+                Assert.Fail("Method should have thrown but passed");
+            }
+            catch (ArgumentException)
+            {
+                Assert.Pass();
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("Method did not throw an exception or threw a different type of exception. Message: " + e.Message);
+            }
+        }
+
+        [Test]
+        public async Task Test_RemoveRoleFromUserReturnsTheGuidOfTheUserIfSuccessful()
+        {
+            var id = Guid.NewGuid();
+            var user = new ApplicationUser()
+            {
+                Id = id,
+            };
+
+            this.userManagerMock
+                .Setup(um => um.FindByIdAsync(id.ToString()))
+                .ReturnsAsync(user);
+
+            this.userManagerMock
+                .Setup(um => um.RemoveFromRoleAsync(user, Roles.Moderator))
+                .ReturnsAsync(IdentityResult.Success);
+
+            var result = await this.service.RemoveRoleFromUser(id.ToString(), Roles.Moderator);
+            Assert.That(result, Is.EqualTo(id));
+        }
+
+        [Test]
+        public async Task Test_RemoveRoleFromUserWorksIfPassedAGuid()
+        {
+            var id = Guid.NewGuid();
+            var user = new ApplicationUser()
+            {
+                Id = id,
+            };
+
+            this.userManagerMock
+                .Setup(um => um.FindByIdAsync(id.ToString()))
+                .ReturnsAsync(user);
+
+            this.userManagerMock
+                .Setup(um => um.RemoveFromRoleAsync(user, Roles.Moderator))
+                .ReturnsAsync(IdentityResult.Success);
+
+            var result = await this.service.RemoveRoleFromUser(id, Roles.Moderator);
+            Assert.That(result, Is.EqualTo(id));
+        }
+
+        [Test]
+        public async Task Test_RemoveRoleFromUserReturnsNullIfUserManagerReturnsIdentityResultFailed()
+        {
+            var id = new Guid();
+            var user = new ApplicationUser()
+            {
+                Id = id,
+            };
+
+            this.userManagerMock
+                .Setup(um => um.FindByIdAsync(id.ToString()))
+                .ReturnsAsync(user);
+
+            this.userManagerMock
+                .Setup(um => um.RemoveFromRoleAsync(user, Roles.Moderator))
+                .ReturnsAsync(IdentityResult.Failed());
+
+            var result = await this.service.RemoveRoleFromUser(id.ToString(), Roles.Moderator);
+
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public async Task Test_RemoveRoleFromUserReturnsNullIfUserManagerCannotFindTheUser()
+        {
+            var id = new Guid();
+            this.userManagerMock
+                .Setup(um => um.FindByIdAsync(id.ToString()))
+                .ReturnsAsync(() => null);
+            try
+            {
+                var result = await this.service.RemoveRoleFromUser(id.ToString(), Roles.Moderator);
+                Assert.Fail("Method should have thrown but passed");
+            }
+            catch (ArgumentException)
+            {
+                Assert.Pass();
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("Method did not throw an exception or threw a different type of exception. Message: " + e.Message);
+            }
+        }
+
+        [Test]
+        [TestCase("Janitor")]
+        [TestCase(Roles.Admin)]
+        public async Task Test_RemoveRoleFromUserThrowsArgumentExceptionIfTheRoleIsNotAvailableToBeGiven(string role)
+        {
+            var id = new Guid();
+
+            try
+            {
+                var result = await this.service.RemoveRoleFromUser(id.ToString(), role);
+                Assert.Fail("Method should have thrown but passed");
+            }
+            catch (ArgumentException)
+            {
+                Assert.Pass();
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("Method did not throw an exception or threw a different type of exception. Message: " + e.Message);
+            }
+        }
+
         private IQueryable<ApplicationUser> GenerateUsers()
         {
             var users = new List<ApplicationUser>();
-            
+
             var id1 = Guid.NewGuid();
             var id2 = Guid.NewGuid();
             var id3 = Guid.NewGuid();
 
             var userRole = new ApplicationRole() { Name = Roles.User, NormalizedName = Roles.User.Normalized() };
             var moderatorRole = new ApplicationRole() { Name = Roles.Moderator, NormalizedName = Roles.Moderator.Normalized() };
-            var adminRole = new ApplicationRole() {Name = Roles.Admin, NormalizedName = Roles.Admin.Normalized() };
+            var adminRole = new ApplicationRole() { Name = Roles.Admin, NormalizedName = Roles.Admin.Normalized() };
 
             var admin = new ApplicationUser()
             {

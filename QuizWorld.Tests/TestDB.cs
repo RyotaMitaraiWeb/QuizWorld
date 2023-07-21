@@ -107,18 +107,21 @@ namespace QuizWorld.Tests
 
             this.User = new ApplicationUser()
             {
+                Id = Guid.NewGuid(),
                 UserName = "ryota1",
                 NormalizedUserName = "RYOTA1",
             };
 
             this.Admin = new ApplicationUser()
             {
+                Id = Guid.NewGuid(),
                 UserName = "admin1",
                 NormalizedUserName = "ADMIN1"
             };
 
             this.Moderator = new ApplicationUser()
             {
+                Id = Guid.NewGuid(),
                 UserName = "moderator1",
                 NormalizedUserName = "MODERATOR1"
             };

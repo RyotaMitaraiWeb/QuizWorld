@@ -12,7 +12,9 @@ namespace QuizWorld.Common.Constants.Roles
     public static class Roles
     {
         /// <summary>
-        /// Administrators can check activity logs and can change users' roles to a limited extent.
+        /// Administrators can check activity logs and can change users' roles to a limited extent. Refer
+        /// to <see cref="RolesThatCanBeGivenOrRemoved"/> to see which roles can be added or removed from
+        /// users.
         /// </summary>
         public const string Admin = "Administrator";
 
@@ -28,11 +30,12 @@ namespace QuizWorld.Common.Constants.Roles
 
         /// <summary>
         /// Contains all roles that can be given to or removed from any user. Roles not present
-        /// here can only be managed with seeding or at database level.
+        /// here can only be managed with seeding or at database level. The only exception is the User role,
+        /// which is instead given by default to all registered users and cannot be removed at all.
         /// </summary>
         public readonly static string[] RolesThatCanBeGivenOrRemoved = new[]
         {
-            Moderator, User 
+            Moderator
         };
 
         public readonly static string[] AvailableRoles = new[]
