@@ -193,6 +193,114 @@ namespace QuizWorld.Tests.Services.RoleServiceUnitTests
             }
         }
 
+        [Test]
+        public async Task Test_RemoveRoleFromUserReturnsTheGuidOfTheUserIfSuccessful()
+        {
+            var id = Guid.NewGuid();
+            var user = new ApplicationUser()
+            {
+                Id = id,
+            };
+
+            this.userManagerMock
+                .Setup(um => um.FindByIdAsync(id.ToString()))
+                .ReturnsAsync(user);
+
+            this.userManagerMock
+                .Setup(um => um.RemoveFromRoleAsync(user, Roles.Moderator))
+                .ReturnsAsync(IdentityResult.Success);
+
+            var result = await this.service.RemoveRoleFromUser(id.ToString(), Roles.Moderator);
+            Assert.That(result, Is.EqualTo(id));
+        }
+
+        [Test]
+        public async Task Test_RemoveRoleFromUserWorksIfPassedAGuid()
+        {
+            var id = Guid.NewGuid();
+            var user = new ApplicationUser()
+            {
+                Id = id,
+            };
+
+            this.userManagerMock
+                .Setup(um => um.FindByIdAsync(id.ToString()))
+                .ReturnsAsync(user);
+
+            this.userManagerMock
+                .Setup(um => um.RemoveFromRoleAsync(user, Roles.Moderator))
+                .ReturnsAsync(IdentityResult.Success);
+
+            var result = await this.service.RemoveRoleFromUser(id, Roles.Moderator);
+            Assert.That(result, Is.EqualTo(id));
+        }
+
+        [Test]
+        public async Task Test_RemoveRoleFromUserReturnsNullIfUserManagerReturnsIdentityResultFailed()
+        {
+            var id = new Guid();
+            var user = new ApplicationUser()
+            {
+                Id = id,
+            };
+
+            this.userManagerMock
+                .Setup(um => um.FindByIdAsync(id.ToString()))
+                .ReturnsAsync(user);
+
+            this.userManagerMock
+                .Setup(um => um.RemoveFromRoleAsync(user, Roles.Moderator))
+                .ReturnsAsync(IdentityResult.Failed());
+
+            var result = await this.service.RemoveRoleFromUser(id.ToString(), Roles.Moderator);
+
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public async Task Test_RemoveRoleFromUserReturnsNullIfUserManagerCannotFindTheUser()
+        {
+            var id = new Guid();
+            this.userManagerMock
+                .Setup(um => um.FindByIdAsync(id.ToString()))
+                .ReturnsAsync(() => null);
+            try
+            {
+                var result = await this.service.RemoveRoleFromUser(id.ToString(), Roles.Moderator);
+                Assert.Fail("Method should have thrown but passed");
+            }
+            catch (ArgumentException)
+            {
+                Assert.Pass();
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("Method did not throw an exception or threw a different type of exception. Message: " + e.Message);
+            }
+        }
+
+        [Test]
+        [TestCase("Janitor")]
+        [TestCase(Roles.Admin)]
+        public async Task Test_RemoveRoleFromUserThrowsArgumentExceptionIfTheRoleIsNotAvailableToBeGiven(string role)
+        {
+            var id = new Guid();
+
+            try
+            {
+                var result = await this.service.RemoveRoleFromUser(id.ToString(), role);
+                Assert.Fail("Method should have thrown but passed");
+            }
+            catch (ArgumentException)
+            {
+                Assert.Pass();
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("Method did not throw an exception or threw a different type of exception. Message: " + e.Message);
+            }
+        }
+
         private IQueryable<ApplicationUser> GenerateUsers()
         {
             var users = new List<ApplicationUser>();

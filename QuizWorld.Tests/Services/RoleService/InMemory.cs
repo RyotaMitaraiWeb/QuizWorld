@@ -84,5 +84,41 @@ namespace QuizWorld.Tests.Services.RoleServiceImMemoryTests
 
             Assert.That(roles, Has.Length.EqualTo(3));
         }
+
+        [Test]
+        public async Task Test_RemoveRoleFromUserSuccessfullyRemovesTheRoleFromTheUser()
+        {
+            var admin = this.testDb.Admin;
+            var result = await this.service.RemoveRoleFromUser(admin.Id.ToString(), Roles.Moderator);
+
+            Assert.That(result, Is.EqualTo(admin.Id));
+
+            var newAdminRoles = await this.testDb.userManager.Users
+                .Where(u => u.Id == admin.Id)
+                .Select(u => u.UserRoles.Select(ur => ur.Role.Name))
+                .FirstAsync();
+
+            var roles = newAdminRoles.ToArray();
+
+            Assert.That(roles, Does.Not.Contain(Roles.Moderator));
+            Assert.That(roles, Has.Length.EqualTo(2));
+        }
+
+        [Test]
+        public async Task Test_RemoveRoleFromUserReturnsNullIfItCannotRemoveAValidRoleFromUser()
+        {
+            var user = this.testDb.User;
+            var result = await this.service.RemoveRoleFromUser(user.Id.ToString(), Roles.Moderator);
+            Assert.That(result, Is.Null);
+
+            var userRoles = await this.testDb.userManager.Users
+                .Where(u => u.Id == user.Id)
+                .Select(u => u.UserRoles.Select(ur => ur.Role.Name))
+                .FirstAsync();
+
+            var roles = userRoles.ToArray();
+
+            Assert.That(roles, Has.Length.EqualTo(1));
+        }
     }
 }

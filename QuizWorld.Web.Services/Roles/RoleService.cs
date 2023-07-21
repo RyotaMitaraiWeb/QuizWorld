@@ -116,9 +116,35 @@ namespace QuizWorld.Web.Services.RoleService
         /// <param name="userId">The user</param>
         /// <param name="role">The role to be removed from the user</param>
         /// <returns>The ID of the user if successful, null otherwise</returns>
-        public Task<Guid?> RemoveRoleFromUser(string userId, string role)
+        /// <exception cref="ArgumentNullException"></exception>
+        public async Task<Guid?> RemoveRoleFromUser(string userId, string role)
         {
-            throw new NotImplementedException();
+            if (!Roles.RolesThatCanBeGivenOrRemoved.Contains(role))
+            {
+                throw new ArgumentException($"Role \"{role}\" cannot be removed from users!");
+            }
+
+            var user = await this.userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new ArgumentException("The user does not exist!");
+            }
+
+            try
+            {
+                var result = await this.userManager.RemoveFromRoleAsync(user, role);
+                if (result != IdentityResult.Success)
+                {
+                    return null;
+                }
+
+                return user.Id;
+            }
+            // User does not have the role
+            catch (NullReferenceException)
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -127,9 +153,10 @@ namespace QuizWorld.Web.Services.RoleService
         /// <param name="userId">The user</param>
         /// <param name="role">The role to be removed from the user</param>
         /// <returns>The ID of the user if successful, null otherwise</returns>
-        public Task<Guid?> RemoveRoleFromUser(Guid userId, string role)
+        /// <exception cref="ArgumentNullException"></exception>
+        public async Task<Guid?> RemoveRoleFromUser(Guid userId, string role)
         {
-            throw new NotImplementedException();
+            return await this.RemoveRoleFromUser(userId.ToString(), role);
         }
 
         /// <summary>
