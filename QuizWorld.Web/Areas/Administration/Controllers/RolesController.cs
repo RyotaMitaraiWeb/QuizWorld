@@ -77,13 +77,32 @@ namespace QuizWorld.Web.Areas.Administration.Controllers
         [HttpPut]
         [Route("demote/{userid}/{role}")]
         [Authorize(Policy = "CanChangeRoles", AuthenticationSchemes = "Bearer")]
-        public Task<ActionResult> RemoveRoleFromUser(
+        public async Task<ActionResult> RemoveRoleFromUser(
             string userId,
             string role,
             [ModelBinder(BinderType = typeof(PaginationModelBinder))] int page,
             [ModelBinder(BinderType = typeof(SortingOrderModelBinder))] SortingOrders order)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var result = await this.roleService.RemoveRoleFromUser(userId, role);
+                if (result == null)
+                {
+                    return BadRequest();
+                }
+
+                var updatedUserList = await this.roleService.GetUsersOfRole(role, page, order, 20);
+                return Ok(updatedUserList);
+            }
+            catch (ArgumentException e)
+            {
+                var errors = new ErrorViewModel() { Errors = new string[] { e.Message } };
+                return NotFound(errors);
+            }
+            catch
+            {
+                return StatusCode(503);
+            }
         }
     }
 }
