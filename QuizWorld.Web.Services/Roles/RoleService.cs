@@ -66,9 +66,36 @@ namespace QuizWorld.Web.Services.RoleService
         /// <param name="userId">The user</param>
         /// <param name="role">The role to be given to the user</param>
         /// <returns>The ID of the user if successful, null otherwise</returns>
-        public Task<Guid?> GiveUserRole(Guid userId, string role)
+        /// <exception cref="ArgumentNullException"></exception>
+        public async Task<Guid?> GiveUserRole(string userId, string role)
         {
-            throw new NotImplementedException();
+            if (!Roles.RolesThatCanBeGivenOrRemoved.Contains(role))
+            {
+                throw new ArgumentException($"Role \"{role}\" cannot be given to users!");
+            }
+
+            var user = await this.userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new ArgumentException("The user does not exist!");
+            }
+
+            try
+            {
+                var result = await this.userManager.AddToRoleAsync(user, role);
+                if (result != IdentityResult.Success)
+                {
+                    return null;
+                }
+
+                return user.Id;
+            }
+            // User already has the role
+            catch (NullReferenceException)
+            {
+                return null;
+            }
+            
         }
 
         /// <summary>
@@ -77,9 +104,10 @@ namespace QuizWorld.Web.Services.RoleService
         /// <param name="userId">The user</param>
         /// <param name="role">The role to be given to the user</param>
         /// <returns>The ID of the user if successful, null otherwise</returns>
-        public Task<Guid?> GiveUserRole(string userId, string role)
+        /// <exception cref="ArgumentNullException"></exception>
+        public async Task<Guid?> GiveUserRole(Guid userId, string role)
         {
-            throw new NotImplementedException();
+            return await this.GiveUserRole(userId.ToString(), role);
         }
 
         /// <summary>
