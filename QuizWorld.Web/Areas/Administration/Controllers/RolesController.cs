@@ -44,7 +44,7 @@ namespace QuizWorld.Web.Areas.Administration.Controllers
         }
 
         [HttpPut]
-        [Route("promote/{userid}/{role}")]
+        [Route("promote/{userId}/{role}")]
         [Authorize(Policy = "CanChangeRoles", AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult> GiveUserRole(
             string userId,
@@ -68,14 +68,14 @@ namespace QuizWorld.Web.Areas.Administration.Controllers
                 var errors = new ErrorViewModel() { Errors = new string[] { e.Message } };
                 return NotFound(errors);
             }
-            catch
+            catch (Exception e)
             {
                 return StatusCode(503);
             }
         }
 
         [HttpPut]
-        [Route("demote/{userid}/{role}")]
+        [Route("demote/{userId}/{role}")]
         [Authorize(Policy = "CanChangeRoles", AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult> RemoveRoleFromUser(
             string userId,

@@ -46,6 +46,8 @@ namespace QuizWorld.Web.Services.RoleService
 
             var users = await this.userManager.Users
                 .Where(u => u.UserRoles.Where(ur => ur.Role.Name == role).Any())
+                .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
                 .SortByOrder(u => u.UserName, order)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
@@ -53,7 +55,7 @@ namespace QuizWorld.Web.Services.RoleService
                 {
                     Username = u.UserName,
                     Id = u.Id.ToString(),
-                    Roles = this.GenerateRoleString(u.UserRoles)
+                    Roles = GenerateRoleString(u.UserRoles)
                 })
                 .ToListAsync();
 
@@ -165,7 +167,7 @@ namespace QuizWorld.Web.Services.RoleService
         /// </summary>
         /// <param name="usersRoles"></param>
         /// <returns></returns>
-        private string GenerateRoleString(ICollection<ApplicationUserRole> usersRoles)
+        private static string GenerateRoleString(ICollection<ApplicationUserRole> usersRoles)
         {
             var roles = usersRoles.Select(ur => ur.Role.Name).ToList();
             if (roles.Count > 1)
