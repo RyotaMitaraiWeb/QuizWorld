@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Infrastructure.ModelBinders;
+using QuizWorld.ViewModels.Common;
 using QuizWorld.Web.Contracts.Roles;
 
 namespace QuizWorld.Web.Areas.Administration.Controllers
@@ -45,13 +46,32 @@ namespace QuizWorld.Web.Areas.Administration.Controllers
         [HttpPut]
         [Route("promote/{userid}/{role}")]
         [Authorize(Policy = "CanChangeRoles", AuthenticationSchemes = "Bearer")]
-        public Task<ActionResult> GiveUserRole(
+        public async Task<ActionResult> GiveUserRole(
             string userId,
             string role,
             [ModelBinder(BinderType = typeof(PaginationModelBinder))] int page,
             [ModelBinder(BinderType = typeof(SortingOrderModelBinder))] SortingOrders order)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var result = await this.roleService.GiveUserRole(userId, role);
+                if (result == null)
+                {
+                    return BadRequest();
+                }
+
+                var updatedUserList = await this.roleService.GetUsersOfRole(role, page, order, 20);
+                return Ok(updatedUserList);
+            }
+            catch (ArgumentException e)
+            {
+                var errors = new ErrorViewModel() { Errors = new string[] { e.Message } };
+                return NotFound(errors);
+            }
+            catch
+            {
+                return StatusCode(503);
+            }
         }
 
         [HttpPut]
