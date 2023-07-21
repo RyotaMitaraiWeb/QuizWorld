@@ -28,6 +28,8 @@ using QuizWorld.Infrastructure.AuthConfig.CanAccessLogs;
 using QuizWorld.Web.Contracts.Logging;
 using QuizWorld.Web.Services.Logging;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
+using QuizWorld.Web.Contracts.Roles;
+using QuizWorld.Web.Services.RoleService;
 
 namespace QuizWorld.Web
 {
@@ -58,6 +60,7 @@ namespace QuizWorld.Web
             builder.Services.AddScoped<IQuizService, QuizService>();
             builder.Services.AddScoped<IGradeService, GradeService>();
             builder.Services.AddScoped<IActivityLogger, ActivityLogger>();
+            builder.Services.AddScoped<IRoleService, RoleService>();
             builder.Services.AddScoped<IAuthorizationHandler, CanPerformOwnerActionHandler>();
             builder.Services.AddScoped<IAuthorizationHandler, CanAccessLogsHandler>();
 
