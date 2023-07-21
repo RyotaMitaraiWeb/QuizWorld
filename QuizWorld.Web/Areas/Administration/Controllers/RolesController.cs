@@ -20,13 +20,26 @@ namespace QuizWorld.Web.Areas.Administration.Controllers
         [HttpGet]
         [Route("users/{role}")]
         [Authorize(Policy = "CanSeeRoles", AuthenticationSchemes = "Bearer")]
-        public Task<ActionResult> GetUsersOfRole(
+        public async Task<ActionResult> GetUsersOfRole(
             string role,
             [ModelBinder(BinderType = typeof(PaginationModelBinder))] int page,
             [ModelBinder(BinderType = typeof(SortingOrderModelBinder))] SortingOrders order
         )
         {
-            throw new NotImplementedException();
+            try
+            {
+                var users = await this.roleService.GetUsersOfRole(role, page, order, 20);
+                return Ok(users);
+
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch
+            {
+                return StatusCode(503);
+            }
         }
 
         [HttpPut]

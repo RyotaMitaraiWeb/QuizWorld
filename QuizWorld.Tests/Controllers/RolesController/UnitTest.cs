@@ -62,7 +62,7 @@ namespace QuizWorld.Tests.Controllers.RolesControllerUnitTests
                 .Setup(rs => rs.GetUsersOfRole(Roles.Moderator, 1, SortingOrders.Ascending, 20))
                 .ThrowsAsync(new Exception());
 
-            var result = await this.controller.GetUsersOfRole("Janitor", 1, SortingOrders.Ascending);
+            var result = await this.controller.GetUsersOfRole(Roles.Moderator, 1, SortingOrders.Ascending);
             Assert.That(result, Is.TypeOf<StatusCodeResult>());
         }
 
