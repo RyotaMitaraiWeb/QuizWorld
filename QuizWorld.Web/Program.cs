@@ -32,6 +32,7 @@ using QuizWorld.Web.Contracts.Roles;
 using QuizWorld.Web.Services.RoleService;
 using QuizWorld.Infrastructure.AuthConfig.CanChangeRoles;
 using QuizWorld.Common.Constants.Roles;
+using QuizWorld.Infrastructure.Extensions;
 
 namespace QuizWorld.Web
 {
@@ -71,6 +72,8 @@ namespace QuizWorld.Web
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            
 
             builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
@@ -182,7 +185,7 @@ namespace QuizWorld.Web
             });
 
             var app = builder.Build();
-
+            
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -196,6 +199,7 @@ namespace QuizWorld.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.SeedAdministrator("admin");
 
             app.MapControllers();
 
