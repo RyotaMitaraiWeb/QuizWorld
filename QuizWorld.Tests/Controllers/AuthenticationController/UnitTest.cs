@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using QuizWorld.Common.Constants.Roles;
 
 namespace QuizWorld.Tests.Controllers.AuthenticationControllerUnitTests
 {
@@ -36,7 +37,7 @@ namespace QuizWorld.Tests.Controllers.AuthenticationControllerUnitTests
             {
                 Id = "a",
                 Username = "ryota1",
-                Roles = new string[] { "User" } 
+                Roles = new string[] { Roles.User } 
             };
 
             this.register = new RegisterViewModel
@@ -71,7 +72,7 @@ namespace QuizWorld.Tests.Controllers.AuthenticationControllerUnitTests
                 Assert.That(value.Token, Is.EqualTo("a"));
                 Assert.That(value.Username, Is.EqualTo(this.register.Username));
                 Assert.That(value.Roles, Has.Length.EqualTo(1));
-                Assert.That(value.Roles[0], Is.EqualTo("User"));
+                Assert.That(value.Roles[0], Is.EqualTo(Roles.User));
             });
         }
 
@@ -122,7 +123,7 @@ namespace QuizWorld.Tests.Controllers.AuthenticationControllerUnitTests
                 Assert.That(value.Token, Is.EqualTo("a"));
                 Assert.That(value.Username, Is.EqualTo(this.register.Username));
                 Assert.That(value.Roles, Has.Length.EqualTo(1));
-                Assert.That(value.Roles[0], Is.EqualTo("User"));
+                Assert.That(value.Roles[0], Is.EqualTo(Roles.User));
             });
         }
 
@@ -173,7 +174,7 @@ namespace QuizWorld.Tests.Controllers.AuthenticationControllerUnitTests
                 Assert.That(value.Token, Is.EqualTo("a"));
                 Assert.That(value.Username, Is.EqualTo(this.register.Username));
                 Assert.That(value.Roles, Has.Length.EqualTo(1));
-                Assert.That(value.Roles[0], Is.EqualTo("User"));
+                Assert.That(value.Roles[0], Is.EqualTo(Roles.User));
             });
         }
 

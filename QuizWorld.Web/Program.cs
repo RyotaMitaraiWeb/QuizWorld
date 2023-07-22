@@ -160,17 +160,17 @@ namespace QuizWorld.Web
             {
                 options.AddPolicy("CanEditQuiz", policy =>
                 {
-                    policy.Requirements.Add(new CanPerformOwnerActionRequirement("Moderator"));
+                    policy.Requirements.Add(new CanPerformOwnerActionRequirement(Roles.Moderator));
                 });
 
                 options.AddPolicy("CanDeleteQuiz", policy =>
                 {
-                    policy.Requirements.Add(new CanPerformOwnerActionRequirement("Moderator"));
+                    policy.Requirements.Add(new CanPerformOwnerActionRequirement(Roles.Moderator));
                 });
 
                 options.AddPolicy("CanAccessLogs", policy =>
                 {
-                    policy.Requirements.Add(new CanAccessLogsRequirement("Administrator"));
+                    policy.Requirements.Add(new CanAccessLogsRequirement(Roles.Admin));
                 });
 
                 options.AddPolicy("CanSeeRoles", policy =>

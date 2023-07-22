@@ -39,8 +39,8 @@ namespace QuizWorld.Tests.Services.RoleServiceImMemoryTests
             Assert.That(admin.Roles, Is.EqualTo("Administrator, Moderator"));
             Assert.Multiple(() =>
             {
-                Assert.That(moderator.Roles, Is.EqualTo("Moderator"));
-                Assert.That(user.Roles, Is.EqualTo("User"));
+                Assert.That(moderator.Roles, Is.EqualTo(Roles.Moderator));
+                Assert.That(user.Roles, Is.EqualTo(Roles.User));
             });
 
             var sortedResult = await this.service.GetUsersOfRole(Roles.Moderator, 2, SortingOrders.Ascending, 1);

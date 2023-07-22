@@ -10,6 +10,7 @@ using QuizWorld.Common.Constants.Types;
 using QuizWorld.Infrastructure.Data.Entities.Logging;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Infrastructure.Data.Entities.Quiz;
+using QuizWorld.Common.Constants.Roles;
 
 namespace QuizWorld.Tests
 {
@@ -87,20 +88,20 @@ namespace QuizWorld.Tests
 
             dbContext.Roles.Add(new ApplicationRole()
             {
-                Name = "User",
-                NormalizedName = "USER",
+                Name = Roles.User,
+                NormalizedName = Roles.User.ToUpper(),
             });
 
             dbContext.Roles.Add(new ApplicationRole()
             {
-                Name = "Moderator",
-                NormalizedName = "MODERATOR",
+                Name = Roles.Moderator,
+                NormalizedName = Roles.Moderator.ToUpper(),
             });
 
             dbContext.Roles.Add(new ApplicationRole()
             {
-                Name = "Administrator",
-                NormalizedName = "ADMINISTRATOR",
+                Name = Roles.Admin,
+                NormalizedName = Roles.Admin.ToUpper(),
             });
 
             dbContext.SaveChangesAsync().Wait();
@@ -160,9 +161,9 @@ namespace QuizWorld.Tests
             this.userManager.CreateAsync(this.Moderator, "123456").Wait();
             this.userManager.CreateAsync(this.Admin, "123456").Wait();
 
-            this.userManager.AddToRoleAsync(this.User, "User").Wait();
-            this.userManager.AddToRolesAsync(this.Moderator, new string[] { "User", "Moderator" }).Wait();
-            this.userManager.AddToRolesAsync(this.Admin, new string[] { "User", "Moderator", "Administrator" }).Wait();
+            this.userManager.AddToRoleAsync(this.User, Roles.User).Wait();
+            this.userManager.AddToRolesAsync(this.Moderator, new string[] { Roles.User, Roles.Moderator }).Wait();
+            this.userManager.AddToRolesAsync(this.Admin, new string[] { Roles.User, Roles.Moderator, Roles.Admin }).Wait();
 
             this.repository.AddAsync(this.Quiz).Wait();
             this.repository.AddAsync(this.DeletedQuiz).Wait();
