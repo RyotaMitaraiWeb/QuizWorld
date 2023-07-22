@@ -77,8 +77,8 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
                 var user = await this.userService.Login(login);
                 if (user == null)
                 {
-                    var errors = new ErrorViewModel() { Errors = new string[] { "Something went wrong while attempting to log you in, please try again or check your input!" } };
-                    return BadRequest(errors);
+                    var errors = new ErrorViewModel() { Errors = new string[] { InvalidActionsMessages.FailedLogin } };
+                    return Unauthorized(errors);
                 }
 
                 string jwt = this.jwtService.GenerateJWT(user);
@@ -93,6 +93,7 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
 
                 return Created("/users" + session.Username, session);
             }
+            
             catch
             {
                 var errors = new ErrorViewModel() { Errors = new string[] { InvalidActionsMessages.RequestFailed } };

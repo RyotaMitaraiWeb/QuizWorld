@@ -127,7 +127,7 @@ namespace QuizWorld.Tests.Controllers.AuthenticationControllerUnitTests
         }
 
         [Test]
-        public async Task Test_LoginReturnsBadRequestIfLoginFails()
+        public async Task Test_LoginReturnsUnauthorizedIfLoginFails()
         {
             this.userServiceMock
                 .Setup(us => us.Login(this.login))
@@ -135,7 +135,7 @@ namespace QuizWorld.Tests.Controllers.AuthenticationControllerUnitTests
 
 
             var result = await this.controller.Login(this.login);
-            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+            Assert.That(result, Is.TypeOf<UnauthorizedObjectResult>());
         }
 
         [Test]
