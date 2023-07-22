@@ -22,57 +22,6 @@ namespace QuizWorld.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
-
-                    b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("cace07a2-930c-4029-9465-019d78edcf68"),
-                            ConcurrencyStamp = "336a122d-4494-4509-adaa-95de720b2657",
-                            Name = "User",
-                            NormalizedName = "USER"
-                        },
-                        new
-                        {
-                            Id = new Guid("6448a395-d249-4aef-bf74-9cdeeba69f33"),
-                            ConcurrencyStamp = "07dc7417-c26a-49e0-ba40-ff6021a1ded9",
-                            Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
-                        },
-                        new
-                        {
-                            Id = new Guid("90f00fd4-9966-4819-aa58-98836f0e0ddf"),
-                            ConcurrencyStamp = "cba33ea6-94ae-402e-87a3-1a5a6cd9147d",
-                            Name = "Moderator",
-                            NormalizedName = "MODERATOR"
-                        });
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
@@ -142,21 +91,6 @@ namespace QuizWorld.Infrastructure.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetUserRoles", (string)null);
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -176,37 +110,58 @@ namespace QuizWorld.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.Answer", b =>
+            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.Identity.ApplicationRole", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasComment("Primary key for the answer. For single- and multiple-choice questions, the ID is also used on the client to determine if the user has answered the question correctly");
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Correct")
-                        .HasColumnType("bit")
-                        .HasComment("A mark that indicates whether the answer is considered correct or wrong. Text questions should have only correct answers.");
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("QuestionId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasComment("The ID of the question which this answer belongs to");
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasComment("The content of the answer. For text questions, this is also used on the client to determine whether the user has answered correctly");
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QuestionId");
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("Answers");
+                    b.ToTable("AspNetRoles", (string)null);
 
-                    b.HasComment("An answer for the given question, which can be correct or wrong. For text questions, all answers should be correct");
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("cace07a2-930c-4029-9465-019d78edcf68"),
+                            ConcurrencyStamp = "8fcee5fd-8774-4637-840c-2eb9741c1c19",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = new Guid("90f00fd4-9966-4819-aa58-98836f0e0ddf"),
+                            ConcurrencyStamp = "e98ea9b9-9bb2-414e-a716-7eb6e71fc648",
+                            Name = "Administrator",
+                            NormalizedName = "ADMINISTRATOR"
+                        },
+                        new
+                        {
+                            Id = new Guid("6448a395-d249-4aef-bf74-9cdeeba69f33"),
+                            ConcurrencyStamp = "885d9b50-dc24-4cd8-9102-0df14b5df2a8",
+                            Name = "Moderator",
+                            NormalizedName = "MODERATOR"
+                        });
                 });
 
-            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.ApplicationUser", b =>
+            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.Identity.ApplicationUser", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -272,6 +227,21 @@ namespace QuizWorld.Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.Identity.ApplicationUserRole", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
             modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.Logging.ActivityLog", b =>
                 {
                     b.Property<Guid>("Id")
@@ -290,7 +260,37 @@ namespace QuizWorld.Infrastructure.Migrations
                     b.ToTable("ActivityLogs");
                 });
 
-            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.Question", b =>
+            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.Quiz.Answer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("Primary key for the answer. For single- and multiple-choice questions, the ID is also used on the client to determine if the user has answered the question correctly");
+
+                    b.Property<bool>("Correct")
+                        .HasColumnType("bit")
+                        .HasComment("A mark that indicates whether the answer is considered correct or wrong. Text questions should have only correct answers.");
+
+                    b.Property<Guid>("QuestionId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("The ID of the question which this answer belongs to");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasComment("The content of the answer. For text questions, this is also used on the client to determine whether the user has answered correctly");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("Answers");
+
+                    b.HasComment("An answer for the given question, which can be correct or wrong. For text questions, all answers should be correct");
+                });
+
+            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.Quiz.Question", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -330,7 +330,7 @@ namespace QuizWorld.Infrastructure.Migrations
                     b.HasComment("A question in the given quiz.");
                 });
 
-            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.QuestionType", b =>
+            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.Quiz.QuestionType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -383,7 +383,7 @@ namespace QuizWorld.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.Quiz", b =>
+            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.Quiz.Quiz", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -443,7 +443,7 @@ namespace QuizWorld.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
+                    b.HasOne("QuizWorld.Infrastructure.Data.Entities.Identity.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -452,7 +452,7 @@ namespace QuizWorld.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("QuizWorld.Infrastructure.Data.Entities.ApplicationUser", null)
+                    b.HasOne("QuizWorld.Infrastructure.Data.Entities.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -461,22 +461,7 @@ namespace QuizWorld.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("QuizWorld.Infrastructure.Data.Entities.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("QuizWorld.Infrastructure.Data.Entities.ApplicationUser", null)
+                    b.HasOne("QuizWorld.Infrastructure.Data.Entities.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -485,16 +470,35 @@ namespace QuizWorld.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("QuizWorld.Infrastructure.Data.Entities.ApplicationUser", null)
+                    b.HasOne("QuizWorld.Infrastructure.Data.Entities.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.Answer", b =>
+            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.Identity.ApplicationUserRole", b =>
                 {
-                    b.HasOne("QuizWorld.Infrastructure.Data.Entities.Question", "Question")
+                    b.HasOne("QuizWorld.Infrastructure.Data.Entities.Identity.ApplicationRole", "Role")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("QuizWorld.Infrastructure.Data.Entities.Identity.ApplicationUser", "User")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.Quiz.Answer", b =>
+                {
+                    b.HasOne("QuizWorld.Infrastructure.Data.Entities.Quiz.Question", "Question")
                         .WithMany("Answers")
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -503,15 +507,15 @@ namespace QuizWorld.Infrastructure.Migrations
                     b.Navigation("Question");
                 });
 
-            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.Question", b =>
+            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.Quiz.Question", b =>
                 {
-                    b.HasOne("QuizWorld.Infrastructure.Data.Entities.QuestionType", "QuestionType")
+                    b.HasOne("QuizWorld.Infrastructure.Data.Entities.Quiz.QuestionType", "QuestionType")
                         .WithMany()
                         .HasForeignKey("QuestionTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("QuizWorld.Infrastructure.Data.Entities.Quiz", "Quiz")
+                    b.HasOne("QuizWorld.Infrastructure.Data.Entities.Quiz.Quiz", "Quiz")
                         .WithMany("Questions")
                         .HasForeignKey("QuizId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -522,9 +526,9 @@ namespace QuizWorld.Infrastructure.Migrations
                     b.Navigation("Quiz");
                 });
 
-            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.Quiz", b =>
+            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.Quiz.Quiz", b =>
                 {
-                    b.HasOne("QuizWorld.Infrastructure.Data.Entities.ApplicationUser", "Creator")
+                    b.HasOne("QuizWorld.Infrastructure.Data.Entities.Identity.ApplicationUser", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -533,12 +537,22 @@ namespace QuizWorld.Infrastructure.Migrations
                     b.Navigation("Creator");
                 });
 
-            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.Question", b =>
+            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.Identity.ApplicationRole", b =>
+                {
+                    b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.Identity.ApplicationUser", b =>
+                {
+                    b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.Quiz.Question", b =>
                 {
                     b.Navigation("Answers");
                 });
 
-            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.Quiz", b =>
+            modelBuilder.Entity("QuizWorld.Infrastructure.Data.Entities.Quiz.Quiz", b =>
                 {
                     b.Navigation("Questions");
                 });

@@ -30,6 +30,9 @@ using QuizWorld.Web.Services.Logging;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Web.Contracts.Roles;
 using QuizWorld.Web.Services.RoleService;
+using QuizWorld.Infrastructure.AuthConfig.CanChangeRoles;
+using QuizWorld.Common.Constants.Roles;
+using QuizWorld.Infrastructure.Extensions;
 
 namespace QuizWorld.Web
 {
@@ -61,6 +64,7 @@ namespace QuizWorld.Web
             builder.Services.AddScoped<IGradeService, GradeService>();
             builder.Services.AddScoped<IActivityLogger, ActivityLogger>();
             builder.Services.AddScoped<IRoleService, RoleService>();
+            builder.Services.AddScoped<IAuthorizationHandler, CanWorkWithRolesHandler>();
             builder.Services.AddScoped<IAuthorizationHandler, CanPerformOwnerActionHandler>();
             builder.Services.AddScoped<IAuthorizationHandler, CanAccessLogsHandler>();
 
@@ -68,6 +72,8 @@ namespace QuizWorld.Web
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            
 
             builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
@@ -166,10 +172,20 @@ namespace QuizWorld.Web
                 {
                     policy.Requirements.Add(new CanAccessLogsRequirement("Administrator"));
                 });
+
+                options.AddPolicy("CanSeeRoles", policy =>
+                {
+                    policy.Requirements.Add(new CanWorkWithRolesRequirement(false, Roles.Admin));
+                });
+
+                options.AddPolicy("CanChangeRoles", policy =>
+                {
+                    policy.Requirements.Add(new CanWorkWithRolesRequirement(true, Roles.Admin));
+                });
             });
 
             var app = builder.Build();
-
+            
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -183,6 +199,7 @@ namespace QuizWorld.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.SeedAdministrator("admin", "123456");
 
             app.MapControllers();
 
