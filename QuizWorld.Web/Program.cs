@@ -199,7 +199,7 @@ namespace QuizWorld.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.SeedAdministrator("admin");
+            app.SeedAdministrator("admin", "123456");
 
             app.MapControllers();
 
