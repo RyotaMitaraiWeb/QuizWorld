@@ -184,6 +184,18 @@ namespace QuizWorld.Web
                 });
             });
 
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    policy =>
+                    {
+                        policy.WithOrigins(builder.Configuration["AllowedHosts"]);
+                        policy.AllowAnyHeader();
+                        policy.WithMethods("GET", "PUT", "POST", "DELETE");
+                    });
+            });
+
             var app = builder.Build();
             
 
@@ -195,9 +207,11 @@ namespace QuizWorld.Web
             }
 
             app.UseHttpsRedirection();
-
+            app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            
 
             app.SeedAdministrator("admin", "123456");
 
