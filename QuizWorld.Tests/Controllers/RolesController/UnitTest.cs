@@ -33,11 +33,11 @@ namespace QuizWorld.Tests.Controllers.RolesControllerUnitTests
 
             this.roleServiceMock
                 .Setup(rs => rs.GetUsersOfRole(Roles.Moderator, 1, SortingOrders.Ascending, 20))
-                .ReturnsAsync(list);
+                .ReturnsAsync(new ListUsersViewModel() { Total = 3, Users = list });
 
             var result = await this.controller.GetUsersOfRole(Roles.Moderator, 1, SortingOrders.Ascending) as OkObjectResult;
-            var value = result.Value as List<ListUserViewModel>;
-            Assert.That(value, Is.EqualTo(list));
+            var value = result.Value as ListUsersViewModel;
+            Assert.That(value.Users, Is.EqualTo(list));
         }
 
         [Test]
@@ -77,11 +77,11 @@ namespace QuizWorld.Tests.Controllers.RolesControllerUnitTests
 
             this.roleServiceMock
                 .Setup(rs => rs.GetUsersOfRole(Roles.Moderator, 1, SortingOrders.Ascending, 20))
-                .ReturnsAsync(list);
+                .ReturnsAsync(new ListUsersViewModel() { Total = 3, Users = list });
 
             var result = await this.controller.GiveUserRole(id.ToString(), Roles.Moderator, 1, SortingOrders.Ascending) as OkObjectResult;
-            var value = result.Value as List<ListUserViewModel>;
-            Assert.That(value, Is.EqualTo(list));
+            var value = result.Value as ListUsersViewModel;
+            Assert.That(value.Users, Is.EqualTo(list));
         }
 
         [Test]
@@ -143,11 +143,11 @@ namespace QuizWorld.Tests.Controllers.RolesControllerUnitTests
 
             this.roleServiceMock
                 .Setup(rs => rs.GetUsersOfRole(Roles.Moderator, 1, SortingOrders.Ascending, 20))
-                .ReturnsAsync(list);
+                .ReturnsAsync(new ListUsersViewModel() { Total = 3, Users = list });
 
             var result = await this.controller.RemoveRoleFromUser(id.ToString(), Roles.Moderator, 1, SortingOrders.Ascending) as OkObjectResult;
-            var value = result.Value as List<ListUserViewModel>;
-            Assert.That(value, Is.EqualTo(list));
+            var value = result.Value as ListUsersViewModel;
+            Assert.That(value.Users, Is.EqualTo(list));
         }
 
         [Test]
@@ -198,20 +198,20 @@ namespace QuizWorld.Tests.Controllers.RolesControllerUnitTests
             Assert.That(result, Is.TypeOf<StatusCodeResult>());
         }
 
-        private List<ListUserViewModel> GenerateUserList()
+        private List<ListUserItemViewModel> GenerateUserList()
         {
-            return new List<ListUserViewModel>()
+            return new List<ListUserItemViewModel>()
             {
-                new ListUserViewModel()
+                new ListUserItemViewModel()
                 {
                     Id = "1",
-                    Roles = "Administrator, Moderator",
+                    Roles = new List<string>() { Roles.Admin, Roles.Moderator },
                     Username = "admin",
                 },
-                new ListUserViewModel()
+                new ListUserItemViewModel()
                 {
                     Id = "2",
-                    Roles = "Moderator",
+                    Roles = new List<string>() { Roles.Moderator },
                     Username = "moderator",
                 },
             };

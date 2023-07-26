@@ -37,21 +37,26 @@ namespace QuizWorld.Web.Services.RoleService
         /// <param name="order">The order in which the users will be sorted. Users are sorted by their username.</param>
         /// <returns>A paginated list of users sorted by their usernames.</returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<IEnumerable<ListUserViewModel>?> GetUsersOfRole(string role, int page, SortingOrders order, int pageSize = 20)
+        public async Task<ListUsersViewModel> GetUsersOfRole(string role, int page, SortingOrders order, int pageSize = 20)
         {
             if (!Roles.AvailableRoles.Contains(role))
             {
                 throw new ArgumentException("The provided role does not exist!");
             }
 
-            var users = await this.userManager.Users
-                .Where(u => u.UserRoles.Where(ur => ur.Role.Name == role).Any())
+            int count = 0;
+
+            var query = this.userManager.Users
+                .Where(u => u.UserRoles.Where(ur => ur.Role.Name == role).Any());
+
+            count = await query.CountAsync();
+
+            var users = await query
                 .Include(u => u.UserRoles)
                 .ThenInclude(ur => ur.Role)
                 .SortByOrder(u => u.UserName, order)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .Select(u => new ListUserViewModel()
+                .Paginate(page, pageSize)
+                .Select(u => new ListUserItemViewModel()
                 {
                     Username = u.UserName,
                     Id = u.Id.ToString(),
@@ -59,7 +64,7 @@ namespace QuizWorld.Web.Services.RoleService
                 })
                 .ToListAsync();
 
-            return users;
+            return new ListUsersViewModel() { Total = count, Users = users};
         }
 
         /// <summary>
@@ -162,12 +167,12 @@ namespace QuizWorld.Web.Services.RoleService
         }
 
         /// <summary>
-        /// Generates a string of roles, separated by a comma and space, ordered alphabetically. The role
+        /// Generates a list of roles, ordered alphabetically. The role
         /// "User" is removed if there are other roles present.
         /// </summary>
         /// <param name="usersRoles"></param>
         /// <returns></returns>
-        private static string GenerateRoleString(ICollection<ApplicationUserRole> usersRoles)
+        private static List<string> GenerateRoleString(ICollection<ApplicationUserRole> usersRoles)
         {
             var roles = usersRoles.Select(ur => ur.Role.Name).ToList();
             if (roles.Count > 1)
@@ -175,7 +180,7 @@ namespace QuizWorld.Web.Services.RoleService
                 roles.Remove(Roles.User);
             }
 
-            return String.Join(", ", roles.OrderBy(r => r));
+            return roles.OrderBy(r => r).ToList();
         }
     }
 }

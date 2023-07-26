@@ -11,6 +11,6 @@ namespace QuizWorld.Web.Contracts.Logging
     public interface IActivityLogger
     {
         Task LogActivity(string message, DateTime date);
-        Task<IEnumerable<ActivityLogViewModel>> RetrieveLogs(int page, SortingOrders order, int pageSize);
+        Task<ActivityLogsViewModel> RetrieveLogs(int page, SortingOrders order, int pageSize);
     }
 }

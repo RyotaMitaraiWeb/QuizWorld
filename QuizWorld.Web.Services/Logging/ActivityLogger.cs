@@ -50,13 +50,16 @@ namespace QuizWorld.Web.Services.Logging
         /// <param name="order">The order in which the logs will be sorted. All logs are sorted by their date.</param>
         /// <param name="pageSize">The amount of logs to be taken</param>
         /// <returns>A paginated and sorted list of activity logs.</returns>
-        public async Task<IEnumerable<ActivityLogViewModel>> RetrieveLogs(int page, SortingOrders order, int pageSize = 6)
+        public async Task<ActivityLogsViewModel> RetrieveLogs(int page, SortingOrders order, int pageSize = 6)
         {
-            var logs = await this.repository
-                .AllReadonly<ActivityLog>()
+            int count = 0;
+            var query = this.repository
+                .AllReadonly<ActivityLog>();
+
+            count = await query.CountAsync();
+            var logs = await query
                 .SortByOrder(al => al.Date, order)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
+                .Paginate(page, pageSize)
                 .Select(al => new ActivityLogViewModel
                 {
                     Id = al.Id.ToString(),
@@ -67,7 +70,7 @@ namespace QuizWorld.Web.Services.Logging
 
             
 
-            return logs;
+            return new ActivityLogsViewModel() { Total = count, Logs = logs };
         }
     }
 }

@@ -34,10 +34,12 @@ namespace QuizWorld.Tests.Services.ActivityLoggerUnitTests
                 .Returns(this.GenerateMockLogs(3));
 
             var result = await this.logger.RetrieveLogs(1, order, 1);
-
-            Assert.That(result.Count(), Is.EqualTo(1));
-
-            var log = result.First();
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Logs.Count, Is.EqualTo(1));
+                Assert.That(result.Total, Is.EqualTo(3));
+            });
+            var log = result.Logs.First();
 
             Assert.That(log.Message, Is.EqualTo(expectedMessage));
         }
