@@ -182,5 +182,19 @@ namespace QuizWorld.Web.Services.RoleService
 
             return roles.OrderBy(r => r).ToList();
         }
+
+        /// <summary>
+        /// Retrieves a paginated and sorted list of users whose username contains the given <paramref name="query"/>
+        /// </summary>
+        /// <param name="query">The string to be looked up in the users' usernames. The search is case insensitive.</param>
+        /// <param name="page">The current page</param>
+        /// <param name="order">The order in which the users will be sorted. Users are sorted by their usernames.</param>
+        /// <param name="pageSize">The maximum amount of items that will be retrieved.</param>
+        /// <returns>A sorted and paginated list of users whose username contains the <paramref name="query"/></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public Task<ListUsersViewModel> GetUsersByUsername(string query, int page, SortingOrders order, int pageSize = 20)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

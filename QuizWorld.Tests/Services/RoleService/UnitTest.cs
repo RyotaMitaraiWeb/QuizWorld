@@ -305,6 +305,24 @@ namespace QuizWorld.Tests.Services.RoleServiceUnitTests
             }
         }
 
+        [Test]
+        [TestCase("e", 2, 1, SortingOrders.Ascending)]
+        [TestCase("M", 2, 1, SortingOrders.Descending)]
+        public async Task Test_GetsUsersByUsernameReturnsAListOfUsersSuccessfully(string query, int expectedTotal, int expectedRolesCount, SortingOrders order)
+        {
+            this.userManagerMock
+                .Setup(um => um.Users)
+                .Returns(this.GenerateUsers());
+
+            var result = await this.service.GetUsersByUsername(query, 1, order, 1);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Total, Is.EqualTo(expectedRolesCount));
+                Assert.That(result.Users.Count, Is.EqualTo(1));
+            });
+            Assert.That(result.Users.First().Roles.Count, Is.EqualTo(expectedRolesCount));
+        }
+
         private IQueryable<ApplicationUser> GenerateUsers()
         {
             var users = new List<ApplicationUser>();
