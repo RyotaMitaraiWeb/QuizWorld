@@ -205,13 +205,13 @@ namespace QuizWorld.Tests.Controllers.RolesControllerUnitTests
                 new ListUserViewModel()
                 {
                     Id = "1",
-                    Roles = "Administrator, Moderator",
+                    Roles = new List<string>() { Roles.Admin, Roles.Moderator },
                     Username = "admin",
                 },
                 new ListUserViewModel()
                 {
                     Id = "2",
-                    Roles = "Moderator",
+                    Roles = new List<string>() { Roles.Moderator },
                     Username = "moderator",
                 },
             };

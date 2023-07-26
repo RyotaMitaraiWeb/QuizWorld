@@ -162,12 +162,12 @@ namespace QuizWorld.Web.Services.RoleService
         }
 
         /// <summary>
-        /// Generates a string of roles, separated by a comma and space, ordered alphabetically. The role
+        /// Generates a list of roles, ordered alphabetically. The role
         /// "User" is removed if there are other roles present.
         /// </summary>
         /// <param name="usersRoles"></param>
         /// <returns></returns>
-        private static string GenerateRoleString(ICollection<ApplicationUserRole> usersRoles)
+        private static List<string> GenerateRoleString(ICollection<ApplicationUserRole> usersRoles)
         {
             var roles = usersRoles.Select(ur => ur.Role.Name).ToList();
             if (roles.Count > 1)
@@ -175,7 +175,7 @@ namespace QuizWorld.Web.Services.RoleService
                 roles.Remove(Roles.User);
             }
 
-            return String.Join(", ", roles.OrderBy(r => r));
+            return roles.OrderBy(r => r).ToList();
         }
     }
 }

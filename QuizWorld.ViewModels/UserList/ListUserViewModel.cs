@@ -14,9 +14,9 @@ namespace QuizWorld.ViewModels.UserList
         public string Id { get; set; } = string.Empty;
         public string Username { get; set; } = string.Empty;
         /// <summary>
-        /// A collection of roles joined by a comma and space (", "). The role "User" is
+        /// A collection of roles. The role "User" is
         /// removed from the list if the user has any other roles.
         /// </summary>
-        public string Roles { get; set; } = string.Empty;
+        public IEnumerable<string> Roles { get; set; } = Enumerable.Empty<string>();
     }
 }
