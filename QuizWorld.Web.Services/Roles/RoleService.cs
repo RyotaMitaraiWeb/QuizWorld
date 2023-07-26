@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Common.Constants.Sorting;

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using MockQueryable.Moq;
 using Moq;
 using QuizWorld.Common.Constants.Roles;
