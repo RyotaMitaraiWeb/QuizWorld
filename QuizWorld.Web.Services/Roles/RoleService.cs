@@ -192,9 +192,26 @@ namespace QuizWorld.Web.Services.RoleService
         /// <param name="pageSize">The maximum amount of items that will be retrieved.</param>
         /// <returns>A sorted and paginated list of users whose username contains the <paramref name="query"/></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Task<ListUsersViewModel> GetUsersByUsername(string query, int page, SortingOrders order, int pageSize = 20)
+        public async Task<ListUsersViewModel> GetUsersByUsername(string query, int page, SortingOrders order, int pageSize = 20)
         {
-            throw new NotImplementedException();
+            var userQuery = this.userManager
+                .Users
+                .Where(u => u.NormalizedUserName.Contains(query.Normalized()));
+
+            int count = await userQuery.CountAsync();
+
+            var users = await userQuery
+                .SortByOrder(u => u.NormalizedUserName, order)
+                .Paginate(page, pageSize)
+                .Select(u => new ListUserItemViewModel()
+                {
+                    Id = u.Id.ToString(),
+                    Username = u.UserName,
+                    Roles = GenerateRoleString(u.UserRoles)
+                })
+                .ToListAsync();
+
+            return new ListUsersViewModel() { Total = count, Users = users };
         }
     }
 }
