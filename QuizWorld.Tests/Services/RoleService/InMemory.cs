@@ -29,7 +29,7 @@ namespace QuizWorld.Tests.Services.RoleServiceImMemoryTests
         public async Task Test_GetUsersOfRoleCorrectlyRetrievesUsersOfTheSpecifiedRole()
         {
             var result = await this.service.GetUsersOfRole(Roles.User, 1, SortingOrders.Ascending, 3);
-            var users = result.OrderBy(users => users.Username).ToArray();
+            var users = result.Users.OrderBy(users => users.Username).ToArray();
             Assert.That(users, Has.Length.EqualTo(3));
 
             var admin = users[0];
@@ -46,10 +46,12 @@ namespace QuizWorld.Tests.Services.RoleServiceImMemoryTests
                 Assert.That(moderator.Roles, Does.Contain(Roles.Moderator));
                 Assert.That(moderator.Roles.Count, Is.EqualTo(1));
                 Assert.That(user.Roles, Does.Contain(Roles.User));
+
+                Assert.That(result.Total, Is.EqualTo(3));
             });
 
             var sortedResult = await this.service.GetUsersOfRole(Roles.Moderator, 2, SortingOrders.Ascending, 1);
-            var user2 = sortedResult.First();
+            var user2 = sortedResult.Users.First();
 
             Assert.That(user2.Username, Is.EqualTo("moderator1"));
         }

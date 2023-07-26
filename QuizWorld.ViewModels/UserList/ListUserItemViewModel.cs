@@ -9,7 +9,7 @@ namespace QuizWorld.ViewModels.UserList
     /// <summary>
     /// Represents a user in a list of users.
     /// </summary>
-    public class ListUserViewModel
+    public class ListUserItemViewModel
     {
         public string Id { get; set; } = string.Empty;
         public string Username { get; set; } = string.Empty;

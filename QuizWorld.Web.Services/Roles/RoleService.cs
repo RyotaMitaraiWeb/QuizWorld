@@ -37,20 +37,26 @@ namespace QuizWorld.Web.Services.RoleService
         /// <param name="order">The order in which the users will be sorted. Users are sorted by their username.</param>
         /// <returns>A paginated list of users sorted by their usernames.</returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<IEnumerable<ListUserViewModel>?> GetUsersOfRole(string role, int page, SortingOrders order, int pageSize = 20)
+        public async Task<ListUsersViewModel> GetUsersOfRole(string role, int page, SortingOrders order, int pageSize = 20)
         {
             if (!Roles.AvailableRoles.Contains(role))
             {
                 throw new ArgumentException("The provided role does not exist!");
             }
 
-            var users = await this.userManager.Users
-                .Where(u => u.UserRoles.Where(ur => ur.Role.Name == role).Any())
+            int count = 0;
+
+            var query = this.userManager.Users
+                .Where(u => u.UserRoles.Where(ur => ur.Role.Name == role).Any());
+
+            count = await query.CountAsync();
+
+            var users = await query
                 .Include(u => u.UserRoles)
                 .ThenInclude(ur => ur.Role)
                 .SortByOrder(u => u.UserName, order)
                 .Paginate(page, pageSize)
-                .Select(u => new ListUserViewModel()
+                .Select(u => new ListUserItemViewModel()
                 {
                     Username = u.UserName,
                     Id = u.Id.ToString(),
@@ -58,7 +64,7 @@ namespace QuizWorld.Web.Services.RoleService
                 })
                 .ToListAsync();
 
-            return users;
+            return new ListUsersViewModel() { Total = count, Users = users};
         }
 
         /// <summary>

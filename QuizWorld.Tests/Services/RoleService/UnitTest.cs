@@ -49,7 +49,7 @@ namespace QuizWorld.Tests.Services.RoleServiceUnitTests
                 .Returns(this.GenerateUsers());
 
             var result = await this.service.GetUsersOfRole(Roles.User, 1, SortingOrders.Ascending, 3);
-            var users = result.ToArray();
+            var users = result.Users.ToArray();
             Assert.That(users, Has.Length.EqualTo(3));
 
             var admin = users[0];
@@ -63,6 +63,8 @@ namespace QuizWorld.Tests.Services.RoleServiceUnitTests
                 Assert.That(admin.Roles.Count, Is.EqualTo(2));
                 Assert.That(user.Roles, Does.Contain(Roles.User));
                 Assert.That(user.Roles.Count, Is.EqualTo(1));
+
+                Assert.That(result.Total, Is.EqualTo(3));
             });
         }
 
