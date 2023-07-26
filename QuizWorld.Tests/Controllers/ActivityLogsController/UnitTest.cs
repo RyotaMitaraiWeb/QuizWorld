@@ -41,12 +41,12 @@ namespace QuizWorld.Tests.Controllers.ActivityLogsControllerUnitTests
 
             this.loggerMock
                 .Setup(l => l.RetrieveLogs(1, SortingOrders.Ascending, 20))
-                .ReturnsAsync(list);
+                .ReturnsAsync(new ActivityLogsViewModel() {  Total = 1, Logs = list });
 
             var result = await this.controller.GetLogs(1, SortingOrders.Ascending) as OkObjectResult;
-            var value = result.Value as List<ActivityLogViewModel>;
+            var value = result.Value as ActivityLogsViewModel;
 
-            Assert.That(value.First().Message, Is.EqualTo("test"));
+            Assert.That(value.Logs, Is.EqualTo(list));
         }
 
         [Test]

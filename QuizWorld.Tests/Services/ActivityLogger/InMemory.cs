@@ -32,11 +32,14 @@ namespace QuizWorld.Tests.Services.ActivityLoggerInMemoryTests
         {
             var result = await this.logger.RetrieveLogs(1, order, 1);
 
-            Assert.That(result.Count(), Is.EqualTo(1));
+            Assert.That(result.Logs.Count(), Is.EqualTo(1));
 
-            var log = result.First();
-
-            Assert.That(log.Message, Is.EqualTo(expectedMessage));
+            var log = result.Logs.First();
+            Assert.Multiple(() =>
+            {
+                Assert.That(log.Message, Is.EqualTo(expectedMessage));
+                Assert.That(result.Total, Is.EqualTo(3));
+            });
         }
 
         [Test]

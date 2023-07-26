@@ -1,4 +1,5 @@
-﻿using QuizWorld.Common.Constants.Sorting;
+﻿using Microsoft.EntityFrameworkCore;
+using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Infrastructure.Data.Entities.Quiz;
 using System;
 using System.Collections.Generic;
