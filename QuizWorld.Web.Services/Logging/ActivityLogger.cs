@@ -55,8 +55,7 @@ namespace QuizWorld.Web.Services.Logging
             var logs = await this.repository
                 .AllReadonly<ActivityLog>()
                 .SortByOrder(al => al.Date, order)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
+                .Paginate(page, pageSize)
                 .Select(al => new ActivityLogViewModel
                 {
                     Id = al.Id.ToString(),

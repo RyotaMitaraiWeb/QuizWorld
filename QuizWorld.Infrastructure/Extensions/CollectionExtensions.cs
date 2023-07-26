@@ -78,5 +78,20 @@ namespace QuizWorld.Infrastructure.Extensions
                 return query.OrderByDescending(expression);
             }
         }
+
+        /// <summary>
+        /// Configures the query to retrieve a paginated list of items.
+        /// </summary>
+        /// <typeparam name="TClass">The class of the collection</typeparam>
+        /// <param name="query">The query to be paginated</param>
+        /// <param name="page">The requested page</param>
+        /// <param name="pageSize">Maximum amount of items to be retrieved</param>
+        /// <returns>A paginated query</returns>
+        public static IQueryable<TClass> Paginate<TClass>(this IQueryable<TClass> query, int page, int pageSize)
+        {
+            return query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize);
+        }
     }
 }

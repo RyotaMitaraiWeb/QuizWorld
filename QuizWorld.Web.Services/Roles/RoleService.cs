@@ -49,8 +49,7 @@ namespace QuizWorld.Web.Services.RoleService
                 .Include(u => u.UserRoles)
                 .ThenInclude(ur => ur.Role)
                 .SortByOrder(u => u.UserName, order)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
+                .Paginate(page, pageSize)
                 .Select(u => new ListUserViewModel()
                 {
                     Username = u.UserName,

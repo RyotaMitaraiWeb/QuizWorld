@@ -134,8 +134,7 @@ namespace QuizWorld.Web.Services.QuizService
             int total = await query.CountAsync();
             var quizzes = await query
                 .SortByOptions(category, order)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
+                .Paginate(page, pageSize)
                 .Select(q => new CatalogueQuizItemViewModel()
                 {
                     Id = q.Id,
@@ -209,8 +208,7 @@ namespace QuizWorld.Web.Services.QuizService
 
             var quizzes = await queryList
                 .SortByOptions(category, order)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
+                .Paginate(page, pageSize)
                 .Select(q => new CatalogueQuizItemViewModel()
                 {
                     Id = q.Id,
@@ -272,8 +270,7 @@ namespace QuizWorld.Web.Services.QuizService
 
             var quizzes = await query
                 .SortByOptions(category, order)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
+                .Paginate(page, pageSize)
                 .Select(q => new CatalogueQuizItemViewModel()
                 {
                     Id = q.Id,
