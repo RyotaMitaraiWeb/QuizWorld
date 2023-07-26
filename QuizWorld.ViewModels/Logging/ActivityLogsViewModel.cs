@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace QuizWorld.ViewModels.Logging
 {
+    /// <summary>
+    /// A catalogue of activity logs
+    /// </summary>
     public class ActivityLogsViewModel
     {
         public int Total { get; set; }
