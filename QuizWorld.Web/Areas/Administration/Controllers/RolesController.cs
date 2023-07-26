@@ -20,6 +20,7 @@ namespace QuizWorld.Web.Areas.Administration.Controllers
 
         [HttpGet]
         [Route("users")]
+        [Authorize(Policy = "CanSeeRoles", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> GetUsersByUsername(
             [FromQuery] string username,
             [ModelBinder(BinderType = typeof(PaginationModelBinder))] int page,
