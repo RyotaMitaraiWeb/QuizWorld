@@ -60,7 +60,7 @@ namespace QuizWorld.Web.Services.RoleService
                 {
                     Username = u.UserName,
                     Id = u.Id.ToString(),
-                    Roles = GenerateRoleString(u.UserRoles)
+                    Roles = GenerateRoleList(u.UserRoles)
                 })
                 .ToListAsync();
 
@@ -167,23 +167,6 @@ namespace QuizWorld.Web.Services.RoleService
         }
 
         /// <summary>
-        /// Generates a list of roles, ordered alphabetically. The role
-        /// "User" is removed if there are other roles present.
-        /// </summary>
-        /// <param name="usersRoles"></param>
-        /// <returns></returns>
-        private static List<string> GenerateRoleString(ICollection<ApplicationUserRole> usersRoles)
-        {
-            var roles = usersRoles.Select(ur => ur.Role.Name).ToList();
-            if (roles.Count > 1)
-            {
-                roles.Remove(Roles.User);
-            }
-
-            return roles.OrderBy(r => r).ToList();
-        }
-
-        /// <summary>
         /// Retrieves a paginated and sorted list of users whose username contains the given <paramref name="query"/>
         /// </summary>
         /// <param name="query">The string to be looked up in the users' usernames. The search is case insensitive.</param>
@@ -207,11 +190,28 @@ namespace QuizWorld.Web.Services.RoleService
                 {
                     Id = u.Id.ToString(),
                     Username = u.UserName,
-                    Roles = GenerateRoleString(u.UserRoles)
+                    Roles = GenerateRoleList(u.UserRoles)
                 })
                 .ToListAsync();
 
             return new ListUsersViewModel() { Total = count, Users = users };
+        }
+
+        /// <summary>
+        /// Generates a list of roles, ordered alphabetically. The role
+        /// "User" is removed if there are other roles present.
+        /// </summary>
+        /// <param name="usersRoles"></param>
+        /// <returns></returns>
+        private static List<string> GenerateRoleList(ICollection<ApplicationUserRole> usersRoles)
+        {
+            var roles = usersRoles.Select(ur => ur.Role.Name).ToList();
+            if (roles.Count > 1)
+            {
+                roles.Remove(Roles.User);
+            }
+
+            return roles.OrderBy(r => r).ToList();
         }
     }
 }
