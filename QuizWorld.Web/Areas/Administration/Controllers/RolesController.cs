@@ -19,6 +19,25 @@ namespace QuizWorld.Web.Areas.Administration.Controllers
         }
 
         [HttpGet]
+        [Route("users")]
+        public async Task<IActionResult> GetUsersByUsername(
+            [FromQuery] string username,
+            [ModelBinder(BinderType = typeof(PaginationModelBinder))] int page,
+            [ModelBinder(BinderType = typeof(SortingOrderModelBinder))] SortingOrders order
+            )
+        {
+            try
+            {
+                var users = await this.roleService.GetUsersByUsername(username, page, order);
+                return Ok(users);
+            }
+            catch
+            {
+                return StatusCode(503);
+            }
+        }
+
+        [HttpGet]
         [Route("users/{role}")]
         [Authorize(Policy = "CanSeeRoles", AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult> GetUsersOfRole(

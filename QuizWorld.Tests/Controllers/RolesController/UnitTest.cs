@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using MockQueryable.Moq;
 using Moq;
 using QuizWorld.Common.Constants.Roles;
@@ -195,6 +195,33 @@ namespace QuizWorld.Tests.Controllers.RolesControllerUnitTests
 
             var result = await this.controller.RemoveRoleFromUser(id.ToString(), Roles.Moderator, 1, SortingOrders.Ascending);
 
+            Assert.That(result, Is.TypeOf<StatusCodeResult>());
+        }
+
+        [Test]
+        public async Task Test_GetUsersByUsernameReturnsOkWithAListOfUsers()
+        {
+            var list = this.GenerateUserList();
+
+            this.roleServiceMock
+                .Setup(rs => rs.GetUsersByUsername("e", 1, SortingOrders.Ascending, 20))
+                .ReturnsAsync(new ListUsersViewModel() { Total = 3, Users = list });
+
+            var result = await this.controller.GetUsersByUsername("e", 1, SortingOrders.Ascending) as OkObjectResult;
+            var value = result.Value as ListUsersViewModel;
+            Assert.That(value.Users, Is.EqualTo(list));
+        }
+
+        [Test]
+        public async Task Test_GetUsersByUsernameReturnsServiceUnavailableIfRoleServiceThrowsAnException()
+        {
+            var list = this.GenerateUserList();
+
+            this.roleServiceMock
+                .Setup(rs => rs.GetUsersByUsername("e", 1, SortingOrders.Ascending, 20))
+                .ThrowsAsync(new Exception());
+
+            var result = await this.controller.GetUsersByUsername("e", 1, SortingOrders.Ascending);
             Assert.That(result, Is.TypeOf<StatusCodeResult>());
         }
 

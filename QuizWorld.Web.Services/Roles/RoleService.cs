@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Common.Constants.Sorting;
@@ -60,7 +60,7 @@ namespace QuizWorld.Web.Services.RoleService
                 {
                     Username = u.UserName,
                     Id = u.Id.ToString(),
-                    Roles = GenerateRoleString(u.UserRoles)
+                    Roles = GenerateRoleList(u.UserRoles)
                 })
                 .ToListAsync();
 
@@ -167,12 +167,43 @@ namespace QuizWorld.Web.Services.RoleService
         }
 
         /// <summary>
+        /// Retrieves a paginated and sorted list of users whose username contains the given <paramref name="query"/>
+        /// </summary>
+        /// <param name="query">The string to be looked up in the users' usernames. The search is case insensitive.</param>
+        /// <param name="page">The current page</param>
+        /// <param name="order">The order in which the users will be sorted. Users are sorted by their usernames.</param>
+        /// <param name="pageSize">The maximum amount of items that will be retrieved.</param>
+        /// <returns>A sorted and paginated list of users whose username contains the <paramref name="query"/></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<ListUsersViewModel> GetUsersByUsername(string query, int page, SortingOrders order, int pageSize = 20)
+        {
+            var userQuery = this.userManager
+                .Users
+                .Where(u => u.NormalizedUserName.Contains(query.Normalized()));
+
+            int count = await userQuery.CountAsync();
+
+            var users = await userQuery
+                .SortByOrder(u => u.NormalizedUserName, order)
+                .Paginate(page, pageSize)
+                .Select(u => new ListUserItemViewModel()
+                {
+                    Id = u.Id.ToString(),
+                    Username = u.UserName,
+                    Roles = GenerateRoleList(u.UserRoles)
+                })
+                .ToListAsync();
+
+            return new ListUsersViewModel() { Total = count, Users = users };
+        }
+
+        /// <summary>
         /// Generates a list of roles, ordered alphabetically. The role
         /// "User" is removed if there are other roles present.
         /// </summary>
         /// <param name="usersRoles"></param>
         /// <returns></returns>
-        private static List<string> GenerateRoleString(ICollection<ApplicationUserRole> usersRoles)
+        private static List<string> GenerateRoleList(ICollection<ApplicationUserRole> usersRoles)
         {
             var roles = usersRoles.Select(ur => ur.Role.Name).ToList();
             if (roles.Count > 1)
