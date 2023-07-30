@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuizWorld.Web.Services.Logging
+namespace QuizWorld.Web.Services.Logging.ActivityLogger
 {
     /// <summary>
     /// A service that tracks the activity of moderators and administrators.
@@ -39,8 +39,8 @@ namespace QuizWorld.Web.Services.Logging
                 Date = date,
             };
 
-            await this.repository.AddAsync(log);
-            await this.repository.SaveChangesAsync();
+            await repository.AddAsync(log);
+            await repository.SaveChangesAsync();
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace QuizWorld.Web.Services.Logging
         /// <returns>A paginated and sorted list of activity logs.</returns>
         public async Task<IEnumerable<ActivityLogViewModel>> RetrieveLogs(int page, SortingOrders order, int pageSize = 6)
         {
-            var logs = await this.repository
+            var logs = await repository
                 .AllReadonly<ActivityLog>()
                 .SortByOrder(al => al.Date, order)
                 .Skip((page - 1) * pageSize)
@@ -65,7 +65,7 @@ namespace QuizWorld.Web.Services.Logging
                 })
                 .ToListAsync();
 
-            
+
 
             return logs;
         }

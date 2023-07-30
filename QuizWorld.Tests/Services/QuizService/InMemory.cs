@@ -6,7 +6,7 @@ using QuizWorld.Infrastructure.Data.Entities.Quiz;
 using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Question;
 using QuizWorld.ViewModels.Quiz;
-using QuizWorld.Web.Services.QuizService;
+using QuizWorld.Web.Services.Quizzes.QuizService;
 using System;
 using System.Collections.Generic;
 using System.Linq;

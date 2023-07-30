@@ -7,7 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace QuizWorld.Web.Services.JsonWebToken
+namespace QuizWorld.Web.Services.Authentication.JsonWebToken.JwtService
 {
     /// <summary>
     /// A service to work with JWTs. It allows you to decode JWTs and turn objects into JWTs. It
@@ -32,7 +32,7 @@ namespace QuizWorld.Web.Services.JsonWebToken
         /// <returns>A boolean value that indicates whether the token is blacklisted or not</returns>
         public async Task<bool> CheckIfJWTHasBeenInvalidated(string jwt)
         {
-            var token = await this.blacklist.FindJWT(jwt);
+            var token = await blacklist.FindJWT(jwt);
             return token != null;
         }
 
@@ -43,9 +43,9 @@ namespace QuizWorld.Web.Services.JsonWebToken
         /// <returns>A string representing the JWT</returns>
         public string GenerateJWT(UserViewModel user)
         {
-            var secret = this.config["JWT:Secret"];
-            var issuer = this.config["JWT:ValidIssuer"];
-            var audience = this.config["JWT:ValidAudience"];
+            var secret = config["JWT:Secret"];
+            var issuer = config["JWT:ValidIssuer"];
+            var audience = config["JWT:ValidAudience"];
 
 
             var claims = new List<Claim>
@@ -107,7 +107,7 @@ namespace QuizWorld.Web.Services.JsonWebToken
         /// <returns>A boolean value that indicates whether the operation succeeded</returns>
         public async Task<bool> InvalidateJWT(string jwt)
         {
-            var succeeded = await this.blacklist.BlacklistJWT(jwt);
+            var succeeded = await blacklist.BlacklistJWT(jwt);
             return succeeded;
         }
 
@@ -137,16 +137,16 @@ namespace QuizWorld.Web.Services.JsonWebToken
         public async Task<bool> CheckIfJWTIsValid(string jwt)
         {
             var handler = new JwtSecurityTokenHandler();
-            string secret = this.config["JWT:Secret"];
-            var issuer = this.config["JWT:ValidIssuer"];
-            var audience = this.config["JWT:ValidAudience"];
+            string secret = config["JWT:Secret"];
+            var issuer = config["JWT:ValidIssuer"];
+            var audience = config["JWT:ValidAudience"];
 
             try
             {
                 handler.ValidateToken(jwt, new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidateAudience =  true,
+                    ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
                     ClockSkew = TimeSpan.Zero,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),
@@ -154,9 +154,9 @@ namespace QuizWorld.Web.Services.JsonWebToken
                     ValidAudience = audience,
                 }, out SecurityToken validatedToken);
 
-                
 
-                bool isBlacklisted = await this.blacklist.FindJWT(jwt) != null;
+
+                bool isBlacklisted = await blacklist.FindJWT(jwt) != null;
                 return !isBlacklisted;
             }
             catch

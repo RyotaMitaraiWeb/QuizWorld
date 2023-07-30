@@ -10,29 +10,30 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using System.Text.Json.Serialization;
 using QuizWorld.Web.Contracts;
-using QuizWorld.Web.Services;
 using Redis.OM.Skeleton.HostedServices;
 using Redis.OM;
 using QuizWorld.Web.Contracts.JsonWebToken;
-using QuizWorld.Web.Services.JsonWebToken;
 using QuizWorld.Infrastructure.Filters.GuestsOnly;
 using QuizWorld.Infrastructure.AuthConfig;
 using QuizWorld.Infrastructure.AuthConfig.CanPerformOwnerAction;
 using QuizWorld.Web.Contracts.Quiz;
-using QuizWorld.Web.Services.QuizService;
 using QuizWorld.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
-using QuizWorld.Web.Services.GradeService;
 using QuizWorld.Infrastructure.AuthConfig.CanAccessLogs;
 using QuizWorld.Web.Contracts.Logging;
-using QuizWorld.Web.Services.Logging;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Web.Contracts.Roles;
-using QuizWorld.Web.Services.RoleService;
 using QuizWorld.Infrastructure.AuthConfig.CanWorkWithRoles;
 using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Infrastructure.Extensions;
+using QuizWorld.Web.Services.Role.RoleService;
+using QuizWorld.Web.Services.Quizzes.GradeService;
+using QuizWorld.Web.Services.Quizzes.QuizService;
+using QuizWorld.Web.Services.Logging.ActivityLogger;
+using QuizWorld.Web.Services.Authentication.UserService;
+using QuizWorld.Web.Services.Authentication.JsonWebToken.JwtService;
+using QuizWorld.Web.Services.Authentication.JsonWebToken.JwtBlacklistService;
 
 namespace QuizWorld.Web
 {

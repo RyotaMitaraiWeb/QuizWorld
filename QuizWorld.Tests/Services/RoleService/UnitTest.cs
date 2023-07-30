@@ -8,7 +8,7 @@ using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Infrastructure.Data.Entities;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Infrastructure.Extensions;
-using QuizWorld.Web.Services.RoleService;
+using QuizWorld.Web.Services.Role.RoleService;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
