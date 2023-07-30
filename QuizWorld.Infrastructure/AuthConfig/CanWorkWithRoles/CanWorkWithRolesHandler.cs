@@ -13,7 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuizWorld.Infrastructure.AuthConfig.CanChangeRoles
+namespace QuizWorld.Infrastructure.AuthConfig.CanWorkWithRoles
 {
     /// <summary>
     /// Checks whether the user has a role that allows them to interact with users' roles.
@@ -58,7 +58,7 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanChangeRoles
             
             foreach (var role in userRoles)
             {
-                if (requirement.RolesThatCanChangeRoles.Contains(role))
+                if (requirement.RolesThatCanWorkWithRoles.Contains(role))
                 {
                     if (requirement.LogActivity)
                     {
