@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QuizWorld.Common.Constants.Sorting;
-using QuizWorld.Infrastructure.ModelBinders;
+using QuizWorld.Infrastructure.ModelBinders.PaginationModelBinder;
+using QuizWorld.Infrastructure.ModelBinders.SortingOrderModelBinder;
 using QuizWorld.ViewModels.Common;
 using QuizWorld.Web.Contracts.Roles;
 

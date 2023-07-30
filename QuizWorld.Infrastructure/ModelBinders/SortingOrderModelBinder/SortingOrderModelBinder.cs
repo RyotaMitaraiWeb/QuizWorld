@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuizWorld.Infrastructure.ModelBinders
+namespace QuizWorld.Infrastructure.ModelBinders.SortingOrderModelBinder
 {
     /// <summary>
     /// If the "sort" query string is an invalid value (an unsupported sorting order), this model binder

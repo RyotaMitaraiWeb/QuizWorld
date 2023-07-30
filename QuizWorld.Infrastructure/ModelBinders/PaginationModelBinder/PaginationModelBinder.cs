@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace QuizWorld.Infrastructure.ModelBinders
+namespace QuizWorld.Infrastructure.ModelBinders.PaginationModelBinder
 {
     /// <summary>
     /// If the "page" query string is an invalid value (a non-integer or a non-positive integer), this model binder
