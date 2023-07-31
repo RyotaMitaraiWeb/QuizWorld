@@ -30,7 +30,7 @@ using QuizWorld.Web.Services.Logging;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Web.Contracts.Roles;
 using QuizWorld.Web.Services.RoleService;
-using QuizWorld.Infrastructure.AuthConfig.CanChangeRoles;
+using QuizWorld.Infrastructure.AuthConfig.CanWorkWithRoles;
 using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Infrastructure.Extensions;
 

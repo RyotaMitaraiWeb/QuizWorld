@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuizWorld.Infrastructure.AuthConfig.CanChangeRoles
+namespace QuizWorld.Infrastructure.AuthConfig.CanWorkWithRoles
 {
     /// <summary>
     /// Checks whether the user has a role that allows them to interact with users' roles.
@@ -13,14 +13,14 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanChangeRoles
     /// </summary>
     public class CanWorkWithRolesRequirement : IAuthorizationRequirement
     {
-        public string[] RolesThatCanChangeRoles { get; set; }
+        public string[] RolesThatCanWorkWithRoles { get; set; }
         public bool LogActivity { get; set; }
         /// <param name="logActivity">Whether the policy should log the activity if the user is successfully authorized.</param>
         /// <param name="roles">The roles that can change users' roles</param>
         public CanWorkWithRolesRequirement(bool logActivity, params string[] roles)
         {
             this.LogActivity = logActivity;
-            this.RolesThatCanChangeRoles = roles;
+            this.RolesThatCanWorkWithRoles = roles;
         }
     }
 }
