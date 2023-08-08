@@ -89,6 +89,42 @@ namespace QuizWorld.Web.Services.QuizService
             return id;
         }
 
+        /// <summary>
+        /// Retrieves a quiz with all its data needed to edit it.
+        /// </summary>
+        /// <param name="id">The ID of the quiz</param>
+        /// <returns>A view model with all the data to be populated in the edit quiz form
+        /// or null if the quiz does not exist or is deleted</returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public Task<EditQuizFormViewModel?> GetQuizForEdit(int id)
+        {
+            return this.repository.AllReadonly<Quiz>()
+                .Where(quiz => quiz.Id == id && !quiz.IsDeleted)
+                .Select(quiz => new EditQuizFormViewModel()
+                {
+                    Id = quiz.Id,
+                    Title = quiz.Title,
+                    Description = quiz.Description,
+                    Questions = quiz.Questions
+                        .Where(question => question.Version == quiz.Version)
+                        .OrderBy(question => question.Order)
+                        .Select(question => new EditQuestionFormViewModel()
+                        {
+                            Prompt = question.Prompt,
+                            Type = question.QuestionType.Type.ToString(),
+                            Order = question.Order,
+                            Answers = question.Answers
+                                .Select(answer => new EditAnswerFormViewModel()
+                                {
+                                    Value = answer.Value,
+                                    Correct = answer.Correct,
+                                })
+
+                        })
+                })
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<int?> EditQuizById(int id, EditQuizViewModel quiz)
         {
             var quizEntity = await this.repository.GetByIdAsync<Quiz>(id);
