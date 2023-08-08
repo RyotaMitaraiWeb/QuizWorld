@@ -153,6 +153,14 @@ namespace QuizWorld.Web.Controllers
             }
         }
 
+        [HttpGet]
+        [Authorize(Policy = "CanEditQuiz", AuthenticationSchemes = "Bearer")]
+        [Route("{id}/edit")]
+        public async Task<ActionResult> GetQuizForEdit(int id)
+        {
+            return Ok(await this.quizService.GetQuizForEdit(id));
+        }
+
         [HttpPut]
         [Authorize(Policy = "CanEditQuiz", AuthenticationSchemes = "Bearer")]
         [Route("{id}")]
