@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.Web.Contracts;
@@ -102,6 +103,37 @@ namespace QuizWorld.Web.Services
         {
             var user = await this.userManager.FindByNameAsync(username);
             return user != null;
+        }
+
+        public async Task<UserViewModel?> GetUser(string id)
+        {
+            bool isGuid = Guid.TryParse(id, out _);
+
+            if (!isGuid)
+            {
+                return null;
+            }
+
+            var user = await this.userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return null;
+            }
+
+            var roles = await this.userManager.GetRolesAsync(user);
+            if (roles.Count > 1)
+            {
+                roles.Remove(Roles.User);
+            }
+
+            var model = new UserViewModel()
+            {
+                Id = id,
+                Username = user.UserName,
+                Roles = roles.ToArray(),
+            };
+
+            return model;
         }
     }
 }

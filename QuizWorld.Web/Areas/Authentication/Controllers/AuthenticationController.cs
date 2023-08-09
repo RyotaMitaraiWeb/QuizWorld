@@ -60,10 +60,24 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
         }
 
         [HttpGet]
-        [Route("placeholder")]
-        public IActionResult Placeholder()
+        [AllowAnonymous]
+        [Route("{id}")]
+        public async Task<IActionResult> Profile(string id)
         {
-            return Ok();
+            try
+            {
+                var user = await this.userService.GetUser(id);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(user);
+            }
+            catch
+            {
+                return StatusCode(503);
+            }
         }
 
         [AllowAnonymous]
