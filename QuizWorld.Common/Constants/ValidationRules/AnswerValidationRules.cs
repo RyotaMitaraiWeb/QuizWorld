@@ -13,6 +13,6 @@ namespace QuizWorld.Common.Constants.ValidationRules
     /// </summary>
     public static class AnswerValidationRules
     {
-        public const int MaxLength = 100;
+        public const int MaxLength = 200;
     }
 }
