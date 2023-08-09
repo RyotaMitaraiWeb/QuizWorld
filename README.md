@@ -30,3 +30,6 @@ To run the client associated with this project, [refer to the client-side projec
 - ``Web``- this is essentially the entry and exit point of the application. It holds controllers and ``Program.cs``.
 
 For more information on each project, refer to its documentation (which can be found in the respective folders). You can also find documentation about more specific features/classes (e.g. a specific service) in its respective subfolder.
+
+## Seeding
+An administrator is seeded when the server is initialized. The username and password are "admin" and "123456", respectively. A way to specify the password with secrets is planned
