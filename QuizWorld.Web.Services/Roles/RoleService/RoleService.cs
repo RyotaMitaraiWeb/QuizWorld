@@ -179,7 +179,11 @@ namespace QuizWorld.Web.Services.RoleService
         {
             var userQuery = this.userManager
                 .Users
-                .Where(u => u.NormalizedUserName.Contains(query.Normalized()));
+                .Where(u => u.NormalizedUserName.Contains(query.Normalized()))
+                .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
+                .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.User);
 
             int count = await userQuery.CountAsync();
 
