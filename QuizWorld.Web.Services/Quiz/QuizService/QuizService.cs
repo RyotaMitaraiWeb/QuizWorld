@@ -202,6 +202,8 @@ namespace QuizWorld.Web.Services.QuizService
                     Description = q.Description,
                     Version = q.Version,
                     InstantMode = q.InstantMode,
+                    CreatorId = q.CreatorId.ToString(),
+                    CreatorUsername = q.Creator.UserName,
                     Questions = q.Questions
                         .Where(question => question.Version == q.Version)
                         .OrderBy(question => question.Order)

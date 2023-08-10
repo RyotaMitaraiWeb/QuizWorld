@@ -17,6 +17,8 @@ namespace QuizWorld.ViewModels.Quiz
         public string Description { get; set; } = string.Empty;
         public bool InstantMode { get; set; }
         public int Version { get; set; }
+        public string CreatorId { get; set; } = string.Empty;
+        public string CreatorUsername { get; set; } = string.Empty;
 
         public DateTime CreatedOn { get; set; }
         public DateTime UpdatedOn { get; set; }

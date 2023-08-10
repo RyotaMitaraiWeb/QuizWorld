@@ -4,6 +4,7 @@ using Moq;
 using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Common.Constants.Types;
 using QuizWorld.Infrastructure;
+using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Infrastructure.Data.Entities.Quiz;
 using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Question;
@@ -105,6 +106,11 @@ namespace QuizWorld.Tests.Services.QuizServiceUnitTests
                     Description = "some description",
                     InstantMode = true,
                     Version = 1,
+                    Creator = new ApplicationUser()
+                    {
+                        Id = Guid.NewGuid(),
+                        UserName = "ryota1",
+                    },
                     Questions = new List<Question>()
                     {
                         new Question()
