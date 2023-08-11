@@ -94,10 +94,10 @@ namespace QuizWorld.Web
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
-                    ValidAudience = builder.Configuration["JWT:ValidAudience"],
-                    ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+                    ValidAudience = builder.Configuration["JWT_ValidAudience"],
+                    ValidIssuer = builder.Configuration["JWT_ValidIssuer"],
                     IssuerSigningKey = new
-                        SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"])),
+                        SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT_Secret"])),
                    
                 };
 

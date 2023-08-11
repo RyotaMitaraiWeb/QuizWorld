@@ -51,16 +51,16 @@ namespace QuizWorld.Tests.Services.JwtServiceUnitTests
         public void Test_DecodeJWTSuccessfullyReturnsAUser()
         {
             this.configMock
-                .SetupGet(c => c["JWT:Secret"])
+                .SetupGet(c => c["JWT_Secret"])
                 .Returns("aswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3t");
 
 
             this.configMock
-                .SetupGet(c => c["JWT:ValidIssuer"])
+                .SetupGet(c => c["JWT_ValidIssuer"])
                 .Returns("localhost:5000");
 
             this.configMock
-                .SetupGet(c => c["JWT:ValidAudience"])
+                .SetupGet(c => c["JWT_ValidAudience"])
                 .Returns("localhost:4200");
 
             var user = new UserViewModel()
@@ -86,16 +86,16 @@ namespace QuizWorld.Tests.Services.JwtServiceUnitTests
         public void Test_GenerateJWTGeneratesAToken()
         {
             this.configMock
-                .SetupGet(c => c["JWT:Secret"])
+                .SetupGet(c => c["JWT_Secret"])
                 .Returns("aswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3t");
 
 
             this.configMock
-                .SetupGet(c => c["JWT:ValidIssuer"])
+                .SetupGet(c => c["JWT_ValidIssuer"])
                 .Returns("localhost:5000");
 
             this.configMock
-                .SetupGet(c => c["JWT:ValidAudience"])
+                .SetupGet(c => c["JWT_ValidAudience"])
                 .Returns("localhost:4200");
 
             var user = new UserViewModel()
@@ -166,15 +166,15 @@ namespace QuizWorld.Tests.Services.JwtServiceUnitTests
             };
 
             this.configMock
-                .SetupGet(c => c["JWT:Secret"])
+                .SetupGet(c => c["JWT_Secret"])
                 .Returns("aswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3t");
 
             this.configMock
-                .SetupGet(c => c["JWT:ValidIssuer"])
+                .SetupGet(c => c["JWT_ValidIssuer"])
                 .Returns("localhost:5000");
 
             this.configMock
-                .SetupGet(c => c["JWT:ValidAudience"])
+                .SetupGet(c => c["JWT_ValidAudience"])
                 .Returns("localhost:4200");
 
             string token = this.service.GenerateJWT(user);
@@ -198,15 +198,15 @@ namespace QuizWorld.Tests.Services.JwtServiceUnitTests
             };
 
             this.configMock
-                .SetupGet(c => c["JWT:Secret"])
+                .SetupGet(c => c["JWT_Secret"])
                 .Returns("aswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3t");
 
             this.configMock
-                .SetupGet(c => c["JWT:ValidIssuer"])
+                .SetupGet(c => c["JWT_ValidIssuer"])
                 .Returns("localhost:5000");
 
             this.configMock
-                .SetupGet(c => c["JWT:ValidAudience"])
+                .SetupGet(c => c["JWT_ValidAudience"])
                 .Returns("localhost:4200");
 
             string token = this.service.GenerateJWT(user);
@@ -231,21 +231,21 @@ namespace QuizWorld.Tests.Services.JwtServiceUnitTests
 
             // Act as if the client tampered with the JWT and thus changed its secret
             this.configMock
-                .SetupGet(c => c["JWT:Secret"])
+                .SetupGet(c => c["JWT_Secret"])
                 .Returns("aswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3taswenwe12tasgq3qwsas3t");
 
             this.configMock
-                .SetupGet(c => c["JWT:ValidIssuer"])
+                .SetupGet(c => c["JWT_ValidIssuer"])
                 .Returns("localhost:5000");
 
             this.configMock
-                .SetupGet(c => c["JWT:ValidAudience"])
+                .SetupGet(c => c["JWT_ValidAudience"])
                 .Returns("localhost:4200");
 
             string token = this.service.GenerateJWT(user);
 
             this.configMock
-                .SetupGet(c => c["JWT:Secret"])
+                .SetupGet(c => c["JWT_Secret"])
                 .Returns("correctsecret");
 
             this.blacklistMock
