@@ -48,7 +48,7 @@ namespace QuizWorld.Web.Services.JsonWebToken
             var result = await tokens.InsertAsync(new JWT
             {
                 Id = jwt,
-                Token = token
+         
             }, new TimeSpan(24, 0, 0));
 
             await tokens.SaveAsync();

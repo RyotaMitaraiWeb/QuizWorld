@@ -14,9 +14,5 @@ namespace QuizWorld.Infrastructure.Data.Redis.Models
         [RedisField]
         [Indexed]
         public string? Id { get; set; }
-        [RedisField]
-        [Searchable]
-        [Indexed]
-        public string? Token { get; set; }
     }
 }
