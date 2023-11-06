@@ -43,9 +43,9 @@ namespace QuizWorld.Web.Services.JsonWebToken
         /// <returns>A string representing the JWT</returns>
         public string GenerateJWT(UserViewModel user)
         {
-            var secret = this.config["JWT:Secret"];
-            var issuer = this.config["JWT:ValidIssuer"];
-            var audience = this.config["JWT:ValidAudience"];
+            var secret = this.config["JWT_SECRET"];
+            var issuer = this.config["JWT_VALID_ISSUER"];
+            var audience = this.config["JWT_VALID_AUDIENCE"];
 
 
             var claims = new List<Claim>
@@ -137,9 +137,9 @@ namespace QuizWorld.Web.Services.JsonWebToken
         public async Task<bool> CheckIfJWTIsValid(string jwt)
         {
             var handler = new JwtSecurityTokenHandler();
-            string secret = this.config["JWT:Secret"];
-            var issuer = this.config["JWT:ValidIssuer"];
-            var audience = this.config["JWT:ValidAudience"];
+            string secret = this.config["JWT_SECRET"];
+            var issuer = this.config["JWT_VALID_ISSUER"];
+            var audience = this.config["JWT_VALID_AUDIENCE"];
 
             try
             {

@@ -94,10 +94,10 @@ namespace QuizWorld.Web
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
-                    ValidAudience = builder.Configuration["JWT:ValidAudience"],
-                    ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+                    ValidAudience = builder.Configuration["JWT_VALID_AUDIENCE"],
+                    ValidIssuer = builder.Configuration["JWT_VALID_ISSUER"],
                     IssuerSigningKey = new
-                        SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"])),
+                        SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT_SECRET"])),
                    
                 };
 
@@ -190,7 +190,7 @@ namespace QuizWorld.Web
                 options.AddDefaultPolicy(
                     policy =>
                     {
-                        policy.WithOrigins(builder.Configuration["AllowedHosts"]);
+                        policy.WithOrigins(builder.Configuration["ALLOWED_HOST"]);
                         policy.AllowAnyHeader();
                         policy.WithMethods("GET", "PUT", "POST", "DELETE");
                     });
