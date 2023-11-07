@@ -22,7 +22,6 @@ using QuizWorld.Web.Contracts.Quiz;
 using QuizWorld.Web.Services.QuizService;
 using QuizWorld.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Policy;
 using QuizWorld.Web.Services.GradeService;
 using QuizWorld.Infrastructure.AuthConfig.CanAccessLogs;
 using QuizWorld.Web.Contracts.Logging;
@@ -33,6 +32,8 @@ using QuizWorld.Web.Services.RoleService;
 using QuizWorld.Infrastructure.AuthConfig.CanWorkWithRoles;
 using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Infrastructure.Extensions;
+using Microsoft.Data.SqlClient;
+using StackExchange.Redis;
 
 namespace QuizWorld.Web
 {
@@ -50,11 +51,21 @@ namespace QuizWorld.Web
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             });
 
+            
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddLogging();
+
+            ConfigurationOptions options = new()
+            {
+                EndPoints = { builder.Configuration["REDIS_CONNECTION_STRING"] },
+                ConnectTimeout = 15000,
+                SyncTimeout = 15000,
+                AbortOnConnectFail = false,
+            };
+
+            builder.Services.AddSingleton(new RedisConnectionProvider(options));
             builder.Services.AddHostedService<IndexCreationService>();
             builder.Services.AddScoped<IUserService, UserService>();
-            builder.Services.AddSingleton(new RedisConnectionProvider(builder.Configuration["REDIS_CONNECTION_STRING"]));
             builder.Services.AddSingleton<IJwtService, JwtService>();
             builder.Services.AddSingleton<IJwtBlacklist, JwtBlacklistService>();
             builder.Services.AddScoped<AppJwtBearerEvents>();
@@ -70,7 +81,15 @@ namespace QuizWorld.Web
 
             builder.Services.AddDbContext<QuizWorldDbContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                SqlConnectionStringBuilder connBuilder = new()
+                {
+                    Password = builder.Configuration["DB_PASSWORD"],
+                    DataSource = builder.Configuration["DB_HOST"],
+                    ConnectRetryCount = 30,
+                    InitialCatalog = builder.Configuration["DB_NAME"],
+                    UserID = builder.Configuration["DB_USER"],
+                };
+                options.UseSqlServer(connBuilder.ConnectionString);
             });
 
             
@@ -190,7 +209,7 @@ namespace QuizWorld.Web
                 options.AddDefaultPolicy(
                     policy =>
                     {
-                        policy.WithOrigins(builder.Configuration["ALLOWED_HOST"]);
+                        policy.WithOrigins(builder.Configuration["ALLOWED_HOSTS"]);
                         policy.AllowAnyHeader();
                         policy.WithMethods("GET", "PUT", "POST", "DELETE");
                     });
@@ -206,7 +225,7 @@ namespace QuizWorld.Web
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
