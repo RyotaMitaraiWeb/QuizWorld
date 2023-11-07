@@ -209,7 +209,9 @@ namespace QuizWorld.Web
                 options.AddDefaultPolicy(
                     policy =>
                     {
-                        policy.WithOrigins(builder.Configuration["ALLOWED_HOSTS"]);
+                        string origins = builder.Configuration["ALLOWED_HOSTS"] ?? throw new Exception("No origins specified in environment variables");
+                        
+                        policy.WithOrigins(origins.Split(", "));
                         policy.AllowAnyHeader();
                         policy.WithMethods("GET", "PUT", "POST", "DELETE");
                     });
