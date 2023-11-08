@@ -1,0 +1,57 @@
+version: '3.4'
+name: 'quiz-world'
+services:
+  quizworld.web:
+    image: ${DOCKER_REGISTRY-}quizworldweb
+    container_name: quiz-world
+    volumes:
+      - ~/.aspnet/https:/https
+    depends_on:
+        mssql:
+            condition: service_started
+        redis_cache:
+            condition: service_healthy
+    build:
+      context: .
+      dockerfile: QuizWorld.Web/Dockerfile
+    environment:
+        - JWT_SECRET=wekhnweklhnweklhnklwenhklwenhwewengwel12p12oith121212gqwg,
+        - JWT_VALID_ISSUER=Quiz World
+        - JWT_VALID_AUDIENCE=localhost:4200
+        - REDIS_CONNECTION_STRING=redis_cache
+        - ALLOWED_HOSTS=*
+        - DB_PASSWORD=a(!)ComplexPassword1234
+        - DB_USER=sa 
+        - DB_NAME=quizworld
+        - DB_HOST=mssql
+        - ASPNETCORE_ENVIRONMENT=Development
+        - ASPNETCORE_URLS=https://+443;http://+80
+        - ASPNETCORE_HTTPS_PORT=7246
+        - ASPNETCORE_Kestrel__Certificates__Default__Password=7a15279b-6c3a-42b1-978c-1e5dfa029b7e
+        - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+
+    ports:
+        - 5000:80
+        - 7246:443 
+   
+  mssql:
+    image: mcr.microsoft.com/mssql/server
+    container_name: mssql
+    volumes:
+      - ./mssql/data:/var/opt/mssql/data
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=a(!)ComplexPassword1234
+    ports:
+        - 1433:1433
+  redis_cache:
+    container_name: redis
+    image: redis/redis-stack:latest
+    restart: always
+    healthcheck:
+        test: ["CMD", "redis-cli", "ping"]
+    volumes:
+      - ./local-data/:/data
+    ports:
+      - 7000:6379
+      - 8001:8001
