@@ -347,7 +347,8 @@ namespace QuizWorld.Web.Services.QuizService
                     QuestionTypeId = typeId,
                     Version = version,
                     Order = i + 1,
-                    Answers = this.CreateAnswers(question.Answers).ToList()
+                    Answers = this.CreateAnswers(question.Answers).ToList(),
+                    Notes = question.Notes,
                 };
 
                 questions.Add(questionEntity);
