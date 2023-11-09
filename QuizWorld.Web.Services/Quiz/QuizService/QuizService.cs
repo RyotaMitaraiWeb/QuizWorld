@@ -212,6 +212,7 @@ namespace QuizWorld.Web.Services.QuizService
                             Prompt = question.Prompt,
                             Id = question.Id.ToString(),
                             Type = question.QuestionType.ShortName,
+                            Notes = question.Notes,
                             Answers = question.Answers
                                 .Select(a => new AnswerViewModel()
                                 {
