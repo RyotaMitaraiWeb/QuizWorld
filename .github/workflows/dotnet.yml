@@ -23,4 +23,4 @@ jobs:
     - name: Build
       run: dotnet build QuizWorld.sln
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test QuizWorld.sln --no-build --verbosity normal
