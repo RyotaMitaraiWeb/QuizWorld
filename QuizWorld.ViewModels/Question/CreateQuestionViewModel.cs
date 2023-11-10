@@ -27,5 +27,8 @@ namespace QuizWorld.ViewModels.Quiz
         [HasEnoughAnswers]
         [CorrectAndWrongAnswersAmount]
         public IEnumerable<CreateAnswerViewModel> Answers { get; set; } = Enumerable.Empty<CreateAnswerViewModel>();
+
+        [MaxLength(QuestionValidationRules.Notes.MaxLength, ErrorMessage = QuestionValidationErrorMessages.Notes.TooLong)]
+        public string? Notes { get; set; }
     }
 }

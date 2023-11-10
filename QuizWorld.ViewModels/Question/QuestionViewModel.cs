@@ -17,5 +17,7 @@ namespace QuizWorld.ViewModels.Question
         public string Type { get; set; } = string.Empty;
         public IEnumerable<AnswerViewModel> Answers { get; set; } = new List<AnswerViewModel>();
 
+        public string? Notes { get; set; }
+
     }
 }

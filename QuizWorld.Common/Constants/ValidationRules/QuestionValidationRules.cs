@@ -49,5 +49,10 @@ namespace QuizWorld.Common.Constants.ValidationRules
             public const int MinimumAmountOfAnswers = 1;
             public const int MaximumAmountOfAnswers = 15;
         }
+
+        public static class Notes
+        {
+            public const int MaxLength = 500;
+        }
     }
 }

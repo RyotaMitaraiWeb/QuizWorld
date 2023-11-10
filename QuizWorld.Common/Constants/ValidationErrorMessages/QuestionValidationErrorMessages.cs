@@ -41,5 +41,10 @@ namespace QuizWorld.Common.Constants.ValidationErrorMessages
             public const string DoesNotHaveCorrectAnswers = "Multiple-choice questions questions must have at least one correct answer!";
             public const string TooManyAnswers = "Multiple-choice questions should not have more than ten answers!";
         }
+
+        public static class Notes
+        {
+            public const string TooLong = "The notes for this question must not be longer than 500 characters!";
+        }
     }
 }

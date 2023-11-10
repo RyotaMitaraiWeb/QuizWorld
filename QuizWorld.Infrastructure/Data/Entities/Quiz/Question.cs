@@ -41,5 +41,12 @@ namespace QuizWorld.Infrastructure.Data.Entities.Quiz
         [Comment("The index of the question for the given quiz, used to reliably preserve the order that the creator wants")]
         public int Order { get; set; }
         public ICollection<Answer> Answers { get; set; } = new List<Answer>();
+
+        [Comment("The notes are " +
+            "displayed after the player answers a question. They can be used to clarify something " +
+            "(e.g. why a certain answer is correct/incorrect), provide relevant links, or simply" +
+            "provide more information that may be interesting to the user")]
+        [MaxLength(QuestionValidationRules.Notes.MaxLength)]
+        public string? Notes { get; set; }
     }
 }
