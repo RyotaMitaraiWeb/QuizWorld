@@ -29,6 +29,7 @@ services:
         - ASPNETCORE_HTTPS_PORT=7246
         - ASPNETCORE_Kestrel__Certificates__Default__Password=7a15279b-6c3a-42b1-978c-1e5dfa029b7e
         - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+        - ADMIN_PASS=123476
 
     ports:
         - 5000:80
