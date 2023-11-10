@@ -113,6 +113,7 @@ namespace QuizWorld.Web.Services.QuizService
                             Prompt = question.Prompt,
                             Type = question.QuestionType.Type.ToString(),
                             Order = question.Order,
+                            Notes = question.Notes,
                             Answers = question.Answers
                                 .Select(answer => new EditAnswerFormViewModel()
                                 {

@@ -17,5 +17,6 @@ namespace QuizWorld.ViewModels.Question
         public string Type { get; set; } = null!;
         public int Order { get; set; }
         public IEnumerable<EditAnswerFormViewModel> Answers { get; set; } = null!;
+        public string? Notes { get; set; }
     }
 }
