@@ -8,6 +8,12 @@ Quiz World is an application that allows users to participate in and create quiz
 <summary>Toggle images</summary>
 <br>
 <img src="./preview-images/question_example.png" alt="An example of a question during a quiz session">
+<img src="./preview-images/correct_answer_example.png" alt="An example of answering a question correctly">
+<img src="./preview-images/wrong_answer_example.png" alt="An example of answering a question incorrectly">
+<img src="./preview-images/creating_quiz_1" alt="An example of creating a quiz by filling the title and description and choosing the question type">
+<img src="./preview-images/creating_quiz_2" alt="An example of creating a single-choice question">
+<img src="./preview-images/creating_quiz_3" alt="An example of creating a multiple-choice question">
+<img src="./preview-images/creating_quiz_4" alt="An example of creating a text question">
 </details>
 
 
