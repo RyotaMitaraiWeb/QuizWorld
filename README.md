@@ -2,6 +2,19 @@
 
 Quiz World is an application that allows users to participate in and create quizzes. Quizzes consist of single-choice, multiple-choice, and text questions. This project is a server-side RESTful application for Quiz World, written in ASP.NET 6.
 
+## Running in Docker
+To run this in Docker, simply run the ``docker-compose.yml`` file located at the root of the project.
+Most of the default environment variables are enough to quickstart the project. The only thing you need to configure locally is an SSL password to enable HTTPS connections. To do this, run the following command in the .NET CLI:
+
+```bash
+dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\aspnetapp.pfx -p 7a15279b-6c3a-42b1-978c-1e5dfa029b7e
+dotnet dev-certs https --trust
+```
+
+**Note:** a Redis Insight tool is available on localhost:8001 which you can use to monitor your Redis data.
+
+Don't forget to apply the migrations!
+
 ## Running manually
 To run this project manually:
 1) Clone the repository
@@ -10,8 +23,13 @@ To run this project manually:
 - ``JWT:Secret`` - secret used for generating and validating JWTs
 - ``JWT:ValidIssuer`` - the issuer of the app's JWTs
 - ``JWT:ValidAudience`` - the audience of the app's JWTs
-- ``DefaultConnection`` - a connection string to your SQL Server database
 - ``REDIS_CONNECTION_STRING`` - a connection string to your Redis database. The Redis database stores invalidated JWTs (as a result of the user logging out), meaning that they cannot be used in authorized requests, even if they are valid.
+- ``ALLOWED_HOSTS`` - which clients can send requests to the server. Each domain is separated by a comma and a space (``, ``)
+- ``DB_PASSWORD`` - the SA password needed to connect to the database
+- ``DB_USER`` - the user with which you will be logging in, typically ``sa``
+- ``DB_NAME`` - the name of the database in which the data will be stored
+- ``DB_HOST`` - the address where the database is hosted
+- ``ADMIN_PASS`` - the password of the admin account
 4) Apply the migrations in the ``Infrastructure`` project.
 
 Provided that everything has been set up correctly, you should be able to access the Swagger UI if running this application in development stage.
@@ -32,4 +50,4 @@ To run the client associated with this project, [refer to the client-side projec
 For more information on each project, refer to its documentation (which can be found in the respective folders). You can also find documentation about more specific features/classes (e.g. a specific service) in its respective subfolder.
 
 ## Seeding
-An administrator is seeded when the server is initialized. The username and password are "admin" and "123456", respectively. A way to specify the password with secrets is planned
+An administrator is seeded when the server is initialized. The username and password are "admin" and whatever you passed in the ``ADMIN_PASS`` environment variable, respectively.
