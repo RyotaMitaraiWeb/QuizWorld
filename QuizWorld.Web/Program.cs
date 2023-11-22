@@ -232,9 +232,9 @@ namespace QuizWorld.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            
 
-            app.SeedAdministrator("admin", "123456");
+
+            app.SeedAdministrator("admin", builder.Configuration["ADMIN_PASS"]);
 
             app.MapControllers();
 
