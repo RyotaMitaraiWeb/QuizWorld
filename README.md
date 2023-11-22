@@ -2,6 +2,15 @@
 
 Quiz World is an application that allows users to participate in and create quizzes. Quizzes consist of single-choice, multiple-choice, and text questions. This project is a server-side RESTful application for Quiz World, written in ASP.NET 6.
 
+## Preview images
+
+<details>
+<summary>Toggle images</summary>
+<br>
+<img src="./preview-images/question_example.png" alt="An example of a question during a quiz session">
+</details>
+
+
 ## Running in Docker
 To run this in Docker, simply run the ``docker-compose.yml`` file located at the root of the project.
 Most of the default environment variables are enough to quickstart the project. The only thing you need to configure locally is an SSL password to enable HTTPS connections. To do this, run the following command in the .NET CLI:
