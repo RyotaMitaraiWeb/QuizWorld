@@ -1,7 +1,6 @@
-﻿using MockQueryable.Moq;
+﻿using MockQueryable;
 using Moq;
 using QuizWorld.Infrastructure;
-using QuizWorld.Infrastructure.Data.Entities;
 using QuizWorld.Infrastructure.Data.Entities.Quiz;
 using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Question;

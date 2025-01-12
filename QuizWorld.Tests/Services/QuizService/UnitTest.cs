@@ -1,5 +1,4 @@
-﻿using Microsoft.Identity.Client;
-using MockQueryable.Moq;
+﻿using MockQueryable;
 using Moq;
 using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Common.Constants.Types;
@@ -7,15 +6,10 @@ using QuizWorld.Infrastructure;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Infrastructure.Data.Entities.Quiz;
 using QuizWorld.ViewModels.Answer;
-using QuizWorld.ViewModels.Question;
 using QuizWorld.ViewModels.Quiz;
 using QuizWorld.Web.Services.QuizService;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace QuizWorld.Tests.Services.QuizServiceUnitTests
 {

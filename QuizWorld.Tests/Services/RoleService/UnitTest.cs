@@ -1,20 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using MockQueryable.Moq;
+using MockQueryable;
 using Moq;
 using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Common.Constants.Sorting;
-using QuizWorld.Infrastructure.Data.Entities;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Infrastructure.Extensions;
 using QuizWorld.Web.Services.RoleService;
-using StackExchange.Redis;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QuizWorld.Tests.Services.RoleServiceUnitTests
 {
