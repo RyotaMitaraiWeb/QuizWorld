@@ -1,14 +1,10 @@
-﻿using MockQueryable.Moq;
+﻿using MockQueryable;
 using Moq;
 using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Infrastructure;
 using QuizWorld.Infrastructure.Data.Entities.Logging;
 using QuizWorld.Web.Services.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace QuizWorld.Tests.Services.ActivityLoggerUnitTests
 {

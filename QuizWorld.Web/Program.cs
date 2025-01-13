@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -88,6 +87,7 @@ namespace QuizWorld.Web
                     ConnectRetryCount = 30,
                     InitialCatalog = builder.Configuration["DB_NAME"],
                     UserID = builder.Configuration["DB_USER"],
+                    Encrypt = false,
                 };
                 options.UseSqlServer(connBuilder.ConnectionString);
             });
