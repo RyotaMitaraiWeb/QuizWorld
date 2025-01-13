@@ -137,32 +137,29 @@ namespace QuizWorld.Web.Services.JsonWebToken
         public async Task<bool> CheckIfJWTIsValid(string jwt)
         {
             var handler = new JwtSecurityTokenHandler();
-            string secret = this.config["JWT_SECRET"];
+            string secret = this.config["JWT_SECRET"]!;
             var issuer = this.config["JWT_VALID_ISSUER"];
             var audience = this.config["JWT_VALID_AUDIENCE"];
 
-            try
+            var result = await handler.ValidateTokenAsync(jwt, new TokenValidationParameters
             {
-                handler.ValidateToken(jwt, new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience =  true,
-                    ValidateIssuerSigningKey = true,
-                    ClockSkew = TimeSpan.Zero,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),
-                    ValidIssuer = issuer,
-                    ValidAudience = audience,
-                }, out SecurityToken validatedToken);
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateIssuerSigningKey = true,
+                ClockSkew = TimeSpan.Zero,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),
+                ValidIssuer = issuer,
+                ValidAudience = audience,
+            });
 
-                
-
-                bool isBlacklisted = await this.blacklist.FindJWT(jwt) != null;
-                return !isBlacklisted;
-            }
-            catch
+            // no need to check the blacklist if the JWT is invalid anyways
+            if (!result.IsValid)
             {
                 return false;
             }
+
+            bool isBlacklisted = await this.blacklist.FindJWT(jwt) != null;
+            return !isBlacklisted;
         }
     }
 }
