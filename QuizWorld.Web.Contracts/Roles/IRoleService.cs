@@ -17,6 +17,7 @@ namespace QuizWorld.Web.Contracts.Roles
         public Task<Guid?> RemoveRoleFromUser(Guid userId, string role);
 
         public Task<ListUsersViewModel> GetUsersOfRole(string role, int page, SortingOrders order, int pageSize);
+        public Task<ListUsersViewModel> GetUsersOfRole(string role, string username, int page, SortingOrders order, int pageSize);
         public Task<ListUsersViewModel> GetUsersByUsername(string query, int page, SortingOrders order, int pageSize = 20);
     }
 }
