@@ -43,13 +43,14 @@ namespace QuizWorld.Web.Areas.Administration.Controllers
         [Authorize(Policy = "CanSeeRoles", AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult> GetUsersOfRole(
             string role,
+            [FromQuery] string? username,
             [ModelBinder(BinderType = typeof(PaginationModelBinder))] int page,
             [ModelBinder(BinderType = typeof(SortingOrderModelBinder))] SortingOrders order
         )
         {
             try
             {
-                var users = await this.roleService.GetUsersOfRole(role, page, order, 20);
+                var users = await this.roleService.GetUsersOfRole(role, username ?? string.Empty, page, order, 20);
                 return Ok(users);
 
             }

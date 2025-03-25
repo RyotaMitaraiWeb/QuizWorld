@@ -41,10 +41,10 @@ namespace QuizWorld.Tests.Services.RoleServiceImMemoryTests
             {
                 Assert.That(admin.Roles, Does.Contain(Roles.Admin));
                 Assert.That(admin.Roles, Does.Contain(Roles.Moderator));
-                Assert.That(admin.Roles.Count, Is.EqualTo(2));
+                Assert.That(admin.Roles.Count, Is.EqualTo(3));
 
                 Assert.That(moderator.Roles, Does.Contain(Roles.Moderator));
-                Assert.That(moderator.Roles.Count, Is.EqualTo(1));
+                Assert.That(moderator.Roles.Count, Is.EqualTo(2));
                 Assert.That(user.Roles, Does.Contain(Roles.User));
 
                 Assert.That(result.Total, Is.EqualTo(3));

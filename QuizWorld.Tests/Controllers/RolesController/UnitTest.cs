@@ -30,12 +30,13 @@ namespace QuizWorld.Tests.Controllers.RolesControllerUnitTests
         public async Task Test_GetUsersOfRoleReturnsOkWithAListOfUsers()
         {
             var list = this.GenerateUserList();
+            string username = "a";
 
             this.roleServiceMock
-                .Setup(rs => rs.GetUsersOfRole(Roles.Moderator, 1, SortingOrders.Ascending, 20))
+                .Setup(rs => rs.GetUsersOfRole(Roles.Moderator, username, 1, SortingOrders.Ascending, 20))
                 .ReturnsAsync(new ListUsersViewModel() { Total = 3, Users = list });
 
-            var result = await this.controller.GetUsersOfRole(Roles.Moderator, 1, SortingOrders.Ascending) as OkObjectResult;
+            var result = await this.controller.GetUsersOfRole(Roles.Moderator, username, 1, SortingOrders.Ascending) as OkObjectResult;
             var value = result.Value as ListUsersViewModel;
             Assert.That(value.Users, Is.EqualTo(list));
         }
@@ -44,12 +45,13 @@ namespace QuizWorld.Tests.Controllers.RolesControllerUnitTests
         public async Task Test_GetUsersOfRoleReturnsBadRequestIfRoleServiceThrowsArgumentException()
         {
             var list = this.GenerateUserList();
+            string username = "a";
 
             this.roleServiceMock
-                .Setup(rs => rs.GetUsersOfRole("Janitor", 1, SortingOrders.Ascending, 20))
+                .Setup(rs => rs.GetUsersOfRole("Janitor", username, 1, SortingOrders.Ascending, 20))
                 .ThrowsAsync(new ArgumentException());
 
-            var result = await this.controller.GetUsersOfRole("Janitor", 1, SortingOrders.Ascending);
+            var result = await this.controller.GetUsersOfRole("Janitor", username, 1, SortingOrders.Ascending);
             Assert.That(result, Is.TypeOf<BadRequestResult>());
         }
 
@@ -57,12 +59,13 @@ namespace QuizWorld.Tests.Controllers.RolesControllerUnitTests
         public async Task Test_GetUsersOfRoleReturnsServiceUnavailableIfRoleServiceThrowsAGenericException()
         {
             var list = this.GenerateUserList();
+            string username = "a";
 
             this.roleServiceMock
-                .Setup(rs => rs.GetUsersOfRole(Roles.Moderator, 1, SortingOrders.Ascending, 20))
+                .Setup(rs => rs.GetUsersOfRole(Roles.Moderator, username, 1, SortingOrders.Ascending, 20))
                 .ThrowsAsync(new Exception());
 
-            var result = await this.controller.GetUsersOfRole(Roles.Moderator, 1, SortingOrders.Ascending);
+            var result = await this.controller.GetUsersOfRole(Roles.Moderator, username, 1, SortingOrders.Ascending);
             Assert.That(result, Is.TypeOf<StatusCodeResult>());
         }
 

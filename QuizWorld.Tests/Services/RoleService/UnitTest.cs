@@ -53,7 +53,7 @@ namespace QuizWorld.Tests.Services.RoleServiceUnitTests
                 Assert.That(admin.Username, Is.EqualTo("admin"));
                 Assert.That(admin.Roles, Does.Contain(Roles.Admin));
                 Assert.That(admin.Roles, Does.Contain(Roles.Moderator));
-                Assert.That(admin.Roles.Count, Is.EqualTo(2));
+                Assert.That(admin.Roles.Count, Is.EqualTo(3));
                 Assert.That(user.Roles, Does.Contain(Roles.User));
                 Assert.That(user.Roles.Count, Is.EqualTo(1));
 

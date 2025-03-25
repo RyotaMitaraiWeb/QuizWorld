@@ -1,10 +1,5 @@
 ﻿using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.ViewModels.UserList;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QuizWorld.Web.Contracts.Roles
 {

@@ -55,7 +55,7 @@ namespace QuizWorld.Web.Services.RoleService
                 {
                     Username = u.UserName,
                     Id = u.Id.ToString(),
-                    Roles = GenerateRoleList(u.UserRoles)
+                    Roles = u.UserRoles.Select(ur => ur.Role.Name).ToList(),
                 })
                 .ToListAsync();
 
@@ -70,7 +70,7 @@ namespace QuizWorld.Web.Services.RoleService
             }
 
             var query = this.userManager.Users
-                .Where(u => u.UserRoles.Where(ur => ur.Role.Name == role).Any() && u.UserName == username);
+                .Where(u => u.UserRoles.Where(ur => ur.Role.Name == role).Any() && u.UserName.Contains(username));
 
             int count = await query.CountAsync();
             var users = await query
@@ -82,7 +82,7 @@ namespace QuizWorld.Web.Services.RoleService
                 {
                     Username = u.UserName,
                     Id = u.Id.ToString(),
-                    Roles = GenerateRoleList(u.UserRoles)
+                    Roles = u.UserRoles.Select(ur => ur.Role.Name).ToList(),
                 })
                 .ToListAsync();
 
