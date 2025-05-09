@@ -216,28 +216,13 @@ namespace QuizWorld.Web.Services.RoleService
                 {
                     Id = u.Id.ToString(),
                     Username = u.UserName,
-                    Roles = GenerateRoleList(u.UserRoles)
+                    Roles = u.UserRoles.Select(ur => ur.Role.Name).ToList()
                 })
                 .ToListAsync();
 
             return new ListUsersViewModel() { Total = count, Users = users };
         }
 
-        /// <summary>
-        /// Generates a list of roles, ordered alphabetically. The role
-        /// "User" is removed if there are other roles present.
-        /// </summary>
-        /// <param name="usersRoles"></param>
-        /// <returns></returns>
-        private static List<string> GenerateRoleList(ICollection<ApplicationUserRole> usersRoles)
-        {
-            var roles = usersRoles.Select(ur => ur.Role.Name).ToList();
-            if (roles.Count > 1)
-            {
-                roles.Remove(Roles.User);
-            }
-
-            return roles.OrderBy(r => r).ToList();
-        }
+      
     }
 }

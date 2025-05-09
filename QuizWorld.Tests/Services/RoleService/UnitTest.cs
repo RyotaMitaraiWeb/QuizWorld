@@ -299,8 +299,8 @@ namespace QuizWorld.Tests.Services.RoleServiceUnitTests
         }
 
         [Test]
-        [TestCase("e", 1, 1, SortingOrders.Ascending, 1)]
-        [TestCase("M", 2, 1, SortingOrders.Descending, 1)]
+        [TestCase("e", 1, 2, SortingOrders.Ascending, 1)]
+        [TestCase("M", 2, 2, SortingOrders.Descending, 1)]
         public async Task Test_GetsUsersByUsernameReturnsAListOfUsersSuccessfully(string query, int expectedTotal, int expectedRolesCount, SortingOrders order, int expectedAmountOfUsers)
         {
             this.userManagerMock
