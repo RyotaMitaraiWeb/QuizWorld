@@ -2,16 +2,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Common.Constants.Sorting;
-using QuizWorld.Infrastructure.Data.Entities;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Infrastructure.Extensions;
 using QuizWorld.ViewModels.UserList;
 using QuizWorld.Web.Contracts.Roles;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace QuizWorld.Web.Services.RoleService
 {
@@ -60,11 +55,38 @@ namespace QuizWorld.Web.Services.RoleService
                 {
                     Username = u.UserName,
                     Id = u.Id.ToString(),
-                    Roles = GenerateRoleList(u.UserRoles)
+                    Roles = u.UserRoles.Select(ur => ur.Role.Name).ToList(),
                 })
                 .ToListAsync();
 
             return new ListUsersViewModel() { Total = count, Users = users};
+        }
+
+        public async Task<ListUsersViewModel> GetUsersOfRole(string role, string username, int page, SortingOrders order, int pageSize = 20)
+        {
+            if (!Roles.AvailableRoles.Contains(role))
+            {
+                throw new ArgumentException("The provided role does not exist!");
+            }
+
+            var query = this.userManager.Users
+                .Where(u => u.UserRoles.Where(ur => ur.Role.Name == role).Any() && u.UserName.Contains(username));
+
+            int count = await query.CountAsync();
+            var users = await query
+                .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
+                .SortByOrder(u => u.UserName, order)
+                .Paginate(page, pageSize)
+                .Select(u => new ListUserItemViewModel()
+                {
+                    Username = u.UserName,
+                    Id = u.Id.ToString(),
+                    Roles = u.UserRoles.Select(ur => ur.Role.Name).ToList(),
+                })
+                .ToListAsync();
+
+            return new ListUsersViewModel() { Total = count, Users = users };
         }
 
         /// <summary>
@@ -194,28 +216,13 @@ namespace QuizWorld.Web.Services.RoleService
                 {
                     Id = u.Id.ToString(),
                     Username = u.UserName,
-                    Roles = GenerateRoleList(u.UserRoles)
+                    Roles = u.UserRoles.Select(ur => ur.Role.Name).ToList()
                 })
                 .ToListAsync();
 
             return new ListUsersViewModel() { Total = count, Users = users };
         }
 
-        /// <summary>
-        /// Generates a list of roles, ordered alphabetically. The role
-        /// "User" is removed if there are other roles present.
-        /// </summary>
-        /// <param name="usersRoles"></param>
-        /// <returns></returns>
-        private static List<string> GenerateRoleList(ICollection<ApplicationUserRole> usersRoles)
-        {
-            var roles = usersRoles.Select(ur => ur.Role.Name).ToList();
-            if (roles.Count > 1)
-            {
-                roles.Remove(Roles.User);
-            }
-
-            return roles.OrderBy(r => r).ToList();
-        }
+      
     }
 }

@@ -1,10 +1,5 @@
 ﻿using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.ViewModels.UserList;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QuizWorld.Web.Contracts.Roles
 {
@@ -17,6 +12,7 @@ namespace QuizWorld.Web.Contracts.Roles
         public Task<Guid?> RemoveRoleFromUser(Guid userId, string role);
 
         public Task<ListUsersViewModel> GetUsersOfRole(string role, int page, SortingOrders order, int pageSize);
+        public Task<ListUsersViewModel> GetUsersOfRole(string role, string username, int page, SortingOrders order, int pageSize);
         public Task<ListUsersViewModel> GetUsersByUsername(string query, int page, SortingOrders order, int pageSize = 20);
     }
 }

@@ -53,7 +53,7 @@ namespace QuizWorld.Tests.Services.RoleServiceUnitTests
                 Assert.That(admin.Username, Is.EqualTo("admin"));
                 Assert.That(admin.Roles, Does.Contain(Roles.Admin));
                 Assert.That(admin.Roles, Does.Contain(Roles.Moderator));
-                Assert.That(admin.Roles.Count, Is.EqualTo(2));
+                Assert.That(admin.Roles.Count, Is.EqualTo(3));
                 Assert.That(user.Roles, Does.Contain(Roles.User));
                 Assert.That(user.Roles.Count, Is.EqualTo(1));
 
@@ -299,8 +299,8 @@ namespace QuizWorld.Tests.Services.RoleServiceUnitTests
         }
 
         [Test]
-        [TestCase("e", 1, 1, SortingOrders.Ascending, 1)]
-        [TestCase("M", 2, 1, SortingOrders.Descending, 1)]
+        [TestCase("e", 1, 2, SortingOrders.Ascending, 1)]
+        [TestCase("M", 2, 2, SortingOrders.Descending, 1)]
         public async Task Test_GetsUsersByUsernameReturnsAListOfUsersSuccessfully(string query, int expectedTotal, int expectedRolesCount, SortingOrders order, int expectedAmountOfUsers)
         {
             this.userManagerMock
