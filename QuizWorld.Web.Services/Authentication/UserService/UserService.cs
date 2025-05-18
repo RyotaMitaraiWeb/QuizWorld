@@ -135,5 +135,26 @@ namespace QuizWorld.Web.Services
 
             return model;
         }
+
+        public async Task<UserViewModel?> GetUserByUsername(string username)
+        {
+            ApplicationUser? appUser = await this.userManager.FindByNameAsync(username);
+
+            if (appUser == null)
+            {
+                return null;
+            }
+
+            var roles = await this.userManager.GetRolesAsync(appUser);
+
+            var model = new UserViewModel()
+            {
+                Id = appUser.Id.ToString(),
+                Username = appUser.UserName,
+                Roles = roles.ToArray(),
+            };
+
+            return model;
+        }
     }
 }

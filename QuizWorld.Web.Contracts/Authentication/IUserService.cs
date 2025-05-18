@@ -9,5 +9,6 @@ namespace QuizWorld.Web.Contracts
         public Task<bool> Logout(string jwt);
         public Task<bool> CheckIfUsernameIsTaken(string username);
         public Task<UserViewModel?> GetUser(string id);
+        public Task<UserViewModel?> GetUserByUsername(string username);
     }
 }
