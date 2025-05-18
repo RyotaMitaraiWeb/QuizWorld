@@ -80,6 +80,27 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
             }
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("get-by-username/{username}")]
+        public async Task<IActionResult> GetProfileByUsername(string username)
+        {
+            try
+            {
+                var user = await this.userService.GetUserByUsername(username);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(user);
+            }
+            catch
+            {
+                return StatusCode(503);
+            }
+        }
+
         [AllowAnonymous]
         [GuestsOnly]
         [HttpPost]

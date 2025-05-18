@@ -268,5 +268,43 @@ namespace QuizWorld.Tests.Controllers.AuthenticationControllerUnitTests
 
             Assert.That(result, Is.TypeOf<ObjectResult>());
         }
+
+        [Test]
+        public async Task Test_GetProfileByUsernameReturnsOkIfUserServiceReturnsAUser()
+        {
+            this.userServiceMock
+                .Setup(us => us.GetUserByUsername("a"))
+                .ReturnsAsync(this.user);
+
+            var result = await this.controller.GetProfileByUsername("a");
+
+
+            Assert.That(result, Is.TypeOf<OkObjectResult>());
+        }
+
+        [Test]
+        public async Task Test_GetProfileByUsernameReturns404IfUserServiceReturnsNull()
+        {
+            this.userServiceMock
+                .Setup(us => us.GetUserByUsername("a"))
+                .ReturnsAsync(() => null);
+
+            var result = await this.controller.GetProfileByUsername("a");
+
+            Assert.That(result, Is.TypeOf<NotFoundResult>());
+        }
+
+        [Test]
+        public async Task Test_GetProfileByUsernameReturns503IfUserServiceThrows()
+        {
+            this.userServiceMock
+                .Setup(us => us.GetUserByUsername("a"))
+                .ThrowsAsync(new Exception());
+
+            var result = await this.controller.GetProfileByUsername("a");
+
+
+            Assert.That(result, Is.TypeOf<StatusCodeResult>());
+        }
     }
 }
