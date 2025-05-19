@@ -6,6 +6,7 @@ using QuizWorld.Web.Contracts.JsonWebToken;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.Web.Services;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
+using QuizWorld.Common.Constants.Roles;
 
 namespace QuizWorld.Tests.Services.UserServiceTest
 {
@@ -191,6 +192,38 @@ namespace QuizWorld.Tests.Services.UserServiceTest
 
             var result = await this.service.CheckIfUsernameIsTaken("a");
             Assert.That(result, Is.False);
+        }
+
+        [Test]
+        public async Task Test_GetUserByUsernameReturnsNullIfTheUserDoesNotExist()
+        {
+            this.userManagerMock
+                .Setup(um => um.FindByNameAsync("a"))
+                .ReturnsAsync(() => null);
+
+            var result = await this.service.GetUserByUsername("a");
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public async Task Test_GetUserByUsernameReturnsAUserViewModel()
+        {
+            var appUser = new ApplicationUser()
+            {
+                UserName = "ryota",
+                Id = Guid.NewGuid(),
+            };
+
+            this.userManagerMock
+                .Setup(um => um.FindByNameAsync("a"))
+                .ReturnsAsync(appUser);
+
+            this.userManagerMock
+                .Setup(um => um.GetRolesAsync(appUser))
+                .ReturnsAsync([Roles.User]);
+
+            var result = await this.service.GetUserByUsername("a");
+            Assert.That(result.Username, Is.EqualTo(appUser.UserName));
         }
     }
 }
