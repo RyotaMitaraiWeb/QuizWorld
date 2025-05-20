@@ -67,8 +67,8 @@ namespace QuizWorld.Web
             builder.Services.AddSingleton(new RedisConnectionProvider(options));
             builder.Services.AddHostedService<IndexCreationService>();
             builder.Services.AddScoped<IUserService, UserService>();
-            builder.Services.AddSingleton<IJwtService, JwtService>();
-            builder.Services.AddSingleton<IJwtBlacklist, JwtBlacklistService>();
+            builder.Services.AddSingleton<IJwtServiceDeprecated, JwtServiceDeprecated>();
+            builder.Services.AddSingleton<IJwtBlacklistDeprecated, JwtBlacklistServiceDeprecated>();
             builder.Services.AddScoped<AppJwtBearerEvents>();
             builder.Services.AddSingleton<GuestsOnlyFilter>();
             builder.Services.AddScoped<IRepository, Repository>();

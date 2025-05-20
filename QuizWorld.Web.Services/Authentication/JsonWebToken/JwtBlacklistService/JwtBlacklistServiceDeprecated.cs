@@ -9,12 +9,13 @@ namespace QuizWorld.Web.Services.JsonWebToken
     /// A service to manage a Redis-based of JWTs. A blacklisted JWT will be rejected
     /// in any authorized request.
     /// </summary>
-    public class JwtBlacklistService : IJwtBlacklist
+    [Obsolete]
+    public class JwtBlacklistServiceDeprecated : IJwtBlacklistDeprecated
     {
         private readonly RedisConnectionProvider redisProvider;
         private readonly RedisCollection<JWT> tokens;
 
-        public JwtBlacklistService(RedisConnectionProvider redisProvider)
+        public JwtBlacklistServiceDeprecated(RedisConnectionProvider redisProvider)
         {
             this.redisProvider = redisProvider;
             tokens = (RedisCollection<JWT>)this.redisProvider.RedisCollection<JWT>();

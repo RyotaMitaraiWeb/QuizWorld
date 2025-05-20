@@ -11,11 +11,11 @@ namespace QuizWorld.Web.Services
     public class UserService : IUserService
     {
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly IJwtService jwtService;
+        private readonly IJwtServiceDeprecated jwtService;
 
         public UserService(
                 UserManager<ApplicationUser> userManager,
-                IJwtService jwtService
+                IJwtServiceDeprecated jwtService
             )
         {
             this.userManager = userManager;

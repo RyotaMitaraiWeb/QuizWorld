@@ -23,13 +23,13 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanWorkWithRoles
     {
         private readonly IHttpContextAccessor http;
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly IJwtService jwtService;
+        private readonly IJwtServiceDeprecated jwtService;
         private readonly IActivityLogger logger;
 
         public CanWorkWithRolesHandler(
             IHttpContextAccessor http,
             UserManager<ApplicationUser> userManager,
-            IJwtService jwtService,
+            IJwtServiceDeprecated jwtService,
             IActivityLogger logger)
         {
             this.http = http;

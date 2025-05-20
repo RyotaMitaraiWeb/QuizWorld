@@ -15,12 +15,12 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
     [ApiVersion("1.0")]
     public class AuthenticationControllerV1 : BaseController
     {
-        private readonly IJwtService jwtService;
+        private readonly IJwtServiceDeprecated jwtService;
         private readonly IUserService userService;
 
         public AuthenticationControllerV1
             (
-                IJwtService jwtService,
+                IJwtServiceDeprecated jwtService,
                 IUserService userService
             )
         {

@@ -13,8 +13,8 @@ namespace QuizWorld.Infrastructure.AuthConfig
     /// </summary>
     public class AppJwtBearerEvents : JwtBearerEvents
     {
-        private readonly IJwtService jwtService;
-        public AppJwtBearerEvents(IJwtService jwtService)
+        private readonly IJwtServiceDeprecated jwtService;
+        public AppJwtBearerEvents(IJwtServiceDeprecated jwtService)
         {
             this.jwtService = jwtService;
         }

@@ -13,16 +13,16 @@ namespace QuizWorld.Tests.Services.JwtServiceUnitTests
 {
     public class UnitTest
     {
-        public Mock<IJwtBlacklist> blacklistMock { get; set; }
+        public Mock<IJwtBlacklistDeprecated> blacklistMock { get; set; }
         public Mock<IConfiguration> configMock { get; set; }
-        public JwtService service { get; set; }
+        public JwtServiceDeprecated service { get; set; }
 
         [SetUp]
         public void Setup()
         {
-            this.blacklistMock = new Mock<IJwtBlacklist>();
+            this.blacklistMock = new Mock<IJwtBlacklistDeprecated>();
             this.configMock = new Mock<IConfiguration>();
-            this.service = new JwtService(this.blacklistMock.Object, this.configMock.Object);
+            this.service = new JwtServiceDeprecated(this.blacklistMock.Object, this.configMock.Object);
         }
 
         [Test]

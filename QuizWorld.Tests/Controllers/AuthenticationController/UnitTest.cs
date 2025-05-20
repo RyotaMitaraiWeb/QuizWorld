@@ -18,7 +18,7 @@ namespace QuizWorld.Tests.Controllers.AuthenticationControllerUnitTests
 {
     public class UnitTest
     {
-        public Mock<IJwtService> jwtServiceMock { get; set; }
+        public Mock<IJwtServiceDeprecated> jwtServiceMock { get; set; }
         public Mock<IUserService> userServiceMock { get; set; }
         public AuthenticationControllerV1 controller { get; set; }
 
@@ -30,7 +30,7 @@ namespace QuizWorld.Tests.Controllers.AuthenticationControllerUnitTests
         [SetUp]
         public void Setup()
         {
-            this.jwtServiceMock = new Mock<IJwtService>();
+            this.jwtServiceMock = new Mock<IJwtServiceDeprecated>();
             this.userServiceMock = new Mock<IUserService>();
             this.controller = new AuthenticationControllerV1(jwtServiceMock.Object, userServiceMock.Object);
             this.user = new UserViewModel

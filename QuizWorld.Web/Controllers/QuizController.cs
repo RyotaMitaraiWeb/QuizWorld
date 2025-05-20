@@ -18,8 +18,8 @@ namespace QuizWorld.Web.Controllers
     public class QuizController : BaseController
     {
         private readonly IQuizService quizService;
-        private readonly IJwtService jwtService;
-        public QuizController(IQuizService quizService, IJwtService jwtService)
+        private readonly IJwtServiceDeprecated jwtService;
+        public QuizController(IQuizService quizService, IJwtServiceDeprecated jwtService)
         {
             this.quizService = quizService;
             this.jwtService = jwtService;

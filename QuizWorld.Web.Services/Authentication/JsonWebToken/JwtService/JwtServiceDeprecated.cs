@@ -13,13 +13,14 @@ namespace QuizWorld.Web.Services.JsonWebToken
     /// A service to work with JWTs. It allows you to decode JWTs and turn objects into JWTs. It
     /// also grants a limited access to a Redis-based blacklist to invalidate tokens.
     /// </summary>
-    public class JwtService : IJwtService
+    [Obsolete("Deprecated as part of the refactor")]
+    public class JwtServiceDeprecated : IJwtServiceDeprecated
     {
 
-        private readonly IJwtBlacklist blacklist;
+        private readonly IJwtBlacklistDeprecated blacklist;
         private readonly IConfiguration config;
 
-        public JwtService(IJwtBlacklist blacklist, IConfiguration config)
+        public JwtServiceDeprecated(IJwtBlacklistDeprecated blacklist, IConfiguration config)
         {
             this.blacklist = blacklist;
             this.config = config;

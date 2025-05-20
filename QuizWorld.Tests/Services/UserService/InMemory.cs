@@ -9,12 +9,12 @@ namespace QuizWorld.Tests.Services.UserServiceTest
     {
         public TestDB testDb;
         public UserService service;
-        public Mock<IJwtService> jwtServiceMock;
+        public Mock<IJwtServiceDeprecated> jwtServiceMock;
 
         [SetUp]
         public async Task Setup()
         {
-            this.jwtServiceMock= new Mock<IJwtService>();
+            this.jwtServiceMock= new Mock<IJwtServiceDeprecated>();
             this.testDb = new TestDB();
             this.service = new UserService(testDb.userManager, this.jwtServiceMock.Object);
         }
