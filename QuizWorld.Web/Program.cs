@@ -33,6 +33,8 @@ using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Infrastructure.Extensions;
 using Microsoft.Data.SqlClient;
 using StackExchange.Redis;
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 
 namespace QuizWorld.Web
 {
@@ -149,7 +151,8 @@ namespace QuizWorld.Web
             builder.Services.AddSwaggerGen(options =>
             {
                 options.ResolveConflictingActions(api => api.First());
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Quiz World", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Quiz World v1", Version = "v1" });
+                options.SwaggerDoc("v2", new OpenApiInfo { Title = "Quiz World v2", Version = "v2" });
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
@@ -175,33 +178,42 @@ namespace QuizWorld.Web
                 });
             });
 
-            builder.Services.AddAuthorization(options =>
+            builder.Services.AddApiVersioning(options =>
             {
-                options.AddPolicy("CanEditQuiz", policy =>
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ReportApiVersions = true;
+                options.ApiVersionReader = ApiVersionReader.Combine(
+                    new QueryStringApiVersionReader("api-version"),
+                    new HeaderApiVersionReader("X-Version"),
+                    new MediaTypeApiVersionReader("v"));
+            }).AddApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
+            });
+
+            builder.Services.AddAuthorizationBuilder()
+                .AddPolicy("CanEditQuiz", policy =>
                 {
                     policy.Requirements.Add(new CanPerformOwnerActionRequirement(Roles.Moderator));
-                });
-
-                options.AddPolicy("CanDeleteQuiz", policy =>
+                })
+                .AddPolicy("CanDeleteQuiz", policy =>
                 {
                     policy.Requirements.Add(new CanPerformOwnerActionRequirement(Roles.Moderator));
-                });
-
-                options.AddPolicy("CanAccessLogs", policy =>
+                })
+                .AddPolicy("CanAccessLogs", policy =>
                 {
                     policy.Requirements.Add(new CanAccessLogsRequirement(Roles.Admin));
-                });
-
-                options.AddPolicy("CanSeeRoles", policy =>
+                })
+                .AddPolicy("CanSeeRoles", policy =>
                 {
                     policy.Requirements.Add(new CanWorkWithRolesRequirement(false, Roles.Admin));
-                });
-
-                options.AddPolicy("CanChangeRoles", policy =>
+                })
+                .AddPolicy("CanChangeRoles", policy =>
                 {
                     policy.Requirements.Add(new CanWorkWithRolesRequirement(true, Roles.Admin));
                 });
-            });
 
 
             builder.Services.AddCors(options =>
@@ -218,7 +230,11 @@ namespace QuizWorld.Web
             });
 
             var app = builder.Build();
-            
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+                options.SwaggerEndpoint("/swagger/v2/swagger.json", "v2");
+            });
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

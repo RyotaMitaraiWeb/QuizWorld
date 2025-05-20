@@ -7,16 +7,18 @@ using QuizWorld.ViewModels.Authentication;
 using QuizWorld.ViewModels.Common;
 using QuizWorld.Web.Contracts;
 using static QuizWorld.Common.Constants.InvalidActionsMessages.InvalidActionsMessages;
+using Asp.Versioning;
 
 namespace QuizWorld.Web.Areas.Authentication.Controllers
 {
-    [Route("/auth")]
-    public class AuthenticationController : BaseController
+    [Route("auth")]
+    [ApiVersion("1.0")]
+    public class AuthenticationControllerV1 : BaseController
     {
         private readonly IJwtService jwtService;
         private readonly IUserService userService;
 
-        public AuthenticationController
+        public AuthenticationControllerV1
             (
                 IJwtService jwtService,
                 IUserService userService

@@ -13,7 +13,7 @@ using QuizWorld.Web.Contracts.Quiz;
 
 namespace QuizWorld.Web.Controllers
 {
-    [Route("/quiz")]
+    [Route("quiz")]
     [ApiController]
     public class QuizController : BaseController
     {
