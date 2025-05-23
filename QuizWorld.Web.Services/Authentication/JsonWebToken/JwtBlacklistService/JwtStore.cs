@@ -6,7 +6,7 @@ using static QuizWorld.Common.Results.JwtStoreError;
 using QuizWorld.Common.Result;
 namespace QuizWorld.Web.Services.Authentication.JsonWebToken.JwtBlacklistService
 {
-    class JwtStore(RedisConnectionProvider redisProvider) : IJwtStore
+    public class JwtStore(RedisConnectionProvider redisProvider) : IJwtStore
     {
         private readonly RedisCollection<JWT> _tokens = (RedisCollection<JWT>)redisProvider.RedisCollection<JWT>();
 
@@ -38,7 +38,10 @@ namespace QuizWorld.Web.Services.Authentication.JsonWebToken.JwtBlacklistService
 
         private async Task<Result<string, RetrieveTokenError>> GetToken(string jwt)
         {
-            JWT? token = await this._tokens.FindByIdAsync(jwt);
+            JWT? token = await this._tokens
+                .Where(t => t.Id == jwt)
+                .FirstOrDefaultAsync();
+
             string? tokenId = token?.Id;
 
             if (tokenId is null)
