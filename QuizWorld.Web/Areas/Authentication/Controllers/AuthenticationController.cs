@@ -1,8 +1,4 @@
 ﻿using Asp.Versioning;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 using QuizWorld.Web.Contracts.Authentication.JsonWebToken;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
