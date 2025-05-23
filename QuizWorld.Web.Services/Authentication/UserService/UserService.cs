@@ -8,6 +8,7 @@ using QuizWorld.Web.Contracts.JsonWebToken;
 
 namespace QuizWorld.Web.Services
 {
+    [Obsolete("Deprecated, use AuthService")]
     public class UserService : IUserService
     {
         private readonly UserManager<ApplicationUser> userManager;

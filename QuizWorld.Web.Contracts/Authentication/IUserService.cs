@@ -2,6 +2,7 @@
 
 namespace QuizWorld.Web.Contracts
 {
+    [Obsolete("Deprecated. Use IAuthService")]
     public interface IUserService
     {
         public Task<UserViewModel?> Register(RegisterViewModel user);
