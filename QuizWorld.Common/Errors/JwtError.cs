@@ -6,5 +6,11 @@
         {
             Fail = 1,
         }
+
+        public enum ExtractUserFromTokenErrors
+        {
+            Invalid = 1,
+            Expired = 2,
+        }
     }
 }

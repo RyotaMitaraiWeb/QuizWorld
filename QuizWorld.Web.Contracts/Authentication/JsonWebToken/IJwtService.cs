@@ -7,5 +7,6 @@ namespace QuizWorld.Web.Contracts.Authentication.JsonWebToken
     public interface IJwtService
     {
         public Result<string, GenerateTokenErrors> GenerateToken(UserViewModel user);
+        public Task<Result<UserViewModel, ExtractUserFromTokenErrors>> ExtractUserFromTokenAsync(string bearerToken);
     }
 }
