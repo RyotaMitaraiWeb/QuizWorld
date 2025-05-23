@@ -34,7 +34,9 @@ using QuizWorld.Infrastructure.Extensions;
 using Microsoft.Data.SqlClient;
 using StackExchange.Redis;
 using Asp.Versioning;
-using Asp.Versioning.ApiExplorer;
+using QuizWorld.Web.Contracts.Authentication.JsonWebToken;
+using QuizWorld.Web.Services.Authentication.JsonWebToken.JwtService;
+using QuizWorld.Web.Services.Authentication.JsonWebToken.JwtBlacklistService;
 
 namespace QuizWorld.Web
 {
@@ -69,6 +71,8 @@ namespace QuizWorld.Web
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddSingleton<IJwtServiceDeprecated, JwtServiceDeprecated>();
             builder.Services.AddSingleton<IJwtBlacklistDeprecated, JwtBlacklistServiceDeprecated>();
+            builder.Services.AddSingleton<IJwtStore, JwtStore>();
+            builder.Services.AddSingleton<IJwtService, JwtService>();
             builder.Services.AddScoped<AppJwtBearerEvents>();
             builder.Services.AddSingleton<GuestsOnlyFilter>();
             builder.Services.AddScoped<IRepository, Repository>();
