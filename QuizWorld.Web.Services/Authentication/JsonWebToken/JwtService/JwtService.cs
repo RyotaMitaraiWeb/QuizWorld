@@ -80,7 +80,6 @@ namespace QuizWorld.Web.Services.Authentication.JsonWebToken.JwtService
         {
             string token = RemoveBearer(bearerToken);
             var handler = new JwtSecurityTokenHandler();
-            Console.WriteLine(Audience);
 
             var tokenValidationResult = await TokenIsValid(handler, token);
             if (tokenValidationResult.IsFailure)
