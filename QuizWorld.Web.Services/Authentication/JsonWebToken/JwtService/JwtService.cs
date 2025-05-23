@@ -141,8 +141,6 @@ namespace QuizWorld.Web.Services.Authentication.JsonWebToken.JwtService
                         .Success(token);
                 }
 
-                Console.WriteLine(token.Exception.Message);
-
                 throw token.Exception;
             }
             catch (SecurityTokenExpiredException)
