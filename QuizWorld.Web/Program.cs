@@ -37,6 +37,8 @@ using Asp.Versioning;
 using QuizWorld.Web.Contracts.Authentication.JsonWebToken;
 using QuizWorld.Web.Services.Authentication.JsonWebToken.JwtService;
 using QuizWorld.Web.Services.Authentication.JsonWebToken.JwtBlacklistService;
+using QuizWorld.Web.Contracts.Authentication;
+using QuizWorld.Web.Services.Authentication;
 
 namespace QuizWorld.Web
 {
@@ -69,6 +71,7 @@ namespace QuizWorld.Web
             builder.Services.AddSingleton(new RedisConnectionProvider(options));
             builder.Services.AddHostedService<IndexCreationService>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddSingleton<IJwtServiceDeprecated, JwtServiceDeprecated>();
             builder.Services.AddSingleton<IJwtBlacklistDeprecated, JwtBlacklistServiceDeprecated>();
             builder.Services.AddSingleton<IJwtStore, JwtStore>();

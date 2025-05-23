@@ -2,16 +2,11 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.Web.Contracts.JsonWebToken;
 using QuizWorld.Web.Contracts.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace QuizWorld.Infrastructure.AuthConfig.CanWorkWithRoles
 {
