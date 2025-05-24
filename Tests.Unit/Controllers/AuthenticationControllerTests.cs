@@ -9,6 +9,7 @@ using QuizWorld.Web.Contracts.Authentication;
 using QuizWorld.Web.Contracts.Authentication.JsonWebToken;
 using static QuizWorld.Common.Errors.AuthError;
 using static QuizWorld.Common.Results.JwtError;
+using static QuizWorld.Common.Results.JwtStoreError;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace QuizWorld.Tests.Unit.Controllers
@@ -17,6 +18,7 @@ namespace QuizWorld.Tests.Unit.Controllers
     {
         public IJwtService JwtService { get; set; }
         public IAuthService AuthService { get; set; }
+        public IJwtStore JwtStore { get; set; }
         public AuthenticationController AuthenticationController { get; set; }
         public UserViewModel ExampleUser = new()
         {
@@ -54,9 +56,11 @@ namespace QuizWorld.Tests.Unit.Controllers
         {
             JwtService = Substitute.For<IJwtService>();
             AuthService = Substitute.For<IAuthService>();
+            JwtStore = Substitute.For<IJwtStore>();
             AuthenticationController = new AuthenticationController(
                 JwtService,
-                AuthService
+                AuthService,
+                JwtStore
             );
         }
 
@@ -207,6 +211,43 @@ namespace QuizWorld.Tests.Unit.Controllers
 
             Assert.That(response?.StatusCode, Is.EqualTo(expectedStatusCode));
         }
+
+
+        [Test]
+        public async Task Test_LogoutReturnsNoContentIfSuccessful()
+        {
+            string jwt = "a";
+            var mockResult = CreateMockResultForLogout(jwt);
+            this.JwtStore.BlacklistTokenAsync(jwt)
+                .Returns(mockResult);
+
+            var result = await AuthenticationController.Logout(jwt);
+            Assert.That(result, Is.TypeOf<NoContentResult>());
+        }
+
+        [Test]
+        public async Task Test_LogoutReturnsForbiddenIfAlreadyBlacklistedErrorIsReturned()
+        {
+            string jwt = "a";
+            var mockResult = CreateMockResultForLogout(BlacklistTokenError.AlreadyBlacklisted);
+            this.JwtStore.BlacklistTokenAsync(jwt)
+                .Returns(mockResult);
+
+            var result = await AuthenticationController.Logout(jwt);
+            Assert.That(result, Is.TypeOf<ForbidResult>());
+        }
+
+        [Test]
+        [TestCase(" ")]
+        [TestCase("")]
+        [TestCase(null)]
+        public async Task Test_LogoutReturnsUnauthorizedIfJwtBearerIsWhitespaceOrNull(string? bearer)
+        {
+            var result = await AuthenticationController.Logout(bearer);
+            Assert.That(result, Is.TypeOf<UnauthorizedResult>());
+        }
+
+
         private static Result<UserViewModel, ExtractUserFromTokenErrors> CreateMockResultForExtractUser(UserViewModel user)
         {
             return Result<UserViewModel, ExtractUserFromTokenErrors>
@@ -241,6 +282,18 @@ namespace QuizWorld.Tests.Unit.Controllers
         {
             return Result<UserViewModel, FailedRegisterError>
                 .Failure(error);
+        }
+
+        private static Result<string, BlacklistTokenError> CreateMockResultForLogout(BlacklistTokenError error)
+        {
+            return Result<string, BlacklistTokenError>
+                .Failure(error);
+        }
+
+        private static Result<string, BlacklistTokenError> CreateMockResultForLogout(string value)
+        {
+            return Result<string, BlacklistTokenError>
+                .Success(value);
         }
     }
 }

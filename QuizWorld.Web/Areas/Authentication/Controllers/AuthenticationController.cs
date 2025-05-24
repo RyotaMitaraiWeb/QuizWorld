@@ -5,7 +5,6 @@ using QuizWorld.Common.Http;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.Web.Contracts.Authentication;
 using QuizWorld.Web.Contracts.Authentication.JsonWebToken;
-using System.Threading.Tasks;
 using static QuizWorld.Common.Errors.AuthError;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
@@ -13,10 +12,11 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
 {
     [Route("auth")]
     [ApiVersion("2.0")]
-    public class AuthenticationController(IJwtService jwtService, IAuthService authService) : BaseController
+    public class AuthenticationController(IJwtService jwtService, IAuthService authService, IJwtStore jwtStore) : BaseController
     {
         private readonly IJwtService _jwtService = jwtService;
         private readonly IAuthService _authService = authService;
+        private readonly IJwtStore _jwtStore = jwtStore;
 
         [Route("session")]
         [HttpPost]
@@ -86,6 +86,26 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
             return NotFound();
         }
 
+        [HttpDelete]
+        [Route("logout")]
+        public async Task<IActionResult> Logout([FromHeader(Name = "Authorization")] string? bearerToken)
+        {
+            if (string.IsNullOrWhiteSpace(bearerToken))
+            {
+                return Unauthorized();
+            }
+
+            string jwt = RemoveBearer(bearerToken!);
+
+            var result = await _jwtStore.BlacklistTokenAsync(jwt);
+            if (result.IsSuccess)
+            {
+                return NoContent();
+            }
+
+            return Forbid();
+        }
+
         private SessionViewModel InitiateSession(UserViewModel user)
         {
             var result = _jwtService.GenerateToken(user);
@@ -103,6 +123,11 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
             };
 
             return session;
+        }
+
+        private static string RemoveBearer(string token)
+        {
+            return token.Replace("Bearer ", string.Empty);
         }
     }
 }
