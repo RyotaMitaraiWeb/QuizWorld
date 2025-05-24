@@ -8,6 +8,12 @@
             UserDoesNotExist,
         }
 
+        public enum FailedRegisterError
+        {
+            UsernameIsTaken = 1,
+            Fail = 2,
+        }
+
         /// <summary>
         /// Wrong password and non-existant user intentionally produce the same error code
         /// to prevent information leaks.

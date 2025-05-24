@@ -7,5 +7,6 @@ namespace QuizWorld.Web.Contracts.Authentication
     public interface IAuthService
     {
         Task<Result<UserViewModel, FailedLoginError>> Login(LoginViewModel credentials);
+        Task<Result<UserViewModel, FailedRegisterError>> Register(RegisterViewModel body);
     }
 }
