@@ -8,5 +8,6 @@ namespace QuizWorld.Web.Contracts.Authentication
     {
         Task<Result<UserViewModel, FailedLoginError>> Login(LoginViewModel credentials);
         Task<Result<UserViewModel, FailedRegisterError>> Register(RegisterViewModel body);
+        Task<bool> CheckIfUsernameIsTaken(string username);
     }
 }

@@ -167,6 +167,31 @@ namespace QuizWorld.Tests.Unit.Services
             });
         }
 
+        [Test]
+        public async Task Test_CheckIfUsernameReturnsTrueIfUserExists()
+        {
+            string username = "a";
+            UserManager.FindByNameAsync(username)
+                .Returns(new ApplicationUser());
+
+            var result = await AuthService.CheckIfUsernameIsTaken(username);
+
+            Assert.That(result, Is.True);
+        }
+
+        [Test]
+        public async Task Test_CheckIfUsernameReturnsFalseIfUserDoesNotExist()
+        {
+            string username = "a";
+            UserManager.FindByNameAsync(username)
+                .Returns((ApplicationUser?)null);
+
+
+            var result = await AuthService.CheckIfUsernameIsTaken(username);
+
+            Assert.That(result, Is.False);
+        }
+
         [TearDown]
         public void TearDown()
         {

@@ -71,6 +71,12 @@ namespace QuizWorld.Web.Services.Authentication
                 .Success(user);
         }
 
+        public async Task<bool> CheckIfUsernameIsTaken(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            return user is not null;
+        }
+
         private async Task<bool> PasswordsMatch(string password, ApplicationUser user)
         {
             return await _userManager.CheckPasswordAsync(user, password);
