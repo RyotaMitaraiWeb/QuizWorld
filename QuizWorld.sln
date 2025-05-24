@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizWorld.Web.Services", "Q
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{330147D5-953F-45B7-B5F3-E0A43A73D520}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuizWorld.Tests.Unit", "..\QuizWorld.Tests.Unit\QuizWorld.Tests.Unit.csproj", "{BD6968AB-3D91-4513-916B-8B1A5004829D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Unit", "Tests.Unit\Tests.Unit.csproj", "{BD6968AB-3D91-4513-916B-8B1A5004829D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
