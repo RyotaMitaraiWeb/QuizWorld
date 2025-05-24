@@ -9,6 +9,7 @@ using QuizWorld.Web.Contracts.Authentication;
 using QuizWorld.Web.Contracts.Authentication.JsonWebToken;
 using static QuizWorld.Common.Errors.AuthError;
 using static QuizWorld.Common.Results.JwtError;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace QuizWorld.Tests.Unit.Controllers
 {
@@ -171,11 +172,11 @@ namespace QuizWorld.Tests.Unit.Controllers
         public async Task Test_RegisterReturnsASessionOnSuccess()
         {
             var register = ExampleRegister;
+            var mockResult = CreateMockResultForRegister(ExampleUser);
             string token = "a";
 
             AuthService.Register(register)
-                .Returns(
-                    Result<UserViewModel, FailedRegisterError>.Success(ExampleUser));
+                .Returns(mockResult);
 
             JwtService.GenerateToken(ExampleUser)
                 .Returns(Result<string, GenerateTokenErrors>.Success(token));
@@ -190,6 +191,21 @@ namespace QuizWorld.Tests.Unit.Controllers
                 Assert.That(value?.Id, Is.EqualTo(ExampleUser.Id));
                 Assert.That(value?.Token, Is.EqualTo(token));
             });
+        }
+
+        [Test]
+        [TestCase(true, 204)]
+        [TestCase(false, 404)]
+        public async Task Test_CheckIfUsernameIsTakenReturnsCorrectStatusCode(bool valueToBeReturned, int expectedStatusCode)
+        {
+            string username = "a";
+            AuthService.CheckIfUsernameIsTaken(username)
+                .Returns(valueToBeReturned);
+
+            var result = await AuthenticationController.CheckIfUsernameIsTaken(username);
+            var response = result as StatusCodeResult;
+
+            Assert.That(response?.StatusCode, Is.EqualTo(expectedStatusCode));
         }
         private static Result<UserViewModel, ExtractUserFromTokenErrors> CreateMockResultForExtractUser(UserViewModel user)
         {

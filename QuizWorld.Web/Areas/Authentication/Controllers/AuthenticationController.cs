@@ -72,6 +72,20 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
             return Created("", session);
         }
 
+        [HttpGet]
+        [Route("username")]
+        [AllowAnonymous]
+        public async Task<IActionResult> CheckIfUsernameIsTaken([FromQuery] string username)
+        {
+            bool usernameIsTaken = await _authService.CheckIfUsernameIsTaken(username);
+            if (usernameIsTaken)
+            {
+                return NoContent();
+            }
+
+            return NotFound();
+        }
+
         private SessionViewModel InitiateSession(UserViewModel user)
         {
             var result = _jwtService.GenerateToken(user);
