@@ -52,6 +52,26 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
             return Created(string.Empty, session);
         }
 
+        [HttpPost]
+        [Route("register")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(RegisterViewModel registerBody)
+        {
+            var result = await _authService.Register(registerBody);
+            if (result.IsFailure)
+            {
+                if (result.Error == FailedRegisterError.UsernameIsTaken)
+                {
+                    return BadRequest();
+                }
+
+                return StatusCode(503);
+            }
+
+            SessionViewModel session = InitiateSession(result.Value);
+            return Created("", session);
+        }
+
         private SessionViewModel InitiateSession(UserViewModel user)
         {
             var result = _jwtService.GenerateToken(user);
