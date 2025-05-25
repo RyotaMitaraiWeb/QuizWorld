@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using QuizWorld.Common.Claims;
 using QuizWorld.Common.Result;
+using QuizWorld.Common.Util;
 using QuizWorld.Infrastructure.Data.Redis.Models;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.Web.Contracts.Authentication.JsonWebToken;
@@ -78,7 +79,7 @@ namespace QuizWorld.Web.Services.Authentication.JsonWebToken.JwtService
 
         public async Task<Result<UserViewModel, ExtractUserFromTokenErrors>> ExtractUserFromTokenAsync(string bearerToken)
         {
-            string token = RemoveBearer(bearerToken);
+            string token = JwtUtil.RemoveBearer(bearerToken);
             var handler = new JwtSecurityTokenHandler();
 
             var tokenValidationResult = await TokenIsValid(handler, token);
@@ -99,10 +100,6 @@ namespace QuizWorld.Web.Services.Authentication.JsonWebToken.JwtService
                 .Success(user);
         }
 
-        private static string RemoveBearer(string token)
-        {
-            return token.Replace("Bearer ", string.Empty);
-        }
 
         private static ClaimsIdentity GenerateClaims(UserViewModel user)
         {

@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using QuizWorld.Common.ApiVersion;
+using QuizWorld.Common.Util;
 using QuizWorld.Web.Contracts.Authentication.JsonWebToken;
 using QuizWorld.Web.Contracts.JsonWebToken;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace QuizWorld.Infrastructure.AuthConfig
 {
@@ -47,7 +44,7 @@ namespace QuizWorld.Infrastructure.AuthConfig
 
         private async Task ValidateJwt(TokenValidatedContext context, string bearer)
         {
-            string jwt = RemoveBearer(bearer);
+            string jwt = JwtUtil.RemoveBearer(bearer);
             var result = await _jwtStore.RetrieveBlacklistedTokenAsync(jwt);
 
             if (result.IsFailure)
@@ -80,11 +77,6 @@ namespace QuizWorld.Infrastructure.AuthConfig
             await base.TokenValidated(context);
         }
 
-        private static string RemoveBearer(string bearer)
-        {
-            return bearer.Replace("Bearer ", string.Empty);
-        }
-
-        private string BlacklistedTokenErrorMessage = "The token has been blacklisted and cannot be authorized";
+        private readonly string BlacklistedTokenErrorMessage = "The token has been blacklisted and cannot be authorized";
     }
 }

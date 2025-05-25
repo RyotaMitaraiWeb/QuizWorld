@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QuizWorld.Common.Http;
+using QuizWorld.Common.Util;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.Web.Contracts.Authentication;
 using QuizWorld.Web.Contracts.Authentication.JsonWebToken;
@@ -95,7 +96,7 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
                 return Unauthorized();
             }
 
-            string jwt = RemoveBearer(bearerToken!);
+            string jwt = JwtUtil.RemoveBearer(bearerToken);
 
             var result = await _jwtStore.BlacklistTokenAsync(jwt);
             if (result.IsSuccess)
@@ -123,11 +124,6 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
             };
 
             return session;
-        }
-
-        private static string RemoveBearer(string token)
-        {
-            return token.Replace("Bearer ", string.Empty);
         }
     }
 }
