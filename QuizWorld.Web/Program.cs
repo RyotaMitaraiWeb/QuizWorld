@@ -157,6 +157,7 @@ namespace QuizWorld.Web
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options =>
             {
+                options.DescribeAllParametersInCamelCase();
                 options.ResolveConflictingActions(api => api.First());
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "Quiz World v1", Version = "v1" });
                 options.SwaggerDoc("v2", new OpenApiInfo { Title = "Quiz World v2", Version = "v2" });
