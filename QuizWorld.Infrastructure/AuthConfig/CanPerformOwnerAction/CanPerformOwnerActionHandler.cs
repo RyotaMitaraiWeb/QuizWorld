@@ -26,13 +26,13 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanPerformOwnerAction
     public class CanPerformOwnerActionHandler : AuthorizationHandler<CanPerformOwnerActionRequirement>
     {
         private readonly IHttpContextAccessor http;
-        private readonly IJwtService jwtService;
+        private readonly IJwtServiceDeprecated jwtService;
         private readonly IRepository repository;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IActivityLogger logger;
         public CanPerformOwnerActionHandler(
             IHttpContextAccessor http,
-            IJwtService jwtService,
+            IJwtServiceDeprecated jwtService,
             IRepository repository,
             UserManager<ApplicationUser> userManager,
             IActivityLogger logger)

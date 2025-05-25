@@ -17,7 +17,7 @@ namespace QuizWorld.Tests.Services.UserServiceTest
         public RegisterViewModel register;
         public LoginViewModel login;
         public ApplicationUser user;
-        public Mock<IJwtService> jwtServiceMock;
+        public Mock<IJwtServiceDeprecated> jwtServiceMock;
 
         [SetUp]
         public void Setup()
@@ -33,7 +33,7 @@ namespace QuizWorld.Tests.Services.UserServiceTest
                 new Mock<IServiceProvider>().Object,
                 new Mock<ILogger<UserManager<ApplicationUser>>>().Object);
 
-            this.jwtServiceMock = new Mock<IJwtService>();
+            this.jwtServiceMock = new Mock<IJwtServiceDeprecated>();
 
             this.service = new UserService(this.userManagerMock.Object, this.jwtServiceMock.Object);
 

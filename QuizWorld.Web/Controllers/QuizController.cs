@@ -13,13 +13,13 @@ using QuizWorld.Web.Contracts.Quiz;
 
 namespace QuizWorld.Web.Controllers
 {
-    [Route("/quiz")]
+    [Route("quiz")]
     [ApiController]
     public class QuizController : BaseController
     {
         private readonly IQuizService quizService;
-        private readonly IJwtService jwtService;
-        public QuizController(IQuizService quizService, IJwtService jwtService)
+        private readonly IJwtServiceDeprecated jwtService;
+        public QuizController(IQuizService quizService, IJwtServiceDeprecated jwtService)
         {
             this.quizService = quizService;
             this.jwtService = jwtService;

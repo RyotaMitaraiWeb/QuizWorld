@@ -16,9 +16,9 @@ namespace QuizWorld.Infrastructure.Filters.GuestsOnly
     /// </summary>
     public class GuestsOnlyFilter : IAsyncAuthorizationFilter
     {
-        private readonly IJwtService jwtService;
+        private readonly IJwtServiceDeprecated jwtService;
         private readonly IHttpContextAccessor http;
-        public GuestsOnlyFilter(IJwtService jwtService, IHttpContextAccessor http)
+        public GuestsOnlyFilter(IJwtServiceDeprecated jwtService, IHttpContextAccessor http)
         {
             this.jwtService = jwtService;
             this.http = http;

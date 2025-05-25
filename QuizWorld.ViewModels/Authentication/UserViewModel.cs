@@ -13,7 +13,7 @@ namespace QuizWorld.ViewModels.Authentication
     {
         public string Username { get; set; } = null!;
         public string Id { get; set; } = null!;
-        public string[] Roles { get; set; } = Array.Empty<string>();
+        public string[] Roles { get; set; } = [];
 
     }
 }

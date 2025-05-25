@@ -1,211 +1,129 @@
+﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using QuizWorld.Common.Constants.InvalidActionsMessages;
-using QuizWorld.Web.Contracts.JsonWebToken;
-using QuizWorld.Infrastructure.Filters.GuestsOnly;
+using QuizWorld.Common.Http;
+using QuizWorld.Common.Util;
 using QuizWorld.ViewModels.Authentication;
-using QuizWorld.ViewModels.Common;
-using QuizWorld.Web.Contracts;
-using static QuizWorld.Common.Constants.InvalidActionsMessages.InvalidActionsMessages;
+using QuizWorld.Web.Contracts.Authentication;
+using QuizWorld.Web.Contracts.Authentication.JsonWebToken;
+using static QuizWorld.Common.Errors.AuthError;
+using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
 namespace QuizWorld.Web.Areas.Authentication.Controllers
 {
-    [Route("/auth")]
-    public class AuthenticationController : BaseController
+    [Route("auth")]
+    [ApiVersion("2.0")]
+    public class AuthenticationController(IJwtService jwtService, IAuthService authService, IJwtStore jwtStore) : BaseController
     {
-        private readonly IJwtService jwtService;
-        private readonly IUserService userService;
+        private readonly IJwtService _jwtService = jwtService;
+        private readonly IAuthService _authService = authService;
+        private readonly IJwtStore _jwtStore = jwtStore;
 
-        public AuthenticationController
-            (
-                IJwtService jwtService,
-                IUserService userService
-            )
-        {
-            this.jwtService = jwtService;
-            this.userService = userService;
-        }
-
+        [Route("session")]
         [HttpPost]
-        [AllowAnonymous]
-        [GuestsOnly]
-        [Route("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterViewModel register)
+        public async Task<IActionResult> RetrieveSession([FromHeader(Name = "Authorization")] string? bearerToken)
         {
-            try
+            if (string.IsNullOrWhiteSpace(bearerToken))
             {
-                var user = await this.userService.Register(register);
-                if (user == null)
-                {
-                    var errors = new ErrorViewModel() { Errors = new string[] { "Something went wrong while registering you, please try again or check your input!" } };
-                    return BadRequest(errors);
-                }
-
-                string jwt = this.jwtService.GenerateJWT(user);
-                var session = new SessionViewModel()
-                {
-                    Id = user.Id,
-                    Username = user.Username,
-                    Roles = user.Roles,
-                    Token = jwt
-                };
-
-                return Created("/users" + session.Username, session);
+                return Unauthorized();
             }
-            catch
+
+            var sessionValidationResult = await _jwtService.ExtractUserFromTokenAsync(bearerToken);
+            if (sessionValidationResult.IsSuccess)
             {
-                var errors = new ErrorViewModel() { Errors = new string[] { InvalidActionsMessages.RequestFailed } };
-                return StatusCode(503, errors);
+                return Created("/auth/login",sessionValidationResult.Value);
             }
+
+            return Unauthorized();
         }
 
-        [HttpGet]
-        [AllowAnonymous]
-        [Route("{id}")]
-        public async Task<IActionResult> Profile(string id)
-        {
-            try
-            {
-                var user = await this.userService.GetUser(id);
-                if (user == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(user);
-            }
-            catch
-            {
-                return StatusCode(503);
-            }
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
-        [Route("get-by-username/{username}")]
-        public async Task<IActionResult> GetProfileByUsername(string username)
-        {
-            try
-            {
-                var user = await this.userService.GetUserByUsername(username);
-                if (user == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(user);
-            }
-            catch
-            {
-                return StatusCode(503);
-            }
-        }
-
-        [AllowAnonymous]
-        [GuestsOnly]
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody] LoginViewModel login)
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(LoginViewModel credentials)
         {
-            try
+            var result = await _authService.LoginAsync(credentials);
+            if (result.IsFailure)
             {
-                var user = await this.userService.Login(login);
-                if (user == null)
-                {
-                    var errors = new ErrorViewModel() { Errors = new string[] { InvalidActionsMessages.FailedLogin } };
-                    return Unauthorized(errors);
-                }
-
-                string jwt = this.jwtService.GenerateJWT(user);
-                var session = new SessionViewModel()
-                {
-                    Id = user.Id,
-                    Username = user.Username,
-                    Roles = user.Roles,
-                    Token = jwt
-                };
-
-
-                return Created("/users" + session.Username, session);
+                var error = new HttpError(FailedLoginErrorCodes[result.Error]);
+                return Unauthorized(error);
             }
-            
-            catch
-            {
-                var errors = new ErrorViewModel() { Errors = new string[] { InvalidActionsMessages.RequestFailed } };
-                return StatusCode(503, errors);
-            }
+
+            SessionViewModel session = InitiateSession(result.Value);
+            return Created(string.Empty, session);
         }
 
         [HttpPost]
-        [Route("session")]
-        public async Task<IActionResult> Session([FromHeader(Name = "Authorization")] string? jwt)
-        {
-            string token = this.jwtService.RemoveBearer(jwt);
-            try
-            {
-                var user = this.jwtService.DecodeJWT(token);
-                var session = new SessionViewModel()
-                {
-                    Token = token,
-                    Id = user.Id,
-                    Username = user.Username,
-                    Roles = user.Roles,
-                };
-
-
-                return Created($"/users/{user.Username}", session);
-            }
-            catch
-            {
-                var errors = new ErrorViewModel() { Errors = new string[] { "Malformed JWT" } };
-                return BadRequest(errors);
-            }
-        }
-
+        [Route("register")]
         [AllowAnonymous]
-        [HttpGet]
-        [Route("username/{username}")]
-        public async Task<IActionResult> UsernameExists(string username)
+        public async Task<IActionResult> Register(RegisterViewModel registerBody)
         {
-            try
+            var result = await _authService.RegisterAsync(registerBody);
+            if (result.IsFailure)
             {
-                var exists = await this.userService.CheckIfUsernameIsTaken(username);
-                if (exists == false)
+                if (result.Error == FailedRegisterError.UsernameIsTaken)
                 {
-                    return NotFound();
+                    return BadRequest();
                 }
 
-                return Ok();
+                return StatusCode(503);
             }
-            catch
+
+            SessionViewModel session = InitiateSession(result.Value);
+            return Created("", session);
+        }
+
+        [HttpGet]
+        [Route("username")]
+        [AllowAnonymous]
+        public async Task<IActionResult> CheckIfUsernameIsTaken([FromQuery] string username)
+        {
+            bool usernameIsTaken = await _authService.CheckIfUsernameIsTakenAsync(username);
+            if (usernameIsTaken)
             {
-                var errors = new ErrorViewModel() { Errors = new string[] { InvalidActionsMessages.RequestFailed } };
-                return StatusCode(503, errors);
+                return NoContent();
             }
+
+            return NotFound();
         }
 
         [HttpDelete]
         [Route("logout")]
-        public async Task<IActionResult> Logout([FromHeader(Name = "Authorization")] string? jwt)
+        public async Task<IActionResult> Logout([FromHeader(Name = "Authorization")] string? bearerToken)
         {
-            string token = this.jwtService.RemoveBearer(jwt);
-            try
+            if (string.IsNullOrWhiteSpace(bearerToken))
             {
-                bool succeeded = await this.jwtService.InvalidateJWT(token);
-                if (!succeeded)
-                {
-                    return Forbid("Bearer");
-                }
+                return Unauthorized();
+            }
 
+            string jwt = JwtUtil.RemoveBearer(bearerToken);
+
+            var result = await _jwtStore.BlacklistTokenAsync(jwt);
+            if (result.IsSuccess)
+            {
                 return NoContent();
             }
 
-            catch (Exception e)
+            return Forbid();
+        }
+
+        private SessionViewModel InitiateSession(UserViewModel user)
+        {
+            var result = _jwtService.GenerateToken(user);
+            if (result.IsFailure)
             {
-                
-                var errors = new ErrorViewModel() { Errors = new string[] { e.Message } };
-                return StatusCode(503, errors);
+                throw new Exception("Token generation failed");
             }
+
+            SessionViewModel session = new()
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Roles = user.Roles,
+                Token = result.Value,
+            };
+
+            return session;
         }
     }
 }

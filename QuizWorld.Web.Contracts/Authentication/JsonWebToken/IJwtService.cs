@@ -1,18 +1,12 @@
-﻿using QuizWorld.ViewModels.Authentication;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using QuizWorld.Common.Result;
+using QuizWorld.ViewModels.Authentication;
+using static QuizWorld.Common.Results.JwtError;
 
-namespace QuizWorld.Web.Contracts.JsonWebToken;
-
-public interface IJwtService
+namespace QuizWorld.Web.Contracts.Authentication.JsonWebToken
 {
-    public string GenerateJWT(UserViewModel user);
-    public UserViewModel DecodeJWT(string jwt);
-    public Task<bool> InvalidateJWT(string jwt);
-    public Task<bool> CheckIfJWTHasBeenInvalidated(string jwt);
-    public string RemoveBearer(string? bearerToken);
-    public Task<bool> CheckIfJWTIsValid(string jwt);
+    public interface IJwtService
+    {
+        public Result<string, GenerateTokenErrors> GenerateToken(UserViewModel user);
+        public Task<Result<UserViewModel, ExtractUserFromTokenErrors>> ExtractUserFromTokenAsync(string bearerToken);
+    }
 }

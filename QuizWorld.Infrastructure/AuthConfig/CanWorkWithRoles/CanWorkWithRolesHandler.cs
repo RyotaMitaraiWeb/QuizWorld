@@ -2,16 +2,11 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.Web.Contracts.JsonWebToken;
 using QuizWorld.Web.Contracts.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace QuizWorld.Infrastructure.AuthConfig.CanWorkWithRoles
 {
@@ -23,13 +18,13 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanWorkWithRoles
     {
         private readonly IHttpContextAccessor http;
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly IJwtService jwtService;
+        private readonly IJwtServiceDeprecated jwtService;
         private readonly IActivityLogger logger;
 
         public CanWorkWithRolesHandler(
             IHttpContextAccessor http,
             UserManager<ApplicationUser> userManager,
-            IJwtService jwtService,
+            IJwtServiceDeprecated jwtService,
             IActivityLogger logger)
         {
             this.http = http;

@@ -1,165 +1,173 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using QuizWorld.Web.Contracts.JsonWebToken;
+using QuizWorld.Common.Claims;
+using QuizWorld.Common.Result;
+using QuizWorld.Common.Util;
+using QuizWorld.Infrastructure.Data.Redis.Models;
 using QuizWorld.ViewModels.Authentication;
+using QuizWorld.Web.Contracts.Authentication.JsonWebToken;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using static QuizWorld.Common.Results.JwtError;
 
-namespace QuizWorld.Web.Services.JsonWebToken
+namespace QuizWorld.Web.Services.Authentication.JsonWebToken.JwtService
 {
-    /// <summary>
-    /// A service to work with JWTs. It allows you to decode JWTs and turn objects into JWTs. It
-    /// also grants a limited access to a Redis-based blacklist to invalidate tokens.
-    /// </summary>
-    public class JwtService : IJwtService
+    public class JwtService(IConfiguration config) : IJwtService
     {
-
-        private readonly IJwtBlacklist blacklist;
-        private readonly IConfiguration config;
-
-        public JwtService(IJwtBlacklist blacklist, IConfiguration config)
+        private readonly IConfiguration _config = config;
+        private string Secret
         {
-            this.blacklist = blacklist;
-            this.config = config;
-        }
-
-        /// <summary>
-        /// Checks if the JWT has been blacklisted
-        /// </summary>
-        /// <param name="jwt">The token to be looked up</param>
-        /// <returns>A boolean value that indicates whether the token is blacklisted or not</returns>
-        public async Task<bool> CheckIfJWTHasBeenInvalidated(string jwt)
-        {
-            var token = await this.blacklist.FindJWT(jwt);
-            return token != null;
-        }
-
-        /// <summary>
-        /// Generates a JWT that can be decoded to a UserViewModel
-        /// </summary>
-        /// <param name="user">The user to be converted to a JWT</param>
-        /// <returns>A string representing the JWT</returns>
-        public string GenerateJWT(UserViewModel user)
-        {
-            var secret = this.config["JWT_SECRET"];
-            var issuer = this.config["JWT_VALID_ISSUER"];
-            var audience = this.config["JWT_VALID_AUDIENCE"];
-
-
-            var claims = new List<Claim>
+            get
             {
-                new Claim("id", user.Id),
-                new Claim("username", user.Username),
-                new Claim("roles", JsonConvert.SerializeObject(user.Roles))
-            };
-
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
-
-            var token = new JwtSecurityToken(
-                issuer: issuer,
-                audience: audience,
-                expires: DateTime.Now.AddDays(1),
-                claims: claims,
-                signingCredentials:
-                    new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        /// <summary>
-        /// Decodes the provided JWT into a UserViewModel.
-        /// </summary>
-        /// <param name="jwt">The token to be decoded</param>
-        /// <returns>A UserViewModel representing the content of the JWT</returns>
-        /// <exception cref="InvalidOperationException">If roles is null</exception>
-
-        public UserViewModel DecodeJWT(string jwt)
-        {
-            var handler = new JwtSecurityTokenHandler();
-            var token = handler.ReadJwtToken(jwt);
-
-            var rolesJson = token.Claims.First(t => t.Type == "roles").Value;
-            var roles = JsonConvert.DeserializeObject<string[]>(rolesJson);
-
-            if (roles == null)
-            {
-                throw new InvalidOperationException("roles is null, this is most likely an error from the token itself");
+                return _config["JWT_SECRET"] ?? string.Empty;
             }
+        }
+
+        private string Issuer
+        {
+            get
+            {
+                return _config["JWT_VALID_ISSUER"] ?? string.Empty;
+            }
+        }
+
+        private string Audience
+        {
+            get
+            {
+                return _config["JWT_VALID_AUDIENCE"] ?? string.Empty;
+            }
+        }
+        
+        public Result<string, GenerateTokenErrors> GenerateToken(UserViewModel user)
+        {
+            try
+            {
+                var handler = new JwtSecurityTokenHandler();
+
+                byte[] key = Encoding.ASCII.GetBytes(Secret);
+                var credentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature
+                );
+
+                ClaimsIdentity claims = GenerateClaims(user);
+
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = claims,
+                    Expires = DateTime.UtcNow.AddDays(1),
+                    SigningCredentials = credentials,
+                    Audience = Audience,
+                    Issuer = Issuer,
+                };
+
+                SecurityToken token = handler.CreateToken(tokenDescriptor);
+                string jwt = handler.WriteToken(token);
+
+                return Result<string, GenerateTokenErrors>
+                    .Success(jwt);
+            }
+            catch
+            {
+                return Result<string, GenerateTokenErrors>
+                    .Failure(GenerateTokenErrors.Fail);
+            }
+        }
+
+        public async Task<Result<UserViewModel, ExtractUserFromTokenErrors>> ExtractUserFromTokenAsync(string bearerToken)
+        {
+            string token = JwtUtil.RemoveBearer(bearerToken);
+            var handler = new JwtSecurityTokenHandler();
+
+            var tokenValidationResult = await TokenIsValid(handler, token);
+            if (tokenValidationResult.IsFailure)
+            {
+                return Result<UserViewModel, ExtractUserFromTokenErrors>
+                    .Failure(tokenValidationResult.Error);
+            }
+
+            Dictionary<string, string> claims = tokenValidationResult
+                .Value
+                .Claims
+                .ToDictionary(c => c.Key, c => c.Value.ToString() ?? string.Empty);
+
+            UserViewModel user = ExtractPayload(tokenValidationResult.Value);
+
+            return Result<UserViewModel, ExtractUserFromTokenErrors>
+                .Success(user);
+        }
+
+
+        private static ClaimsIdentity GenerateClaims(UserViewModel user)
+        {
+            var claims = new ClaimsIdentity();
+            claims.AddClaim(new Claim(UserClaimsProperties.Id, user.Id));
+            claims.AddClaim(new Claim(UserClaimsProperties.Username, user.Username));
+            claims.AddClaim(new Claim(UserClaimsProperties.Roles, JsonConvert.SerializeObject(user.Roles)));
+
+            return claims;
+        }
+
+        private async Task<Result<TokenValidationResult, ExtractUserFromTokenErrors>> TokenIsValid(JwtSecurityTokenHandler handler, string jwt)
+        {
+            try
+            {
+                byte[] key = Encoding.ASCII.GetBytes(Secret);
+                var credentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature
+                );
+
+                TokenValidationResult token = await handler.ValidateTokenAsync(jwt, new TokenValidationParameters()
+                {
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateAudience = true,
+                    ValidateIssuer = true,
+                    ValidIssuer = Issuer,
+                    ValidAudience = Audience,
+                });
+
+                if (token.IsValid)
+                {
+                    return Result<TokenValidationResult, ExtractUserFromTokenErrors>
+                        .Success(token);
+                }
+
+                throw token.Exception;
+            }
+            catch (SecurityTokenExpiredException)
+            {
+                return Result<TokenValidationResult, ExtractUserFromTokenErrors>
+                    .Failure(ExtractUserFromTokenErrors.Expired);
+            }
+            catch
+            {
+                return Result<TokenValidationResult, ExtractUserFromTokenErrors>
+                    .Failure(ExtractUserFromTokenErrors.Invalid);
+            }
+        }
+
+        private static UserViewModel ExtractPayload(TokenValidationResult result)
+        {
+            Dictionary<string, string> claims = result
+                .Claims
+                .ToDictionary(c => c.Key, c => c.Value.ToString() ?? string.Empty);
 
             var user = new UserViewModel()
             {
-                Id = token.Claims.First(t => t.Type == "id").Value,
-                Username = token.Claims.First(t => t.Type == "username").Value,
-                Roles = roles
+                Id = claims[UserClaimsProperties.Id],
+                Username = claims[UserClaimsProperties.Username],
+
+                // this is what the "roles" property is converted to when generating the token
+                Roles = JsonConvert.DeserializeObject<string[]>(claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]) ?? []
             };
 
             return user;
-        }
-
-        /// <summary>
-        /// Adds the provided token to the JWT blacklist, rendering it unusable in
-        /// future authorized requests
-        /// </summary>
-        /// <param name="jwt">The token to be blacklisted</param>
-        /// <returns>A boolean value that indicates whether the operation succeeded</returns>
-        public async Task<bool> InvalidateJWT(string jwt)
-        {
-            var succeeded = await this.blacklist.BlacklistJWT(jwt);
-            return succeeded;
-        }
-
-        /// <summary>
-        /// Removes the "Bearer " part of the token.
-        /// </summary>
-        /// <param name="bearerToken">The token to be truncated</param>
-        /// <returns>The JWT from the bearer token or an empty string if <paramref name="bearerToken"/> is null</returns>
-        public string RemoveBearer(string? bearerToken)
-        {
-            if (bearerToken == null)
-            {
-                return string.Empty;
-            }
-
-            string jwt = bearerToken.Replace("Bearer ", string.Empty);
-            return jwt;
-        }
-
-        /// <summary>
-        /// Checks whether <paramref name="jwt"/> is valid or not. A JWT is considered invalid
-        /// if it has expired, is found in the JWT blacklist, or has been tampered with.
-        /// This method is useful in filters.
-        /// </summary>
-        /// <param name="jwt"></param>
-        /// <returns></returns>
-        public async Task<bool> CheckIfJWTIsValid(string jwt)
-        {
-            var handler = new JwtSecurityTokenHandler();
-            string secret = this.config["JWT_SECRET"]!;
-            var issuer = this.config["JWT_VALID_ISSUER"];
-            var audience = this.config["JWT_VALID_AUDIENCE"];
-
-            var result = await handler.ValidateTokenAsync(jwt, new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateIssuerSigningKey = true,
-                ClockSkew = TimeSpan.Zero,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),
-                ValidIssuer = issuer,
-                ValidAudience = audience,
-            });
-
-            // no need to check the blacklist if the JWT is invalid anyways
-            if (!result.IsValid)
-            {
-                return false;
-            }
-
-            bool isBlacklisted = await this.blacklist.FindJWT(jwt) != null;
-            return !isBlacklisted;
         }
     }
 }

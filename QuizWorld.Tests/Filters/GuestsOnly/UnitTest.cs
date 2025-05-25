@@ -17,7 +17,7 @@ namespace QuizWorld.Tests.Filters.GuestsOnly
     public class UnitTest
     {
         public GuestsOnlyFilter filter;
-        public Mock<IJwtService> jwtServiceMock;
+        public Mock<IJwtServiceDeprecated> jwtServiceMock;
         public Mock<IHttpContextAccessor> httpMock;
         public ActionContext actionContext;
         public AuthorizationFilterContext authorizationFilterContext;
@@ -25,7 +25,7 @@ namespace QuizWorld.Tests.Filters.GuestsOnly
         [SetUp]
         public void Setup()
         {
-            this.jwtServiceMock = new Mock<IJwtService>();
+            this.jwtServiceMock = new Mock<IJwtServiceDeprecated>();
             this.httpMock= new Mock<IHttpContextAccessor>();
 
             this.actionContext = new ActionContext()

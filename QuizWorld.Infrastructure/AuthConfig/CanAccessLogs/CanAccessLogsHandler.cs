@@ -21,13 +21,13 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanAccessLogs
     {
         private readonly IHttpContextAccessor http;
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly IJwtService jwtService;
+        private readonly IJwtServiceDeprecated jwtService;
         private readonly ILogger<CanAccessLogsHandler> logger;
 
         public CanAccessLogsHandler(
             IHttpContextAccessor http,
             UserManager<ApplicationUser> userManager,
-            IJwtService jwtService,
+            IJwtServiceDeprecated jwtService,
             ILogger<CanAccessLogsHandler> logger)
         {
             this.http = http;
