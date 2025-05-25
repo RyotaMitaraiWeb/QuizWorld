@@ -1,12 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using QuizWorld.Common.Constants.Sorting;
+﻿using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Infrastructure.Data.Entities.Quiz;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QuizWorld.Infrastructure.Extensions
 {

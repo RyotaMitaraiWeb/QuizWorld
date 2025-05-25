@@ -18,7 +18,6 @@ using QuizWorld.Infrastructure.Filters.GuestsOnly;
 using QuizWorld.Infrastructure.AuthConfig;
 using QuizWorld.Infrastructure.AuthConfig.CanPerformOwnerAction;
 using QuizWorld.Web.Contracts.Quiz;
-using QuizWorld.Web.Services.QuizService;
 using QuizWorld.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using QuizWorld.Web.Services.GradeService;
@@ -39,6 +38,7 @@ using QuizWorld.Web.Services.Authentication.JsonWebToken.JwtService;
 using QuizWorld.Web.Services.Authentication.JsonWebToken.JwtBlacklistService;
 using QuizWorld.Web.Contracts.Authentication;
 using QuizWorld.Web.Services.Authentication;
+using QuizWorld.Web.Services.Legacy;
 
 namespace QuizWorld.Web
 {
@@ -80,6 +80,7 @@ namespace QuizWorld.Web
             builder.Services.AddSingleton<GuestsOnlyFilter>();
             builder.Services.AddScoped<IRepository, Repository>();
             builder.Services.AddScoped<IQuizServiceDeprecated, QuizServiceDeprecated>();
+            builder.Services.AddScoped<IQuizService, QuizService>();
             builder.Services.AddScoped<IGradeService, GradeService>();
             builder.Services.AddScoped<IActivityLogger, ActivityLogger>();
             builder.Services.AddScoped<IRoleService, RoleService>();
