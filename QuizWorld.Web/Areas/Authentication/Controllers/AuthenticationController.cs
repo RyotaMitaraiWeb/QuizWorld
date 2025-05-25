@@ -42,7 +42,7 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel credentials)
         {
-            var result = await _authService.Login(credentials);
+            var result = await _authService.LoginAsync(credentials);
             if (result.IsFailure)
             {
                 var error = new HttpError(FailedLoginErrorCodes[result.Error]);
@@ -58,7 +58,7 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel registerBody)
         {
-            var result = await _authService.Register(registerBody);
+            var result = await _authService.RegisterAsync(registerBody);
             if (result.IsFailure)
             {
                 if (result.Error == FailedRegisterError.UsernameIsTaken)
@@ -78,7 +78,7 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> CheckIfUsernameIsTaken([FromQuery] string username)
         {
-            bool usernameIsTaken = await _authService.CheckIfUsernameIsTaken(username);
+            bool usernameIsTaken = await _authService.CheckIfUsernameIsTakenAsync(username);
             if (usernameIsTaken)
             {
                 return NoContent();

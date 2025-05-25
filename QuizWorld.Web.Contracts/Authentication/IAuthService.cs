@@ -6,8 +6,8 @@ namespace QuizWorld.Web.Contracts.Authentication
 {
     public interface IAuthService
     {
-        Task<Result<UserViewModel, FailedLoginError>> Login(LoginViewModel credentials);
-        Task<Result<UserViewModel, FailedRegisterError>> Register(RegisterViewModel body);
-        Task<bool> CheckIfUsernameIsTaken(string username);
+        Task<Result<UserViewModel, FailedLoginError>> LoginAsync(LoginViewModel credentials);
+        Task<Result<UserViewModel, FailedRegisterError>> RegisterAsync(RegisterViewModel body);
+        Task<bool> CheckIfUsernameIsTakenAsync(string username);
     }
 }

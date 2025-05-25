@@ -12,7 +12,7 @@ namespace QuizWorld.Web.Services.Authentication
     public class AuthService(UserManager<ApplicationUser> userManager) : IAuthService
     {
         private readonly UserManager<ApplicationUser> _userManager = userManager;
-        public async Task<Result<UserViewModel, FailedLoginError>> Login(LoginViewModel credentials)
+        public async Task<Result<UserViewModel, FailedLoginError>> LoginAsync(LoginViewModel credentials)
         {
             ApplicationUser? user = await _userManager.FindByNameAsync(credentials.Username);
 
@@ -42,7 +42,7 @@ namespace QuizWorld.Web.Services.Authentication
                 .Success(claims);
         }
 
-        public async Task<Result<UserViewModel, FailedRegisterError>> Register(RegisterViewModel body)
+        public async Task<Result<UserViewModel, FailedRegisterError>> RegisterAsync(RegisterViewModel body)
         {
             ApplicationUser? existingUser = await _userManager.FindByNameAsync(body.Username);
             if (existingUser is not null)
@@ -71,7 +71,7 @@ namespace QuizWorld.Web.Services.Authentication
                 .Success(user);
         }
 
-        public async Task<bool> CheckIfUsernameIsTaken(string username)
+        public async Task<bool> CheckIfUsernameIsTakenAsync(string username)
         {
             var user = await _userManager.FindByNameAsync(username);
             return user is not null;

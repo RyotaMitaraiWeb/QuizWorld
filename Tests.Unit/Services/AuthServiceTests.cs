@@ -51,7 +51,7 @@ namespace QuizWorld.Tests.Unit.Services
             this.UserManager.FindByNameAsync(ExampleLogin.Username)
                 .Returns((ApplicationUser?) null);
 
-            var result = await AuthService.Login(ExampleLogin);
+            var result = await AuthService.LoginAsync(ExampleLogin);
             Assert.That(result.Error, Is.EqualTo(FailedLoginError.UserDoesNotExist));
         }
 
@@ -65,7 +65,7 @@ namespace QuizWorld.Tests.Unit.Services
             this.UserManager.CheckPasswordAsync(user, ExampleLogin.Password)
                 .Returns(false);
 
-            var result = await this.AuthService.Login(ExampleLogin);
+            var result = await this.AuthService.LoginAsync(ExampleLogin);
             Assert.That(result.Error, Is.EqualTo(FailedLoginError.WrongPassword));
         }
 
@@ -82,7 +82,7 @@ namespace QuizWorld.Tests.Unit.Services
             this.UserManager.GetRolesAsync(user)
                 .Returns([Roles.User]);
 
-            var result = await AuthService.Login(ExampleLogin);
+            var result = await AuthService.LoginAsync(ExampleLogin);
 
             Assert.Multiple(() =>
             {
@@ -98,7 +98,7 @@ namespace QuizWorld.Tests.Unit.Services
             UserManager.FindByNameAsync(ExampleRegister.Username)
                 .Returns(new ApplicationUser());
 
-            var result = await AuthService.Register(ExampleRegister);
+            var result = await AuthService.RegisterAsync(ExampleRegister);
 
             Assert.Multiple(() =>
             {
@@ -116,7 +116,7 @@ namespace QuizWorld.Tests.Unit.Services
             UserManager.CreateAsync(new ApplicationUser(), ExampleRegister.Password)
                 .ReturnsForAnyArgs(IdentityResult.Failed());
 
-            var result = await AuthService.Register(ExampleRegister);
+            var result = await AuthService.RegisterAsync(ExampleRegister);
 
             Assert.Multiple(() =>
             {
@@ -137,7 +137,7 @@ namespace QuizWorld.Tests.Unit.Services
             UserManager.AddToRoleAsync(new ApplicationUser(), Roles.User)
                 .ReturnsForAnyArgs(IdentityResult.Failed());
 
-            var result = await AuthService.Register(ExampleRegister);
+            var result = await AuthService.RegisterAsync(ExampleRegister);
 
             Assert.Multiple(() =>
             {
@@ -158,7 +158,7 @@ namespace QuizWorld.Tests.Unit.Services
             UserManager.AddToRoleAsync(new ApplicationUser(), Roles.User)
                 .ReturnsForAnyArgs(IdentityResult.Success);
 
-            var result = await AuthService.Register(ExampleRegister);
+            var result = await AuthService.RegisterAsync(ExampleRegister);
 
             Assert.Multiple(() =>
             {
@@ -174,7 +174,7 @@ namespace QuizWorld.Tests.Unit.Services
             UserManager.FindByNameAsync(username)
                 .Returns(new ApplicationUser());
 
-            var result = await AuthService.CheckIfUsernameIsTaken(username);
+            var result = await AuthService.CheckIfUsernameIsTakenAsync(username);
 
             Assert.That(result, Is.True);
         }
@@ -187,7 +187,7 @@ namespace QuizWorld.Tests.Unit.Services
                 .Returns((ApplicationUser?)null);
 
 
-            var result = await AuthService.CheckIfUsernameIsTaken(username);
+            var result = await AuthService.CheckIfUsernameIsTakenAsync(username);
 
             Assert.That(result, Is.False);
         }

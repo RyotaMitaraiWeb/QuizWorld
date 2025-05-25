@@ -114,7 +114,7 @@ namespace QuizWorld.Tests.Unit.Controllers
             var login = ExampleLogin;
             var mockResult = CreateMockResultForLogin(error);
 
-            AuthService.Login(login)
+            AuthService.LoginAsync(login)
                 .Returns(mockResult);
 
             var result = await AuthenticationController.Login(login);
@@ -134,7 +134,7 @@ namespace QuizWorld.Tests.Unit.Controllers
             string token = "a";
             var mockResult = CreateMockResultForLogin(ExampleUser);
 
-            AuthService.Login(login)
+            AuthService.LoginAsync(login)
                 .Returns(mockResult);
 
             JwtService.GenerateToken(ExampleUser)
@@ -162,7 +162,7 @@ namespace QuizWorld.Tests.Unit.Controllers
             var register = ExampleRegister;
             var mockResult = CreateMockResultForRegister(error);
 
-            AuthService.Register(register)
+            AuthService.RegisterAsync(register)
                 .Returns(mockResult);
 
 
@@ -178,7 +178,7 @@ namespace QuizWorld.Tests.Unit.Controllers
             var mockResult = CreateMockResultForRegister(ExampleUser);
             string token = "a";
 
-            AuthService.Register(register)
+            AuthService.RegisterAsync(register)
                 .Returns(mockResult);
 
             JwtService.GenerateToken(ExampleUser)
@@ -202,7 +202,7 @@ namespace QuizWorld.Tests.Unit.Controllers
         public async Task Test_CheckIfUsernameIsTakenReturnsCorrectStatusCode(bool valueToBeReturned, int expectedStatusCode)
         {
             string username = "a";
-            AuthService.CheckIfUsernameIsTaken(username)
+            AuthService.CheckIfUsernameIsTakenAsync(username)
                 .Returns(valueToBeReturned);
 
             var result = await AuthenticationController.CheckIfUsernameIsTaken(username);
