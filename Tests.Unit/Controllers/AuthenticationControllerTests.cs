@@ -10,7 +10,6 @@ using QuizWorld.Web.Contracts.Authentication.JsonWebToken;
 using static QuizWorld.Common.Errors.AuthError;
 using static QuizWorld.Common.Results.JwtError;
 using static QuizWorld.Common.Results.JwtStoreError;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace QuizWorld.Tests.Unit.Controllers
 {
