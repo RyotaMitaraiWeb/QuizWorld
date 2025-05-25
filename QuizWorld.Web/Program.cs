@@ -79,7 +79,7 @@ namespace QuizWorld.Web
             builder.Services.AddScoped<AppJwtBearerEvents>();
             builder.Services.AddSingleton<GuestsOnlyFilter>();
             builder.Services.AddScoped<IRepository, Repository>();
-            builder.Services.AddScoped<IQuizService, QuizService>();
+            builder.Services.AddScoped<IQuizServiceDeprecated, QuizServiceDeprecated>();
             builder.Services.AddScoped<IGradeService, GradeService>();
             builder.Services.AddScoped<IActivityLogger, ActivityLogger>();
             builder.Services.AddScoped<IRoleService, RoleService>();

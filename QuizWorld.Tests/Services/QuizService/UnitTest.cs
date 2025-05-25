@@ -15,7 +15,7 @@ namespace QuizWorld.Tests.Services.QuizServiceUnitTests
 {
     public class UnitTest
     {
-        public QuizService service;
+        public QuizServiceDeprecated service;
         public Mock<IRepository> repositoryMock;
         public Guid randomGuid = Guid.NewGuid();
 
@@ -55,7 +55,7 @@ namespace QuizWorld.Tests.Services.QuizServiceUnitTests
         public void Setup()
         {
             this.repositoryMock = new Mock<IRepository>();
-            this.service = new QuizService(this.repositoryMock.Object);
+            this.service = new QuizServiceDeprecated(this.repositoryMock.Object);
         }
 
         [Test]

@@ -19,14 +19,14 @@ namespace QuizWorld.Tests.Services.QuizServiceInMemoryTests
     {
         public TestDB testDB;
         public Repository repository;
-        public QuizService service;
+        public QuizServiceDeprecated service;
 
         [SetUp]
         public void Setup()
         {
             this.testDB = new TestDB();
             this.repository = this.testDB.repository;
-            this.service = new QuizService(this.repository);
+            this.service = new QuizServiceDeprecated(this.repository);
         }
 
         [Test]

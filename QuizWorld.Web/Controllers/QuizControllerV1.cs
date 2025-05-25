@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QuizWorld.Common.Constants.Sorting;
@@ -15,11 +16,13 @@ namespace QuizWorld.Web.Controllers
 {
     [Route("quiz")]
     [ApiController]
-    public class QuizController : BaseController
+    [ApiVersion("1.0")]
+    [Obsolete("Deprecated")]
+    public class QuizControllerV1 : BaseController
     {
-        private readonly IQuizService quizService;
+        private readonly IQuizServiceDeprecated quizService;
         private readonly IJwtServiceDeprecated jwtService;
-        public QuizController(IQuizService quizService, IJwtServiceDeprecated jwtService)
+        public QuizControllerV1(IQuizServiceDeprecated quizService, IJwtServiceDeprecated jwtService)
         {
             this.quizService = quizService;
             this.jwtService = jwtService;

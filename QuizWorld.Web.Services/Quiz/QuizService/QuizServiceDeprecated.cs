@@ -13,10 +13,10 @@ namespace QuizWorld.Web.Services.QuizService
     /// <summary>
     /// A service for interacting with quizzes in the database.
     /// </summary>
-    public class QuizService : IQuizService
+    public class QuizServiceDeprecated : IQuizServiceDeprecated
     {
         private readonly IRepository repository;
-        public QuizService(IRepository repository)
+        public QuizServiceDeprecated(IRepository repository)
         {
             this.repository = repository;
         }

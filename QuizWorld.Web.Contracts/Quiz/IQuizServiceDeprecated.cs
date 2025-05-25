@@ -1,14 +1,9 @@
 ﻿using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.ViewModels.Quiz;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace QuizWorld.Web.Contracts.Quiz
 {
-    public interface IQuizService
+    [Obsolete("Deprecated")]
+    public interface IQuizServiceDeprecated
     {
         Task<int> CreateQuiz(CreateQuizViewModel quiz, string userId);
         Task<int> CreateQuiz(CreateQuizViewModel quiz, Guid userId);
