@@ -7,7 +7,7 @@ using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Infrastructure.Data.Entities.Quiz;
 using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Quiz;
-using QuizWorld.Web.Services.QuizService;
+using QuizWorld.Web.Services.Legacy;
 using System.Linq.Expressions;
 
 

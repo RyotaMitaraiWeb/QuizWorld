@@ -1,18 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using QuizWorld.Common.Errors;
+using QuizWorld.Common.Result;
 using QuizWorld.Common.Search;
 using QuizWorld.Infrastructure;
 using QuizWorld.Infrastructure.Data.Entities.Quiz;
 using QuizWorld.Infrastructure.Extensions;
+using QuizWorld.ViewModels.Answer;
+using QuizWorld.ViewModels.Question;
 using QuizWorld.ViewModels.Quiz;
 using QuizWorld.Web.Contracts.Quiz;
 using System.Linq.Expressions;
+using static QuizWorld.Common.Errors.QuizError;
 
 namespace QuizWorld.Web.Services
 {
     public class QuizService(IRepository quizRepository) : IQuizService
     {
         private readonly IRepository _quizRepository = quizRepository;
-        public async Task<CatalogueQuizViewModel> Search(QuizSearchParameterss parameters)
+        public async Task<CatalogueQuizViewModel> SearchAsync(QuizSearchParameterss parameters)
         {
             Expression<Func<Quiz, bool>> predicate = BuildPredicate(parameters);
 
@@ -42,9 +47,43 @@ namespace QuizWorld.Web.Services
             };
         }
 
+        public async Task<Result<QuizViewModel, QuizGetError>> GetAsync(int quizId)
+        {
+            QuizViewModelWithDeleted? quiz = await FindQuiz(quizId);
+
+            if (quiz is null)
+            {
+                return Result<QuizViewModel, QuizGetError>
+                    .Failure(QuizGetError.DoesNotExist);
+            }
+
+            if (quiz.IsDeleted)
+            {
+                return Result<QuizViewModel, QuizGetError>
+                    .Failure(QuizGetError.IsDeleted);
+            }
+
+            var quizModel = new QuizViewModel()
+            {
+                Id = quizId,
+                Title = quiz.Title,
+                CreatedOn = quiz.CreatedOn,
+                UpdatedOn = quiz.UpdatedOn,
+                Description = quiz.Description,
+                CreatorId = quiz.CreatorId.ToString(),
+                InstantMode = quiz.InstantMode,
+                Questions = quiz.Questions,
+                Version = quiz.Version,
+                CreatorUsername = quiz.CreatorUsername,
+            };
+
+            return Result<QuizViewModel, QuizGetError>
+                .Success(quizModel);
+        }
+
         private static Expression<Func<Quiz, bool>> BuildPredicate(QuizSearchParameterss parameters)
         {
-            if (parameters.Author != string.Empty)
+            if (string.IsNullOrWhiteSpace(parameters.Author))
             {
                 return q => !q.IsDeleted
                 && q.NormalizedTitle.Contains(parameters.Title.ToLower())
@@ -56,5 +95,52 @@ namespace QuizWorld.Web.Services
                 && q.NormalizedTitle.Contains(parameters.Title.ToLower());
             }
         }
+
+        private async Task<QuizViewModelWithDeleted?> FindQuiz(int quizId)
+        {
+            return await _quizRepository
+                .AllReadonly<Quiz>(q => q.Id == quizId)
+                .Select(quiz => new QuizViewModelWithDeleted()
+                {
+                    Id = quiz.Id,
+                    Title = quiz.Title,
+                    CreatedOn = quiz.CreatedOn,
+                    UpdatedOn = quiz.UpdatedOn,
+                    Description = quiz.Description,
+                    InstantMode = quiz.InstantMode,
+                    Questions = quiz.Questions
+                        .Where(question => question.Version == quiz.Version)
+                        .OrderBy(question => question.Order)
+                        .Select(question => new QuestionViewModel()
+                        {
+                            Prompt = question.Prompt,
+                            Id = question.Id.ToString(),
+                            Type = question.QuestionType.ShortName,
+                            Notes = question.Notes,
+                            Answers = question.Answers
+                                .Select(a => new AnswerViewModel()
+                                {
+                                    Value = a.Value,
+                                    Id = a.Id.ToString(),
+                                })
+                                .Shuffle()
+                        }),
+                    IsDeleted = quiz.IsDeleted,
+                    CreatorId = quiz.Creator.Id.ToString(),
+                    CreatorUsername = quiz.Creator.UserName!,
+                    Version = quiz.Version,
+
+                })
+                .FirstOrDefaultAsync();
+        }
+    }
+
+    /// <summary>
+    /// Used to check if the quiz is deleted, rather than not existing,
+    /// to improve error tracing
+    /// </summary>
+    internal class QuizViewModelWithDeleted : QuizViewModel
+    {
+        public bool IsDeleted { get; set; }
     }
 }

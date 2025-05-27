@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Bogus" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\QuizWorld.Common\QuizWorld.Common.csproj" />
+    <ProjectReference Include="..\QuizWorld.Infrastructure\QuizWorld.Infrastructure.csproj" />
+    <ProjectReference Include="..\QuizWorld.ViewModels\QuizWorld.ViewModels.csproj" />
+    <ProjectReference Include="..\QuizWorld.Web.Contracts\QuizWorld.Web.Contracts.csproj" />
+    <ProjectReference Include="..\QuizWorld.Web.Services\QuizWorld.Web.Services.csproj" />
+    <ProjectReference Include="..\QuizWorld.Web\QuizWorld.Web.csproj" />
+  </ItemGroup>
+
+</Project>
