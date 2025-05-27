@@ -9,5 +9,6 @@ namespace QuizWorld.Web.Contracts.Quiz
     {
         Task<CatalogueQuizViewModel> SearchAsync(QuizSearchParameterss parameters);
         Task<Result<QuizViewModel, QuizGetError>> GetAsync(int quizId);
+        Task<int> CreateAsync(CreateQuizViewModel quiz, string userId, DateTime creationDate);
     }
 }

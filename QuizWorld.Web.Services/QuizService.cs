@@ -81,6 +81,28 @@ namespace QuizWorld.Web.Services
                 .Success(quizModel);
         }
 
+        public async Task<int> CreateAsync(CreateQuizViewModel quiz, string userId, DateTime creationDate)
+        {
+            Quiz newQuiz = new ()
+            {
+                Title = quiz.Title,
+                NormalizedTitle = quiz.Title.ToLower(),
+                Description = quiz.Description,
+                InstantMode = quiz.InstantMode,
+                Version = 1,
+                CreatorId = new Guid(userId),
+                CreatedOn = creationDate,
+                UpdatedOn = creationDate,
+                IsDeleted = false,
+                Questions = BuildQuestions([.. quiz.Questions], 1)
+                
+            };
+
+            await _quizRepository.AddAsync(newQuiz);
+            await _quizRepository.SaveChangesAsync();
+            return newQuiz.Id;
+        }
+
         private static Expression<Func<Quiz, bool>> BuildPredicate(QuizSearchParameterss parameters)
         {
             if (string.IsNullOrWhiteSpace(parameters.Author))
@@ -94,6 +116,40 @@ namespace QuizWorld.Web.Services
                 return q => !q.IsDeleted 
                 && q.NormalizedTitle.Contains(parameters.Title.ToLower());
             }
+        }
+
+        private static List<Question> BuildQuestions(List<CreateQuestionViewModel> questions, int quizVersion)
+        {
+            List<Question> list = [];
+
+            int end = questions.Count;
+            for (int i = 0; i < end; i++)
+            {
+                int order = i + 1;
+                CreateQuestionViewModel question = questions[i];
+                Question newQuestion = new()
+                {
+                    Prompt = question.Prompt,
+                    Notes = question.Notes,
+                    QuestionTypeId = ((int)question.Type) + 1,
+                    Order = order,
+                    Version = quizVersion,
+                    Answers = BuildAnswers(question.Answers),
+                };
+
+                list.Add(newQuestion);
+            }
+
+            return list;
+        }
+
+        private static List<Answer> BuildAnswers(IEnumerable<CreateAnswerViewModel> answers)
+        {
+            return [.. answers.Select(answer => new Answer()
+            {
+                Correct = answer.Correct,
+                Value = answer.Value,
+            })];
         }
 
         private async Task<QuizViewModelWithDeleted?> FindQuiz(int quizId)
