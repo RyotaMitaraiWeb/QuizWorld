@@ -14,10 +14,9 @@ namespace QuizWorld.Web.Controllers
 {
     [Route("quiz")]
     [ApiVersion("2.0")]
-    public class QuizController(IQuizService quizService, IJwtService jwtService) : BaseController
+    public class QuizController(IQuizService quizService) : BaseController
     {
         private readonly IQuizService _quizService = quizService;
-        private readonly IJwtService _jwtService = jwtService;
 
         [Route("")]
         [HttpGet]
@@ -45,17 +44,13 @@ namespace QuizWorld.Web.Controllers
 
         [Route("")]
         [HttpPost]
-        public async Task<IActionResult> Create(
-            CreateQuizViewModel quiz,
-            [FromHeader(Name = "Authorization")] string? bearerToken
-            )
+        public async Task<IActionResult> Create(CreateQuizViewModel quiz)
         {
-            CreateOrEditQuizMetadata metadata = await ExtractQuizMetadata(bearerToken);
-
+            string id = User!.FindFirst("id")!.Value;
             int createdQuizId = await _quizService.CreateAsync(
                 quiz: quiz,
-                userId: metadata.User.Id,
-                creationDate: metadata.Now);
+                userId: id,
+                creationDate: DateTime.Now);
 
             CreatedResponseViewModel response = new()
             {
@@ -63,26 +58,6 @@ namespace QuizWorld.Web.Controllers
             };
 
             return Created($"/quiz/{createdQuizId}", response);
-
         }
-
-        private async Task<CreateOrEditQuizMetadata> ExtractQuizMetadata(string? bearerToken)
-        {
-            var claimsResult = await _jwtService.ExtractUserFromTokenAsync(bearerToken ?? string.Empty);
-            UserViewModel user = claimsResult.Value;
-            var now = DateTime.Now;
-
-            return new CreateOrEditQuizMetadata()
-            {
-                Now = now,
-                User = user,
-            };
-        }
-    }
-
-    internal class CreateOrEditQuizMetadata
-    {
-        public DateTime Now { get; set; }
-        public UserViewModel User { get; set; } = null!;
     }
 }

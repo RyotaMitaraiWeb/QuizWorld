@@ -13,13 +13,11 @@ namespace Tests.Unit.Controllers
     {
         public QuizController QuizController { get; set; }
         public IQuizService QuizService { get; set; }
-        public IJwtService JwtService { get; set; }
 
         [SetUp]
         public void Setup()
         {
             QuizService = Substitute.For<IQuizService>();
-            JwtService = Substitute.For<IJwtService>();
             QuizController = new QuizController(QuizService);
         }
 
