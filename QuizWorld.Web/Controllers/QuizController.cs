@@ -1,13 +1,13 @@
 ﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QuizWorld.Common.Errors;
 using QuizWorld.Common.Http;
+using QuizWorld.Common.Policy;
 using QuizWorld.Common.Search;
-using QuizWorld.ViewModels.Authentication;
 using QuizWorld.ViewModels.Common;
 using QuizWorld.ViewModels.Quiz;
-using QuizWorld.Web.Contracts.Authentication.JsonWebToken;
 using QuizWorld.Web.Contracts.Quiz;
 
 namespace QuizWorld.Web.Controllers
@@ -59,5 +59,43 @@ namespace QuizWorld.Web.Controllers
 
             return Created($"/quiz/{createdQuizId}", response);
         }
+
+        [Route("{id}")]
+        [HttpPut]
+        [Authorize(
+            AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+            Policy = PolicyNames.CanEditAndDeleteAQuiz)]
+        public async Task<IActionResult> EditQuizById(int id, EditQuizViewModel quiz)
+        {
+            await _quizService.EditAsync(id, quiz, DateTime.Now);
+            return NoContent();
+        }
+
+        [Route("{id}")]
+        [HttpDelete]
+        [Authorize(
+            AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+            Policy = PolicyNames.CanEditAndDeleteAQuiz)]
+        public async Task<IActionResult> DeleteQuizById(int id)
+        {
+            await _quizService.DeleteAsync(id);
+            return NoContent();
+        }
+
+        [Route("{id}/get-for-edit")]
+        [HttpGet]
+        [Authorize(
+            AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+            Policy = PolicyNames.CanEditAndDeleteAQuiz)]
+        public async Task<IActionResult> GetQuizForEdit(int id)
+        {
+            var quiz = await _quizService.GetForEditAsync(id);
+            return Ok(quiz);
+        }
+
+        public static readonly string[] CanEditAndDeleteQuizzesEndpointMethods =
+            [HttpMethod.Put.Method, HttpMethod.Delete.Method];
+
+        public static readonly string GetQuizForEditEndpointEnding = "/get-for-edit";
     }
 }

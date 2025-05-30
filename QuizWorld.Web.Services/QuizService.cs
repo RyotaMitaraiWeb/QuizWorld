@@ -103,6 +103,59 @@ namespace QuizWorld.Web.Services
             return newQuiz.Id;
         }
 
+        public async Task<EditQuizFormViewModel> GetForEditAsync(int quizId)
+        {
+            EditQuizFormViewModel quiz = await _quizRepository
+                .AllReadonly<Quiz>(quiz => quiz.Id == quizId && !quiz.IsDeleted)
+                .Select(quiz => new EditQuizFormViewModel()
+                {
+                    Id = quiz.Id,
+                    Title = quiz.Title,
+                    Description = quiz.Description,
+                    Questions = quiz.Questions.Select(question => new EditQuestionFormViewModel()
+                    {
+                        Prompt = question.Prompt,
+                        Notes = question.Notes,
+                        Type = question.QuestionType.ShortName,
+                        Order = question.Order,
+                        Answers = question.Answers.Select(answer => new EditAnswerFormViewModel()
+                        {
+                            Value = answer.Value,
+                            Correct = answer.Correct,
+                        }),
+                    })
+                })
+                .FirstAsync();
+
+            return quiz;
+        }
+
+        public async Task EditAsync(int quizId, EditQuizViewModel quiz, DateTime updatedOn)
+        {
+            Quiz quizToEdit = await _quizRepository.GetByIdAsync<Quiz>(quizId);
+            int newVersion = quizToEdit.Version + 1;
+
+            quizToEdit.Title = quiz.Title;
+            quizToEdit.NormalizedTitle = quiz.Title.ToLower();
+            quizToEdit.Description = quiz.Description;
+            quizToEdit.Version = newVersion;
+            quizToEdit.UpdatedOn = updatedOn;
+
+            var newQuestions = BuildQuestions([.. quiz.Questions], newVersion);
+            foreach (var question in newQuestions)
+            {
+                quizToEdit.Questions.Add(question);
+            }
+
+            await _quizRepository.SaveChangesAsync();
+            return;
+        }
+
+        public async Task DeleteAsync(int quizId)
+        {
+            await _quizRepository.DeleteAsync<Quiz>(quizId);
+            await _quizRepository.SaveChangesAsync();
+        }
         private static Expression<Func<Quiz, bool>> BuildPredicate(QuizSearchParameterss parameters)
         {
             if (string.IsNullOrWhiteSpace(parameters.Author))
