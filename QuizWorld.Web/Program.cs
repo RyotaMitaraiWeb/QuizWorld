@@ -39,6 +39,10 @@ using QuizWorld.Web.Services.Authentication.JsonWebToken.JwtBlacklistService;
 using QuizWorld.Web.Contracts.Authentication;
 using QuizWorld.Web.Services.Authentication;
 using QuizWorld.Web.Services.Legacy;
+using QuizWorld.Web.Middlewares;
+using QuizWorld.Infrastructure.AuthConfig.CanEditAndDeleteQuizzes;
+using QuizWorld.Common.Policy;
+using QuizWorld.Infrastructure.AuthConfig.CreatedTheQuiz;
 
 namespace QuizWorld.Web
 {
@@ -87,7 +91,8 @@ namespace QuizWorld.Web
             builder.Services.AddScoped<IAuthorizationHandler, CanWorkWithRolesHandler>();
             builder.Services.AddScoped<IAuthorizationHandler, CanPerformOwnerActionHandler>();
             builder.Services.AddScoped<IAuthorizationHandler, CanAccessLogsHandler>();
-
+            builder.Services.AddScoped<IAuthorizationHandler, CanEditAndDeleteQuizzesHandler>();
+            builder.Services.AddSingleton<IAuthorizationHandler, CreatedTheQuizHandler>();
             builder.Services.AddDbContext<QuizWorldDbContext>(options =>
             {
                 SqlConnectionStringBuilder connBuilder = new()
@@ -222,6 +227,11 @@ namespace QuizWorld.Web
                 .AddPolicy("CanChangeRoles", policy =>
                 {
                     policy.Requirements.Add(new CanWorkWithRolesRequirement(true, Roles.Admin));
+                })
+                .AddPolicy(PolicyNames.CanEditAndDeleteAQuiz, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.Requirements.Add(new CanEditAndDeleteQuizzesRequirement(Roles.Moderator));
                 });
 
 
@@ -255,7 +265,9 @@ namespace QuizWorld.Web
             //app.UseHttpsRedirection();
             app.UseCors();
             app.UseAuthentication();
+            app.UseAttachQuizToContext();
             app.UseAuthorization();
+
 
 
 
