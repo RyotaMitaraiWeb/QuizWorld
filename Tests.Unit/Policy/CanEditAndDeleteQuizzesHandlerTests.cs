@@ -94,6 +94,31 @@ namespace Tests.Unit.Policy
             });
         }
 
+        [Test]
+        public async Task Test_DoesNotSucceedTheContextIfTheUserIsMissingAtLeastOneRole()
+        {
+            HttpContext.Items[AttachQuizToContextMiddlewareFlags.QuizCreatorIdFlag] = CreatorId.ToString();
+            var claimsPrincipal = new ClaimsPrincipal(
+                new ClaimsIdentity([new Claim(UserClaimsProperties.Id, CreatorId.ToString())]));
+
+            HttpContext.User = claimsPrincipal;
+
+            var user = new ApplicationUser()
+            {
+                Id = CreatorId,
+                UserName = "admin"
+            };
+
+            UserManager.FindByIdAsync(CreatorId.ToString()).Returns(user);
+            UserManager.GetRolesAsync(user).Returns([Roles.Moderator, Roles.User]);
+
+            var context = new AuthorizationHandlerContext([CanEditAndDeleteQuizzesRequirement], claimsPrincipal, null);
+
+            await CanEditAndDeleteQuizzesHandler.Authorize(context, CanEditAndDeleteQuizzesRequirement);
+
+            Assert.That(context.HasSucceeded, Is.False);
+        }
+
         [TearDown]
         public void Teardown()
         {
