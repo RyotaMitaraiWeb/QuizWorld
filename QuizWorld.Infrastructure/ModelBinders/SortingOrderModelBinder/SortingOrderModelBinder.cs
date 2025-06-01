@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace QuizWorld.Infrastructure.ModelBinders
 {
+    [Obsolete("Use simple classes instead")]
     /// <summary>
     /// If the "sort" query string is an invalid value (an unsupported sorting order), this model binder
     /// will bind the enum value "Ascending" of type "SortingOrders" to the parameter for which this binder is called.

@@ -1,185 +1,104 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using QuizWorld.Common.Constants.Sorting;
-using QuizWorld.Infrastructure.ModelBinders;
-using QuizWorld.ViewModels.Answer;
-using QuizWorld.ViewModels.Authentication;
+using QuizWorld.Common.Errors;
+using QuizWorld.Common.Http;
+using QuizWorld.Common.Policy;
+using QuizWorld.Common.Search;
 using QuizWorld.ViewModels.Common;
-using QuizWorld.ViewModels.Question;
 using QuizWorld.ViewModels.Quiz;
-using QuizWorld.Web.Contracts.JsonWebToken;
 using QuizWorld.Web.Contracts.Quiz;
+using QuizWorld.Web.Filters;
 
 namespace QuizWorld.Web.Controllers
 {
     [Route("quiz")]
-    [ApiController]
-    public class QuizController : BaseController
+    [ApiVersion("2.0")]
+    public class QuizController(IQuizService quizService) : BaseController
     {
-        private readonly IQuizService quizService;
-        private readonly IJwtServiceDeprecated jwtService;
-        public QuizController(IQuizService quizService, IJwtServiceDeprecated jwtService)
-        {
-            this.quizService = quizService;
-            this.jwtService = jwtService;
-        }
+        private readonly IQuizService _quizService = quizService;
 
+        [Route("")]
         [HttpGet]
         [AllowAnonymous]
-        [Route("all")]
-        public async Task<ActionResult> GetAll(
-            [ModelBinder(BinderType = typeof(PaginationModelBinder))] int page,
-            [ModelBinder(BinderType = typeof(SortingCategoryModelBinder))] SortingCategories category,
-            [ModelBinder(BinderType = typeof(SortingOrderModelBinder))] SortingOrders order)
+        public async Task<IActionResult> SearchQuizzes([FromQuery] QuizSearchParameterss searchParams)
         {
-            try
-            {
-                var catalogue = await this.quizService.GetAllQuizzes(page, category, order, 6);
-                return Ok(catalogue);
-            }
-            catch
-            {
-                return StatusCode(503);
-            }
+            var result = await _quizService.SearchAsync(searchParams);
+            return Ok(result);
         }
 
+        [Route("{id}")]
         [HttpGet]
         [AllowAnonymous]
-        [Route("user/{id}")]
-        public async Task<ActionResult> GetUserQuizzes(
-            [ModelBinder(BinderType = typeof(PaginationModelBinder))] int page,
-            [ModelBinder(BinderType = typeof(SortingCategoryModelBinder))] SortingCategories category,
-            [ModelBinder(BinderType = typeof(SortingOrderModelBinder))] SortingOrders order,
-            string id)
+        public async Task<IActionResult> GetById(int id)
         {
-            try
+            var result = await _quizService.GetAsync(id);
+            if (result.IsFailure)
             {
-                var catalogue = await this.quizService.GetUserQuizzes(id, page, category, order, 6);
-                return Ok(catalogue);
+                var error = new HttpError(QuizError.QuizGetErrorCodes[result.Error]);
+                return NotFound(error);
             }
-            catch (ArgumentException)
-            {
-                return BadRequest();
-            }
-            catch (Exception)
-            {
-                return StatusCode(503);
-            }
+
+            return Ok(result.Value);
         }
 
-        [HttpGet]
-        [AllowAnonymous]
-        [Route("search")]
-        public async Task<ActionResult> Search(
-            [ModelBinder(BinderType = typeof(PaginationModelBinder))] int page,
-            [ModelBinder(BinderType = typeof(SortingCategoryModelBinder))] SortingCategories category,
-            [ModelBinder(BinderType = typeof(SortingOrderModelBinder))] SortingOrders order,
-            [FromQuery] string search)
-        {
-            try
-            {
-                var catalogue = await this.quizService.GetQuizzesByQuery(search, page, category, order, 6);
-                return Ok(catalogue);
-            }
-            catch
-            {
-                return StatusCode(503);
-            }
-        }
-
+        [Route("")]
         [HttpPost]
-        public async Task<ActionResult> Create([FromBody] CreateQuizViewModel quiz, [FromHeader(Name = "Authorization")] string? token)
+        public async Task<IActionResult> Create(CreateQuizViewModel quiz)
         {
-            try
-            {
-                string jwt = this.jwtService.RemoveBearer(token);
-                UserViewModel user = this.jwtService.DecodeJWT(jwt);
+            string id = User!.FindFirst("id")!.Value;
+            int createdQuizId = await _quizService.CreateAsync(
+                quiz: quiz,
+                userId: id,
+                creationDate: DateTime.Now);
 
-                int id = await this.quizService.CreateQuiz(quiz, user.Id);
-                var response = new CreatedResponseViewModel() { Id = id };
+            CreatedResponseViewModel response = new()
+            {
+                Id = createdQuizId
+            };
 
-                return Created("/quiz/" + id, response);
-            }
-            catch (InvalidOperationException)
-            {
-                return Unauthorized();
-            }
-            catch
-            {
-                return StatusCode(503);
-            }
+            return Created($"/quiz/{createdQuizId}", response);
         }
 
-        [HttpGet]
-        [AllowAnonymous]
         [Route("{id}")]
-        public async Task<ActionResult> Get(int id)
-        {
-            try
-            {
-                var quiz = await this.quizService.GetQuizById(id);
-                if (quiz == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(quiz);
-            }
-            catch
-            {
-                return StatusCode(503);
-            }
-        }
-
-        [HttpDelete]
-        [Authorize(Policy = "CanDeleteQuiz", AuthenticationSchemes = "Bearer")]
-        [Route("{id}")]
-        public async Task<ActionResult> Delete(int id)
-        {
-            try
-            {
-                var result = await this.quizService.DeleteQuizById(id);
-                if (result == null)
-                {
-                    return NotFound();
-                }
-
-                return NoContent();
-            }
-            catch
-            {
-                return StatusCode(503);
-            }
-        }
-
-        [HttpGet]
-        [Authorize(Policy = "CanEditQuiz", AuthenticationSchemes = "Bearer")]
-        [Route("{id}/edit")]
-        public async Task<ActionResult> GetQuizForEdit(int id)
-        {
-            return Ok(await this.quizService.GetQuizForEdit(id));
-        }
-
         [HttpPut]
-        [Authorize(Policy = "CanEditQuiz", AuthenticationSchemes = "Bearer")]
-        [Route("{id}")]
-        public async Task<ActionResult> Edit([FromBody] EditQuizViewModel quiz, int id)
+        [Authorize(
+            AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+            Policy = PolicyNames.CanEditAndDeleteAQuiz)]
+        [ServiceFilter(typeof(LogEditOrDeleteActivityFilter))]
+        public async Task<IActionResult> EditQuizById(int id, EditQuizViewModel quiz)
         {
-            try
-            {
-                var result = await this.quizService.EditQuizById(id, quiz);
-                if (result == null)
-                {
-                    return NotFound();
-                }
-
-                return NoContent();
-            }
-            catch
-            {
-                return StatusCode(503);
-            }
+            await _quizService.EditAsync(id, quiz, DateTime.Now);
+            return NoContent();
         }
+
+        [Route("{id}")]
+        [HttpDelete]
+        [ServiceFilter(typeof(LogEditOrDeleteActivityFilter))]
+        [Authorize(
+            AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+            Policy = PolicyNames.CanEditAndDeleteAQuiz)]
+        public async Task<IActionResult> DeleteQuizById(int id)
+        {
+            await _quizService.DeleteAsync(id);
+            return NoContent();
+        }
+
+        [Route("{id}/get-for-edit")]
+        [HttpGet]
+        [Authorize(
+            AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+            Policy = PolicyNames.CanEditAndDeleteAQuiz)]
+        public async Task<IActionResult> GetQuizForEdit(int id)
+        {
+            var quiz = await _quizService.GetForEditAsync(id);
+            return Ok(quiz);
+        }
+
+        public static readonly string[] CanEditAndDeleteQuizzesEndpointMethods =
+            [HttpMethod.Put.Method, HttpMethod.Delete.Method];
+
+        public static readonly string GetQuizForEditEndpointEnding = "/get-for-edit";
     }
 }

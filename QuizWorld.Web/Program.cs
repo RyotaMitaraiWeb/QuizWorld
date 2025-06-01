@@ -18,7 +18,6 @@ using QuizWorld.Infrastructure.Filters.GuestsOnly;
 using QuizWorld.Infrastructure.AuthConfig;
 using QuizWorld.Infrastructure.AuthConfig.CanPerformOwnerAction;
 using QuizWorld.Web.Contracts.Quiz;
-using QuizWorld.Web.Services.QuizService;
 using QuizWorld.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using QuizWorld.Web.Services.GradeService;
@@ -39,6 +38,12 @@ using QuizWorld.Web.Services.Authentication.JsonWebToken.JwtService;
 using QuizWorld.Web.Services.Authentication.JsonWebToken.JwtBlacklistService;
 using QuizWorld.Web.Contracts.Authentication;
 using QuizWorld.Web.Services.Authentication;
+using QuizWorld.Web.Services.Legacy;
+using QuizWorld.Web.Middlewares;
+using QuizWorld.Infrastructure.AuthConfig.CanEditAndDeleteQuizzes;
+using QuizWorld.Common.Policy;
+using QuizWorld.Infrastructure.AuthConfig.CreatedTheQuiz;
+using QuizWorld.Web.Filters;
 
 namespace QuizWorld.Web
 {
@@ -79,6 +84,7 @@ namespace QuizWorld.Web
             builder.Services.AddScoped<AppJwtBearerEvents>();
             builder.Services.AddSingleton<GuestsOnlyFilter>();
             builder.Services.AddScoped<IRepository, Repository>();
+            builder.Services.AddScoped<IQuizServiceDeprecated, QuizServiceDeprecated>();
             builder.Services.AddScoped<IQuizService, QuizService>();
             builder.Services.AddScoped<IGradeService, GradeService>();
             builder.Services.AddScoped<IActivityLogger, ActivityLogger>();
@@ -86,7 +92,9 @@ namespace QuizWorld.Web
             builder.Services.AddScoped<IAuthorizationHandler, CanWorkWithRolesHandler>();
             builder.Services.AddScoped<IAuthorizationHandler, CanPerformOwnerActionHandler>();
             builder.Services.AddScoped<IAuthorizationHandler, CanAccessLogsHandler>();
-
+            builder.Services.AddScoped<IAuthorizationHandler, CanEditAndDeleteQuizzesHandler>();
+            builder.Services.AddSingleton<IAuthorizationHandler, CreatedTheQuizHandler>();
+            builder.Services.AddScoped<LogEditOrDeleteActivityFilter>();
             builder.Services.AddDbContext<QuizWorldDbContext>(options =>
             {
                 SqlConnectionStringBuilder connBuilder = new()
@@ -157,6 +165,7 @@ namespace QuizWorld.Web
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options =>
             {
+                options.DescribeAllParametersInCamelCase();
                 options.ResolveConflictingActions(api => api.First());
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "Quiz World v1", Version = "v1" });
                 options.SwaggerDoc("v2", new OpenApiInfo { Title = "Quiz World v2", Version = "v2" });
@@ -220,6 +229,11 @@ namespace QuizWorld.Web
                 .AddPolicy("CanChangeRoles", policy =>
                 {
                     policy.Requirements.Add(new CanWorkWithRolesRequirement(true, Roles.Admin));
+                })
+                .AddPolicy(PolicyNames.CanEditAndDeleteAQuiz, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.Requirements.Add(new CanEditAndDeleteQuizzesRequirement(Roles.Moderator));
                 });
 
 
@@ -253,7 +267,9 @@ namespace QuizWorld.Web
             //app.UseHttpsRedirection();
             app.UseCors();
             app.UseAuthentication();
+            app.UseAttachQuizToContext();
             app.UseAuthorization();
+
 
 
 

@@ -19,9 +19,9 @@ namespace QuizWorld.Tests.Controllers.QuizControllerUnitTests
 {
     public class UnitTest
     {
-        public QuizController controller;
+        public QuizControllerV1 controller;
         public Mock<IJwtServiceDeprecated> jwtServiceMock;
-        public Mock<IQuizService> quizServiceMock;
+        public Mock<IQuizServiceDeprecated> quizServiceMock;
         public UserViewModel user;
 
         public CreateQuizViewModel createQuizViewModel;
@@ -38,10 +38,10 @@ namespace QuizWorld.Tests.Controllers.QuizControllerUnitTests
                 Roles = new string[] { "User" }
             };
 
-            this.quizServiceMock = new Mock<IQuizService>();
+            this.quizServiceMock = new Mock<IQuizServiceDeprecated>();
             this.jwtServiceMock = new Mock<IJwtServiceDeprecated>();
 
-            this.controller = new QuizController(this.quizServiceMock.Object, this.jwtServiceMock.Object);
+            this.controller = new QuizControllerV1(this.quizServiceMock.Object, this.jwtServiceMock.Object);
             this.createQuizViewModel = new CreateQuizViewModel()
             {
                 Title = "some quiz",

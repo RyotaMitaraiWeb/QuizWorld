@@ -8,15 +8,16 @@ using QuizWorld.ViewModels.Question;
 using QuizWorld.ViewModels.Quiz;
 using QuizWorld.Web.Contracts.Quiz;
 
-namespace QuizWorld.Web.Services.QuizService
+namespace QuizWorld.Web.Services.Legacy
 {
     /// <summary>
     /// A service for interacting with quizzes in the database.
     /// </summary>
-    public class QuizService : IQuizService
+    [Obsolete("Deprecated")]
+    public class QuizServiceDeprecated : IQuizServiceDeprecated
     {
         private readonly IRepository repository;
-        public QuizService(IRepository repository)
+        public QuizServiceDeprecated(IRepository repository)
         {
             this.repository = repository;
         }
@@ -36,7 +37,7 @@ namespace QuizWorld.Web.Services.QuizService
                 throw new InvalidOperationException("User ID is malformed (not a GUID)");
             }
 
-            return await this.CreateQuiz(quiz, id);
+            return await CreateQuiz(quiz, id);
         }
 
         /// <summary>
@@ -47,7 +48,7 @@ namespace QuizWorld.Web.Services.QuizService
         /// <returns>The ID of the created quiz if successful.</returns>
         public async Task<int> CreateQuiz(CreateQuizViewModel quiz, Guid userId)
         {
-            var questions = this.CreateQuestions(quiz.Questions);
+            var questions = CreateQuestions(quiz.Questions);
             var date = DateTime.Now;
 
             var entity = new Quiz()
@@ -64,8 +65,8 @@ namespace QuizWorld.Web.Services.QuizService
                 Questions = questions.ToList(),
             };
 
-            await this.repository.AddAsync(entity);
-            await this.repository.SaveChangesAsync();
+            await repository.AddAsync(entity);
+            await repository.SaveChangesAsync();
 
             return entity.Id;
         }
@@ -77,7 +78,7 @@ namespace QuizWorld.Web.Services.QuizService
         /// <returns>The ID of the quiz if successful or null if quiz does not exist or has already been deleted.</returns>
         public async Task<int?> DeleteQuizById(int id)
         {
-            var quiz = await this.repository.GetByIdAsync<Quiz>(id);
+            var quiz = await repository.GetByIdAsync<Quiz>(id);
             if (quiz == null || quiz.IsDeleted)
             {
                 return null;
@@ -85,7 +86,7 @@ namespace QuizWorld.Web.Services.QuizService
 
             quiz.IsDeleted = true;
 
-            await this.repository.SaveChangesAsync();
+            await repository.SaveChangesAsync();
             return id;
         }
 
@@ -98,7 +99,7 @@ namespace QuizWorld.Web.Services.QuizService
         /// <exception cref="NotImplementedException"></exception>
         public Task<EditQuizFormViewModel?> GetQuizForEdit(int id)
         {
-            return this.repository.AllReadonly<Quiz>()
+            return repository.AllReadonly<Quiz>()
                 .Where(quiz => quiz.Id == id && !quiz.IsDeleted)
                 .Select(quiz => new EditQuizFormViewModel()
                 {
@@ -128,7 +129,7 @@ namespace QuizWorld.Web.Services.QuizService
 
         public async Task<int?> EditQuizById(int id, EditQuizViewModel quiz)
         {
-            var quizEntity = await this.repository.GetByIdAsync<Quiz>(id);
+            var quizEntity = await repository.GetByIdAsync<Quiz>(id);
             if (quizEntity == null || quizEntity.IsDeleted)
             {
                 return null;
@@ -147,7 +148,7 @@ namespace QuizWorld.Web.Services.QuizService
                 quizEntity.Questions.Add(question);
             }
 
-            await this.repository.SaveChangesAsync();
+            await repository.SaveChangesAsync();
             return id;
 
         }
@@ -163,7 +164,7 @@ namespace QuizWorld.Web.Services.QuizService
         /// <returns>A model that contains the total amount of non-deleted quizzes and the catalogue</returns>
         public async Task<CatalogueQuizViewModel> GetAllQuizzes(int page, SortingCategories category, SortingOrders order, int pageSize = 6)
         {
-            var query = this.repository
+            var query = repository
                 .AllReadonly<Quiz>()
                 .Where(q => !q.IsDeleted);
 
@@ -194,7 +195,7 @@ namespace QuizWorld.Web.Services.QuizService
 
         public Task<QuizViewModel?> GetQuizById(int id)
         {
-            var quiz = this.repository
+            var quiz = repository
                 .AllReadonly<Quiz>(q => q.Id == id && !q.IsDeleted)
                 .Select(q => new QuizViewModel()
                 {
@@ -240,7 +241,7 @@ namespace QuizWorld.Web.Services.QuizService
         /// <returns>A model that contains the total amount of quizzes whose title contains the given <paramref name="query"/> and the catalogue</returns>
         public async Task<CatalogueQuizViewModel> GetQuizzesByQuery(string query, int page, SortingCategories category, SortingOrders order, int pageSize = 6)
         {
-            var queryList = this.repository
+            var queryList = repository
                 .AllReadonly<Quiz>()
                 .Where(q => !q.IsDeleted && q.NormalizedTitle.Contains(query.Normalized()));
 
@@ -288,7 +289,7 @@ namespace QuizWorld.Web.Services.QuizService
                 throw new ArgumentException("The provided ID is invalid");
             }
 
-            return await this.GetUserQuizzes(id, page, category, order, pageSize);
+            return await GetUserQuizzes(id, page, category, order, pageSize);
         }
 
         /// <summary>
@@ -302,7 +303,7 @@ namespace QuizWorld.Web.Services.QuizService
         /// <returns></returns>
         public async Task<CatalogueQuizViewModel> GetUserQuizzes(Guid userId, int page, SortingCategories category, SortingOrders order, int pageSize = 6)
         {
-            var query = this.repository
+            var query = repository
                 .AllReadonly<Quiz>()
                 .Where(q => q.CreatorId == userId && !q.IsDeleted);
 
@@ -349,7 +350,7 @@ namespace QuizWorld.Web.Services.QuizService
                     QuestionTypeId = typeId,
                     Version = version,
                     Order = i + 1,
-                    Answers = this.CreateAnswers(question.Answers).ToList(),
+                    Answers = CreateAnswers(question.Answers).ToList(),
                     Notes = question.Notes,
                 };
 
