@@ -9,6 +9,7 @@ using QuizWorld.Common.Search;
 using QuizWorld.ViewModels.Common;
 using QuizWorld.ViewModels.Quiz;
 using QuizWorld.Web.Contracts.Quiz;
+using QuizWorld.Web.Filters;
 
 namespace QuizWorld.Web.Controllers
 {
@@ -65,6 +66,7 @@ namespace QuizWorld.Web.Controllers
         [Authorize(
             AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
             Policy = PolicyNames.CanEditAndDeleteAQuiz)]
+        [ServiceFilter(typeof(LogEditOrDeleteActivityFilter))]
         public async Task<IActionResult> EditQuizById(int id, EditQuizViewModel quiz)
         {
             await _quizService.EditAsync(id, quiz, DateTime.Now);
@@ -73,6 +75,7 @@ namespace QuizWorld.Web.Controllers
 
         [Route("{id}")]
         [HttpDelete]
+        [ServiceFilter(typeof(LogEditOrDeleteActivityFilter))]
         [Authorize(
             AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
             Policy = PolicyNames.CanEditAndDeleteAQuiz)]

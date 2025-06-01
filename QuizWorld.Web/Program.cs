@@ -43,6 +43,7 @@ using QuizWorld.Web.Middlewares;
 using QuizWorld.Infrastructure.AuthConfig.CanEditAndDeleteQuizzes;
 using QuizWorld.Common.Policy;
 using QuizWorld.Infrastructure.AuthConfig.CreatedTheQuiz;
+using QuizWorld.Web.Filters;
 
 namespace QuizWorld.Web
 {
@@ -93,6 +94,7 @@ namespace QuizWorld.Web
             builder.Services.AddScoped<IAuthorizationHandler, CanAccessLogsHandler>();
             builder.Services.AddScoped<IAuthorizationHandler, CanEditAndDeleteQuizzesHandler>();
             builder.Services.AddSingleton<IAuthorizationHandler, CreatedTheQuizHandler>();
+            builder.Services.AddScoped<LogEditOrDeleteActivityFilter>();
             builder.Services.AddDbContext<QuizWorldDbContext>(options =>
             {
                 SqlConnectionStringBuilder connBuilder = new()
