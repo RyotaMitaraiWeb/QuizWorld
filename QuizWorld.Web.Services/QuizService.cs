@@ -158,7 +158,7 @@ namespace QuizWorld.Web.Services
         }
         private static Expression<Func<Quiz, bool>> BuildPredicate(QuizSearchParameterss parameters)
         {
-            if (string.IsNullOrWhiteSpace(parameters.Author))
+            if (!string.IsNullOrWhiteSpace(parameters.Author))
             {
                 return q => !q.IsDeleted
                 && q.NormalizedTitle.Contains(parameters.Title.ToLower())
