@@ -22,7 +22,6 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" VersionOverride="8.3.0" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="AuthConfig\HasRole\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
   <ItemGroup>

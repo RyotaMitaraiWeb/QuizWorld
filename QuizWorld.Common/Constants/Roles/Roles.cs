@@ -42,5 +42,15 @@ namespace QuizWorld.Common.Constants.Roles
         {
             Admin, Moderator, User
         };
+
+        public static bool HasRequiredRoles(string[] userRoles, string[] requiredRoles)
+        {
+            foreach (string role in requiredRoles)
+            {
+                if (!userRoles.Contains(role)) return false;
+            }
+
+            return true;
+        }
     }
 }

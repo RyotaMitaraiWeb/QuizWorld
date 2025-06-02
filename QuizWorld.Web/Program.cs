@@ -43,6 +43,8 @@ using QuizWorld.Infrastructure.AuthConfig.CanEditAndDeleteQuizzes;
 using QuizWorld.Common.Policy;
 using QuizWorld.Infrastructure.AuthConfig.CreatedTheQuiz;
 using QuizWorld.Web.Filters;
+using QuizWorld.Infrastructure.AuthConfig.Handlers;
+using QuizWorld.Infrastructure.AuthConfig.Requirements;
 
 namespace QuizWorld.Web
 {
@@ -92,6 +94,7 @@ namespace QuizWorld.Web
             builder.Services.AddScoped<IAuthorizationHandler, CanPerformOwnerActionHandler>();
             builder.Services.AddScoped<IAuthorizationHandler, CanAccessLogsHandler>();
             builder.Services.AddScoped<IAuthorizationHandler, CanEditAndDeleteQuizzesHandler>();
+            builder.Services.AddScoped<IAuthorizationHandler, CanViewLogsHandler>();
             builder.Services.AddSingleton<IAuthorizationHandler, CreatedTheQuizHandler>();
             builder.Services.AddScoped<LogEditOrDeleteActivityFilter>();
             builder.Services.AddDbContext<QuizWorldDbContext>(options =>
@@ -233,9 +236,14 @@ namespace QuizWorld.Web
                 {
                     policy.RequireAuthenticatedUser();
                     policy.Requirements.Add(new CanEditAndDeleteQuizzesRequirement(Roles.Moderator));
+                })
+                .AddPolicy(CanViewLogsHandler.Name, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.Requirements.Add(new HasRolesRequirement(Roles.Admin));
                 });
 
-
+            
             builder.Services.AddCors(options =>
             {
                 options.AddDefaultPolicy(

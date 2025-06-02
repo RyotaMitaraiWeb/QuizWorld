@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using QuizWorld.Common.Claims;
+using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Common.Http;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 
@@ -26,7 +27,7 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanEditAndDeleteQuizzes
 
             ApplicationUser? user = await GetUser();
             string[] roles = await GetRolesAsync(user);
-            bool hasRequiredRoles = HasRequiredRoles(roles, requirement.AllowedRoles);
+            bool hasRequiredRoles = Roles.HasRequiredRoles(roles, requirement.AllowedRoles);
             if (hasRequiredRoles)
             {
                 AttachQuizToContextMiddlewareFlags flag = new()
@@ -56,19 +57,6 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanEditAndDeleteQuizzes
         public async Task Authorize(AuthorizationHandlerContext context, CanEditAndDeleteQuizzesRequirement requirement)
         {
             await HandleRequirementAsync(context, requirement);
-        }
-
-        private static bool HasRequiredRoles(string[] userRoles, string[] requiredRoles)
-        {
-            foreach (string role in requiredRoles)
-            {
-                if (!userRoles.Contains(role))
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
 
         private int GetRouteId()

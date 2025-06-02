@@ -6,7 +6,6 @@ using QuizWorld.Common.Claims;
 using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Common.Http;
 using QuizWorld.Infrastructure.AuthConfig.CanEditAndDeleteQuizzes;
-using QuizWorld.Infrastructure.AuthConfig.CreatedTheQuiz;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Tests.Unit.Util;
 using System.Security.Claims;

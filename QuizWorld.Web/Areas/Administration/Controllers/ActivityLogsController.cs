@@ -1,8 +1,10 @@
 ﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Common.Search;
+using QuizWorld.Infrastructure.AuthConfig.Handlers;
 using QuizWorld.Infrastructure.ModelBinders;
 using QuizWorld.Web.Contracts.Logging;
 using QuizWorld.Web.Filters;
@@ -37,8 +39,11 @@ namespace QuizWorld.Web.Areas.Logging.Controllers
 
         [HttpGet]
         [ApiVersion("2.0")]
-        [AllowAnonymous]
         [NotFoundException]
+        [Authorize(
+            Policy = CanViewLogsHandler.Name,
+            AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme
+            )]
         public async Task<IActionResult> GetLogs([FromQuery]SearchLogsParameters searchParameters)
         {
             var logs = await _logger.RetrieveLogs(searchParameters);
