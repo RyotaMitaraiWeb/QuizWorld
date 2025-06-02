@@ -101,5 +101,7 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanEditAndDeleteQuizzes
             var roles = await _userManager.GetRolesAsync(user);
             return [.. roles];
         }
+
+        public const string Name = "CanEditAndDeleteAQuiz";
     }
 }

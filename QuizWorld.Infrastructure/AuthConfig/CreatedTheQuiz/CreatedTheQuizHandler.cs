@@ -44,5 +44,7 @@ namespace QuizWorld.Infrastructure.AuthConfig.CreatedTheQuiz
 
             return quizCreatorIdGuid == userIdGuid;
         }
+
+        public const string Name = "CreatedTheQuizHandler";
     }
 }

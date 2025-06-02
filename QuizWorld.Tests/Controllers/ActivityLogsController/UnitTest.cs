@@ -3,7 +3,7 @@ using MockQueryable.Moq;
 using Moq;
 using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.ViewModels.Logging;
-using QuizWorld.Web.Areas.Logging.Controllers;
+using QuizWorld.Web.Areas.Administration.Controllers;
 using QuizWorld.Web.Contracts.Logging;
 using System;
 using System.Collections.Generic;

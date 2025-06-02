@@ -40,7 +40,6 @@ using QuizWorld.Web.Services.Authentication;
 using QuizWorld.Web.Services.Legacy;
 using QuizWorld.Web.Middlewares;
 using QuizWorld.Infrastructure.AuthConfig.CanEditAndDeleteQuizzes;
-using QuizWorld.Common.Policy;
 using QuizWorld.Infrastructure.AuthConfig.CreatedTheQuiz;
 using QuizWorld.Web.Filters;
 using QuizWorld.Infrastructure.AuthConfig.Handlers;
@@ -232,7 +231,7 @@ namespace QuizWorld.Web
                 {
                     policy.Requirements.Add(new CanWorkWithRolesRequirement(true, Roles.Admin));
                 })
-                .AddPolicy(PolicyNames.CanEditAndDeleteAQuiz, policy =>
+                .AddPolicy(CanEditAndDeleteQuizzesHandler.Name, policy =>
                 {
                     policy.RequireAuthenticatedUser();
                     policy.Requirements.Add(new CanEditAndDeleteQuizzesRequirement(Roles.Moderator));

@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QuizWorld.Common.Errors;
 using QuizWorld.Common.Http;
-using QuizWorld.Common.Policy;
 using QuizWorld.Common.Search;
+using QuizWorld.Infrastructure.AuthConfig.CanEditAndDeleteQuizzes;
 using QuizWorld.ViewModels.Common;
 using QuizWorld.ViewModels.Quiz;
 using QuizWorld.Web.Contracts.Quiz;
@@ -65,7 +65,7 @@ namespace QuizWorld.Web.Controllers
         [HttpPut]
         [Authorize(
             AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
-            Policy = PolicyNames.CanEditAndDeleteAQuiz)]
+            Policy = CanEditAndDeleteQuizzesHandler.Name)]
         [ServiceFilter(typeof(LogEditOrDeleteActivityFilter))]
         public async Task<IActionResult> EditQuizById(int id, EditQuizViewModel quiz)
         {
@@ -78,7 +78,7 @@ namespace QuizWorld.Web.Controllers
         [ServiceFilter(typeof(LogEditOrDeleteActivityFilter))]
         [Authorize(
             AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
-            Policy = PolicyNames.CanEditAndDeleteAQuiz)]
+            Policy = CanEditAndDeleteQuizzesHandler.Name)]
         public async Task<IActionResult> DeleteQuizById(int id)
         {
             await _quizService.DeleteAsync(id);
@@ -89,7 +89,7 @@ namespace QuizWorld.Web.Controllers
         [HttpGet]
         [Authorize(
             AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
-            Policy = PolicyNames.CanEditAndDeleteAQuiz)]
+            Policy = CanEditAndDeleteQuizzesHandler.Name)]
         public async Task<IActionResult> GetQuizForEdit(int id)
         {
             var quiz = await _quizService.GetForEditAsync(id);

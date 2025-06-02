@@ -9,7 +9,7 @@ using QuizWorld.Infrastructure.ModelBinders;
 using QuizWorld.Web.Contracts.Logging;
 using QuizWorld.Web.Filters;
 
-namespace QuizWorld.Web.Areas.Logging.Controllers
+namespace QuizWorld.Web.Areas.Administration.Controllers
 {
     [ApiController]
     [Route("/logs")]
@@ -28,7 +28,7 @@ namespace QuizWorld.Web.Areas.Logging.Controllers
         {
             try
             {
-                var result = await this._logger.RetrieveLogs(page, order, 20);
+                var result = await _logger.RetrieveLogs(page, order, 20);
                 return Ok(result);
             }
             catch
