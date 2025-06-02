@@ -23,7 +23,6 @@ using Microsoft.AspNetCore.Authorization;
 using QuizWorld.Web.Services.GradeService;
 using QuizWorld.Infrastructure.AuthConfig.CanAccessLogs;
 using QuizWorld.Web.Contracts.Logging;
-using QuizWorld.Web.Services.Logging;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Web.Contracts.Roles;
 using QuizWorld.Web.Services.RoleService;

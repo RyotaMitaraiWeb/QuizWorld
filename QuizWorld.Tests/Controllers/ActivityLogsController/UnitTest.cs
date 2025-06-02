@@ -43,7 +43,7 @@ namespace QuizWorld.Tests.Controllers.ActivityLogsControllerUnitTests
                 .Setup(l => l.RetrieveLogs(1, SortingOrders.Ascending, 20))
                 .ReturnsAsync(new ActivityLogsViewModel() {  Total = 1, Logs = list });
 
-            var result = await this.controller.GetLogs(1, SortingOrders.Ascending) as OkObjectResult;
+            var result = await this.controller.GetLogsDeprecated(1, SortingOrders.Ascending) as OkObjectResult;
             var value = result.Value as ActivityLogsViewModel;
 
             Assert.That(value.Logs, Is.EqualTo(list));
@@ -56,7 +56,7 @@ namespace QuizWorld.Tests.Controllers.ActivityLogsControllerUnitTests
                 .Setup(l => l.RetrieveLogs(1, SortingOrders.Ascending, 20))
                 .ThrowsAsync(new Exception());
 
-            var result = await this.controller.GetLogs(1, SortingOrders.Ascending);
+            var result = await this.controller.GetLogsDeprecated(1, SortingOrders.Ascending);
             Assert.That(result, Is.TypeOf<NotFoundResult>());
         }
     }
