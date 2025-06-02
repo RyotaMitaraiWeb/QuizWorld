@@ -5,6 +5,7 @@ using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Common.Search;
 using QuizWorld.Infrastructure.ModelBinders;
 using QuizWorld.Web.Contracts.Logging;
+using QuizWorld.Web.Filters;
 
 namespace QuizWorld.Web.Areas.Logging.Controllers
 {
@@ -37,9 +38,9 @@ namespace QuizWorld.Web.Areas.Logging.Controllers
         [HttpGet]
         [ApiVersion("2.0")]
         [AllowAnonymous]
+        [NotFoundException]
         public async Task<IActionResult> GetLogs([FromQuery]SearchLogsParameters searchParameters)
         {
-            // TO-DO: return 404 if an error occurs.
             var logs = await _logger.RetrieveLogs(searchParameters);
             return Ok(logs);
         }
