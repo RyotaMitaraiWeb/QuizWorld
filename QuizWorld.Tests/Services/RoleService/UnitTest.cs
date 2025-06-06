@@ -14,7 +14,7 @@ namespace QuizWorld.Tests.Services.RoleServiceUnitTests
     public class UnitTest
     {
         public Mock<UserManager<ApplicationUser>> userManagerMock;
-        public RoleService service;
+        public RoleServiceDeprecated service;
 
         [SetUp]
         public void Setup()
@@ -30,7 +30,7 @@ namespace QuizWorld.Tests.Services.RoleServiceUnitTests
                 new Mock<IServiceProvider>().Object,
                 new Mock<ILogger<UserManager<ApplicationUser>>>().Object);
 
-            this.service = new RoleService(this.userManagerMock.Object);
+            this.service = new RoleServiceDeprecated(this.userManagerMock.Object);
         }
 
 

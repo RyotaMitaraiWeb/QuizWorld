@@ -10,15 +10,16 @@ using QuizWorld.Web.Contracts.Roles;
 
 namespace QuizWorld.Web.Services.RoleService
 {
+    [Obsolete]
     /// <summary>
     /// Manages users' roles and information related to that.
     /// </summary>
-    public class RoleService : IRoleService
+    public class RoleServiceDeprecated : IRoleServiceDeprecated
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<IdentityRole<Guid>> roleManager;
 
-        public RoleService(UserManager<ApplicationUser> userManager)
+        public RoleServiceDeprecated(UserManager<ApplicationUser> userManager)
         {
             this.userManager = userManager;
         }
