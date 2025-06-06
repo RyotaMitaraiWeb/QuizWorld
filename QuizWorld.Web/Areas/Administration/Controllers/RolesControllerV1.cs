@@ -12,11 +12,11 @@ namespace QuizWorld.Web.Areas.Administration.Controllers
     [Route("/roles")]
     [ApiVersion("1.0")]
     [Obsolete]
-    public class RolesController : BaseController
+    public class RolesControllerV1 : BaseController
     {
         private readonly IRoleServiceDeprecated roleService;
 
-        public RolesController(IRoleServiceDeprecated roleService)
+        public RolesControllerV1(IRoleServiceDeprecated roleService)
         {
             this.roleService = roleService;
         }
