@@ -3,8 +3,7 @@ using QuizWorld.ViewModels.UserList;
 
 namespace QuizWorld.Web.Contracts.Roles
 {
-    [Obsolete]
-    public interface IRoleServiceDeprecated
+    public interface IRoleService
     {
         public Task<Guid?> GiveUserRole(Guid userId, string role);
         public Task<Guid?> GiveUserRole(string userId, string role);

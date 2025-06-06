@@ -1,5 +1,4 @@
-﻿using Asp.Versioning;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Infrastructure.ModelBinders;
@@ -10,13 +9,11 @@ namespace QuizWorld.Web.Areas.Administration.Controllers
 {
     [ApiController]
     [Route("/roles")]
-    [ApiVersion("1.0")]
-    [Obsolete]
     public class RolesController : BaseController
     {
-        private readonly IRoleServiceDeprecated roleService;
+        private readonly IRoleService roleService;
 
-        public RolesController(IRoleServiceDeprecated roleService)
+        public RolesController(IRoleService roleService)
         {
             this.roleService = roleService;
         }

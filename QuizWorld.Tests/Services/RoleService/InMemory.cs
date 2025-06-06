@@ -15,14 +15,14 @@ namespace QuizWorld.Tests.Services.RoleServiceImMemoryTests
     {
         public TestDB testDb;
         public Repository repository;
-        public RoleServiceDeprecated service;
+        public RoleService service;
 
         [SetUp]
         public void Setup()
         {
             this.testDb = new TestDB();
             this.repository = this.testDb.repository;
-            this.service = new RoleServiceDeprecated(this.testDb.userManager);
+            this.service = new RoleService(this.testDb.userManager);
         }
 
         [Test]

@@ -16,13 +16,13 @@ namespace QuizWorld.Tests.Controllers.RolesControllerUnitTests
 {
     public class UnitTest
     {
-        public Mock<IRoleServiceDeprecated> roleServiceMock;
+        public Mock<IRoleService> roleServiceMock;
         public RolesController controller;
 
         [SetUp]
         public void Setup()
         {
-            this.roleServiceMock = new Mock<IRoleServiceDeprecated>();
+            this.roleServiceMock = new Mock<IRoleService>();
             this.controller = new RolesController(this.roleServiceMock.Object);
         }
 
