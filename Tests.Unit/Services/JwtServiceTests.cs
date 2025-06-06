@@ -1,17 +1,11 @@
-﻿using Castle.Core.Logging;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using QuizWorld.Common.Constants.Roles;
 using QuizWorld.ViewModels.Authentication;
-using QuizWorld.Web.Areas.Logging.Controllers;
-using QuizWorld.Web.Contracts.Authentication.JsonWebToken;
-using QuizWorld.Web.Contracts.Logging;
 using QuizWorld.Web.Services.Authentication.JsonWebToken.JwtService;
-using System.IdentityModel.Tokens.Jwt;
 using static QuizWorld.Common.Results.JwtError;
 
-namespace QuizWorld.Tests.Unit.Services
+namespace Tests.Unit.Services
 {
     public class JwtServiceTests
     {

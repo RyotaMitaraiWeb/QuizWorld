@@ -44,6 +44,7 @@ using QuizWorld.Infrastructure.AuthConfig.CreatedTheQuiz;
 using QuizWorld.Web.Filters;
 using QuizWorld.Infrastructure.AuthConfig.Handlers;
 using QuizWorld.Infrastructure.AuthConfig.Requirements;
+using Microsoft.AspNetCore.Authorization.Policy;
 
 namespace QuizWorld.Web
 {
@@ -96,6 +97,13 @@ namespace QuizWorld.Web
             builder.Services.AddScoped<IAuthorizationHandler, CanViewLogsHandler>();
             builder.Services.AddSingleton<IAuthorizationHandler, CreatedTheQuizHandler>();
             builder.Services.AddScoped<LogEditOrDeleteActivityFilter>();
+            builder.Services.AddSingleton<AuthorizationMiddlewareResultHandler>();
+
+            builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler>(sp =>
+            {
+                var defaultHandler = sp.GetRequiredService<AuthorizationMiddlewareResultHandler>();
+                return new To404NotFoundMiddlewareResultHandler(defaultHandler);
+            });
             builder.Services.AddDbContext<QuizWorldDbContext>(options =>
             {
                 SqlConnectionStringBuilder connBuilder = new()
@@ -238,7 +246,6 @@ namespace QuizWorld.Web
                 })
                 .AddPolicy(CanViewLogsHandler.Name, policy =>
                 {
-                    policy.RequireAuthenticatedUser();
                     policy.Requirements.Add(new HasRolesRequirement(Roles.Admin));
                 });
 
@@ -275,8 +282,6 @@ namespace QuizWorld.Web
             app.UseAuthentication();
             app.UseAttachQuizToContext();
             app.UseAuthorization();
-
-
 
 
             app.SeedAdministrator("admin", builder.Configuration["ADMIN_PASS"]);
