@@ -25,7 +25,6 @@ using QuizWorld.Infrastructure.AuthConfig.CanAccessLogs;
 using QuizWorld.Web.Contracts.Logging;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Web.Contracts.Roles;
-using QuizWorld.Web.Services.RoleService;
 using QuizWorld.Infrastructure.AuthConfig.CanWorkWithRoles;
 using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Infrastructure.Extensions;
@@ -90,6 +89,7 @@ namespace QuizWorld.Web
             builder.Services.AddScoped<IGradeService, GradeService>();
             builder.Services.AddScoped<IActivityLogger, ActivityLogger>();
             builder.Services.AddScoped<IRoleServiceDeprecated, RoleServiceDeprecated>();
+            builder.Services.AddScoped<IRoleService, RoleService>();
             builder.Services.AddScoped<IAuthorizationHandler, CanWorkWithRolesHandler>();
             builder.Services.AddScoped<IAuthorizationHandler, CanPerformOwnerActionHandler>();
             builder.Services.AddScoped<IAuthorizationHandler, CanAccessLogsHandler>();

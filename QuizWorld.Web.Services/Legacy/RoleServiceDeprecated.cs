@@ -8,7 +8,7 @@ using QuizWorld.ViewModels.UserList;
 using QuizWorld.Web.Contracts.Roles;
 
 
-namespace QuizWorld.Web.Services.RoleService
+namespace QuizWorld.Web.Services.Legacy
 {
     [Obsolete]
     /// <summary>
@@ -42,7 +42,7 @@ namespace QuizWorld.Web.Services.RoleService
 
             int count = 0;
 
-            var query = this.userManager.Users
+            var query = userManager.Users
                 .Where(u => u.UserRoles.Where(ur => ur.Role.Name == role).Any());
 
             count = await query.CountAsync();
@@ -70,7 +70,7 @@ namespace QuizWorld.Web.Services.RoleService
                 throw new ArgumentException("The provided role does not exist!");
             }
 
-            var query = this.userManager.Users
+            var query = userManager.Users
                 .Where(u => u.UserRoles.Where(ur => ur.Role.Name == role).Any() && u.UserName.Contains(username));
 
             int count = await query.CountAsync();
@@ -104,7 +104,7 @@ namespace QuizWorld.Web.Services.RoleService
                 throw new ArgumentException($"Role \"{role}\" cannot be given to users!");
             }
 
-            var user = await this.userManager.FindByIdAsync(userId);
+            var user = await userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 throw new ArgumentException("The user does not exist!");
@@ -112,7 +112,7 @@ namespace QuizWorld.Web.Services.RoleService
 
             try
             {
-                var result = await this.userManager.AddToRoleAsync(user, role);
+                var result = await userManager.AddToRoleAsync(user, role);
                 if (result != IdentityResult.Success)
                 {
                     return null;
@@ -137,7 +137,7 @@ namespace QuizWorld.Web.Services.RoleService
         /// <exception cref="ArgumentNullException"></exception>
         public async Task<Guid?> GiveUserRole(Guid userId, string role)
         {
-            return await this.GiveUserRole(userId.ToString(), role);
+            return await GiveUserRole(userId.ToString(), role);
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace QuizWorld.Web.Services.RoleService
                 throw new ArgumentException($"Role \"{role}\" cannot be removed from users!");
             }
 
-            var user = await this.userManager.FindByIdAsync(userId);
+            var user = await userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 throw new ArgumentException("The user does not exist!");
@@ -162,7 +162,7 @@ namespace QuizWorld.Web.Services.RoleService
 
             try
             {
-                var result = await this.userManager.RemoveFromRoleAsync(user, role);
+                var result = await userManager.RemoveFromRoleAsync(user, role);
                 if (result != IdentityResult.Success)
                 {
                     return null;
@@ -186,7 +186,7 @@ namespace QuizWorld.Web.Services.RoleService
         /// <exception cref="ArgumentNullException"></exception>
         public async Task<Guid?> RemoveRoleFromUser(Guid userId, string role)
         {
-            return await this.RemoveRoleFromUser(userId.ToString(), role);
+            return await RemoveRoleFromUser(userId.ToString(), role);
         }
 
         /// <summary>
@@ -200,7 +200,7 @@ namespace QuizWorld.Web.Services.RoleService
         /// <exception cref="NotImplementedException"></exception>
         public async Task<ListUsersViewModel> GetUsersByUsername(string query, int page, SortingOrders order, int pageSize = 20)
         {
-            var userQuery = this.userManager
+            var userQuery = userManager
                 .Users
                 .Where(u => u.NormalizedUserName.Contains(query.Normalized()))
                 .Include(u => u.UserRoles)

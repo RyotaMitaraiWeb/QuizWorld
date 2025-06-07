@@ -1,15 +1,8 @@
 using QuizWorld.Common.Constants.Types;
-using QuizWorld.Infrastructure.Data.Entities;
 using QuizWorld.ViewModels.Answer;
-using QuizWorld.ViewModels.Question;
 using QuizWorld.ViewModels.Quiz;
 using QuizWorld.ViewModels.Validators;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QuizWorld.Tests.Validators.CorrectAndWrongAnswersAmountUnitTest
 {
