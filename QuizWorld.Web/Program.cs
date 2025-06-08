@@ -246,7 +246,7 @@ namespace QuizWorld.Web
                     policy.RequireAuthenticatedUser();
                     policy.Requirements.Add(new CanEditAndDeleteQuizzesRequirement(Roles.Moderator));
                 })
-                .AddPolicy(HasRequiredRolesHandler.Name, policy =>
+                .AddPolicy(PolicyNames.CanViewLogs, policy =>
                 {
                     policy.Requirements.Add(new HasRolesRequirement(Roles.Admin));
                 })

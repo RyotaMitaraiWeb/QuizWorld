@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QuizWorld.Common.Constants.Sorting;
+using QuizWorld.Common.Policy;
 using QuizWorld.Common.Search;
 using QuizWorld.Infrastructure.AuthConfig.Handlers;
 using QuizWorld.Infrastructure.ModelBinders;
@@ -41,7 +42,7 @@ namespace QuizWorld.Web.Areas.Administration.Controllers
         [ApiVersion("2.0")]
         [NotFoundException]
         [Authorize(
-            Policy = HasRequiredRolesHandler.Name)]
+            Policy = PolicyNames.CanViewLogs)]
         public async Task<IActionResult> GetLogs([FromQuery]SearchLogsParameters searchParameters)
         {
             var logs = await _logger.RetrieveLogs(searchParameters);
