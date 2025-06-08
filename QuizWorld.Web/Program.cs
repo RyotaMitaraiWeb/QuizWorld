@@ -98,6 +98,7 @@ namespace QuizWorld.Web
             builder.Services.AddScoped<IAuthorizationHandler, HasRequiredRolesHandler>();
             builder.Services.AddSingleton<IAuthorizationHandler, CreatedTheQuizHandler>();
             builder.Services.AddScoped<LogEditOrDeleteActivityFilter>();
+            builder.Services.AddScoped<LogRoleChangeFilter>();
             builder.Services.AddSingleton<AuthorizationMiddlewareResultHandler>();
             builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler>(sp =>
             {

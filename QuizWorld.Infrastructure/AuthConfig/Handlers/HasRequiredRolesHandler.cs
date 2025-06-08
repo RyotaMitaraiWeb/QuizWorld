@@ -45,5 +45,6 @@ namespace QuizWorld.Infrastructure.AuthConfig.Handlers
         }
 
         public const string Name = "HasRequiredRolesPolicy";
+        public const string RequestSenderFlag = "RequestSenderFlag";
     }
 }
