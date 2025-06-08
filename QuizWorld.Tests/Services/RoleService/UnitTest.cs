@@ -7,14 +7,14 @@ using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Infrastructure.Extensions;
-using QuizWorld.Web.Services.RoleService;
+using QuizWorld.Web.Services.Legacy;
 
 namespace QuizWorld.Tests.Services.RoleServiceUnitTests
 {
     public class UnitTest
     {
         public Mock<UserManager<ApplicationUser>> userManagerMock;
-        public RoleService service;
+        public RoleServiceDeprecated service;
 
         [SetUp]
         public void Setup()
@@ -30,7 +30,7 @@ namespace QuizWorld.Tests.Services.RoleServiceUnitTests
                 new Mock<IServiceProvider>().Object,
                 new Mock<ILogger<UserManager<ApplicationUser>>>().Object);
 
-            this.service = new RoleService(this.userManagerMock.Object);
+            this.service = new RoleServiceDeprecated(this.userManagerMock.Object);
         }
 
 

@@ -1,18 +1,15 @@
-﻿using QuizWorld.Common.Constants.Sorting;
+﻿using QuizWorld.Common.Result;
+using QuizWorld.Common.Search;
+using QuizWorld.ViewModels.Roles;
 using QuizWorld.ViewModels.UserList;
+using static QuizWorld.Common.Errors.RoleError;
 
 namespace QuizWorld.Web.Contracts.Roles
 {
     public interface IRoleService
     {
-        public Task<Guid?> GiveUserRole(Guid userId, string role);
-        public Task<Guid?> GiveUserRole(string userId, string role);
-
-        public Task<Guid?> RemoveRoleFromUser(string userId, string role);
-        public Task<Guid?> RemoveRoleFromUser(Guid userId, string role);
-
-        public Task<ListUsersViewModel> GetUsersOfRole(string role, int page, SortingOrders order, int pageSize);
-        public Task<ListUsersViewModel> GetUsersOfRole(string role, string username, int page, SortingOrders order, int pageSize);
-        public Task<ListUsersViewModel> GetUsersByUsername(string query, int page, SortingOrders order, int pageSize = 20);
+        Task<ListUsersViewModel> SearchUsers(SearchUsersParameters parameters);
+        Task<Result<string, AddRoleError>> GiveUserRole(ChangeRoleViewModel data);
+        Task<Result<string, RemoveRoleError>> RemoveRoleFromUser(ChangeRoleViewModel data);
     }
 }

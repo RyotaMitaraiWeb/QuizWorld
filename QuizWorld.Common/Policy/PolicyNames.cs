@@ -2,6 +2,7 @@
 {
     public static class PolicyNames
     {
-        public const string CanEditAndDeleteAQuiz = "CanEditAndDeleteQuizzes";
+        public const string CanViewLogs = "CanViewLogsPolicy";
+        public const string CanInteractWithRoles = "CanInteractWithRolesPolicy";
     }
 }

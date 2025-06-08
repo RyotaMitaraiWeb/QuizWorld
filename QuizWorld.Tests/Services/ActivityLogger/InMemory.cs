@@ -2,7 +2,7 @@
 using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Infrastructure;
 using QuizWorld.Infrastructure.Data.Entities.Logging;
-using QuizWorld.Web.Services.Logging;
+using QuizWorld.Web.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

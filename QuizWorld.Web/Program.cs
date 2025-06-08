@@ -23,10 +23,8 @@ using Microsoft.AspNetCore.Authorization;
 using QuizWorld.Web.Services.GradeService;
 using QuizWorld.Infrastructure.AuthConfig.CanAccessLogs;
 using QuizWorld.Web.Contracts.Logging;
-using QuizWorld.Web.Services.Logging;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Web.Contracts.Roles;
-using QuizWorld.Web.Services.RoleService;
 using QuizWorld.Infrastructure.AuthConfig.CanWorkWithRoles;
 using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Infrastructure.Extensions;
@@ -41,9 +39,12 @@ using QuizWorld.Web.Services.Authentication;
 using QuizWorld.Web.Services.Legacy;
 using QuizWorld.Web.Middlewares;
 using QuizWorld.Infrastructure.AuthConfig.CanEditAndDeleteQuizzes;
-using QuizWorld.Common.Policy;
 using QuizWorld.Infrastructure.AuthConfig.CreatedTheQuiz;
 using QuizWorld.Web.Filters;
+using QuizWorld.Infrastructure.AuthConfig.Handlers;
+using QuizWorld.Infrastructure.AuthConfig.Requirements;
+using Microsoft.AspNetCore.Authorization.Policy;
+using QuizWorld.Common.Policy;
 
 namespace QuizWorld.Web
 {
@@ -88,13 +89,23 @@ namespace QuizWorld.Web
             builder.Services.AddScoped<IQuizService, QuizService>();
             builder.Services.AddScoped<IGradeService, GradeService>();
             builder.Services.AddScoped<IActivityLogger, ActivityLogger>();
+            builder.Services.AddScoped<IRoleServiceDeprecated, RoleServiceDeprecated>();
             builder.Services.AddScoped<IRoleService, RoleService>();
             builder.Services.AddScoped<IAuthorizationHandler, CanWorkWithRolesHandler>();
             builder.Services.AddScoped<IAuthorizationHandler, CanPerformOwnerActionHandler>();
             builder.Services.AddScoped<IAuthorizationHandler, CanAccessLogsHandler>();
             builder.Services.AddScoped<IAuthorizationHandler, CanEditAndDeleteQuizzesHandler>();
+            builder.Services.AddScoped<IAuthorizationHandler, HasRequiredRolesHandler>();
             builder.Services.AddSingleton<IAuthorizationHandler, CreatedTheQuizHandler>();
             builder.Services.AddScoped<LogEditOrDeleteActivityFilter>();
+            builder.Services.AddScoped<LogRoleChangeFilter>();
+            builder.Services.AddSingleton<AuthorizationMiddlewareResultHandler>();
+            builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler>(sp =>
+            {
+                var defaultHandler = sp.GetRequiredService<AuthorizationMiddlewareResultHandler>();
+                return new To404NotFoundMiddlewareResultHandler(defaultHandler);
+            });
+
             builder.Services.AddDbContext<QuizWorldDbContext>(options =>
             {
                 SqlConnectionStringBuilder connBuilder = new()
@@ -230,13 +241,21 @@ namespace QuizWorld.Web
                 {
                     policy.Requirements.Add(new CanWorkWithRolesRequirement(true, Roles.Admin));
                 })
-                .AddPolicy(PolicyNames.CanEditAndDeleteAQuiz, policy =>
+                .AddPolicy(CanEditAndDeleteQuizzesHandler.Name, policy =>
                 {
                     policy.RequireAuthenticatedUser();
                     policy.Requirements.Add(new CanEditAndDeleteQuizzesRequirement(Roles.Moderator));
+                })
+                .AddPolicy(PolicyNames.CanViewLogs, policy =>
+                {
+                    policy.Requirements.Add(new HasRolesRequirement(Roles.Admin));
+                })
+                .AddPolicy(PolicyNames.CanInteractWithRoles, policy =>
+                {
+                    policy.Requirements.Add(new HasRolesRequirement(Roles.Admin));
                 });
 
-
+            
             builder.Services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
@@ -269,8 +288,6 @@ namespace QuizWorld.Web
             app.UseAuthentication();
             app.UseAttachQuizToContext();
             app.UseAuthorization();
-
-
 
 
             app.SeedAdministrator("admin", builder.Configuration["ADMIN_PASS"]);

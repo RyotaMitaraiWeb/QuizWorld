@@ -1,5 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using QuizWorld.Common.Http;
 using QuizWorld.Infrastructure;
 using QuizWorld.Infrastructure.Data.Entities.Quiz;

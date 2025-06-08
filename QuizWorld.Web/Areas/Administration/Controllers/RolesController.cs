@@ -1,129 +1,71 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using QuizWorld.Common.Constants.Sorting;
-using QuizWorld.Infrastructure.ModelBinders;
-using QuizWorld.ViewModels.Common;
+using QuizWorld.Common.Constants.Roles;
+using QuizWorld.Common.Policy;
+using QuizWorld.Common.Search;
+using QuizWorld.ViewModels.Roles;
 using QuizWorld.Web.Contracts.Roles;
+using QuizWorld.Web.Filters;
+using static QuizWorld.Common.Errors.RoleError;
 
 namespace QuizWorld.Web.Areas.Administration.Controllers
 {
-    [ApiController]
-    [Route("/roles")]
-    public class RolesController : BaseController
+    [Route("roles")]
+    [ApiVersion("2.0")]
+    [Authorize(Policy = PolicyNames.CanInteractWithRoles)]
+    public class RolesController(IRoleService roleService) : BaseController
     {
-        private readonly IRoleService roleService;
+        private readonly IRoleService _roleService = roleService;
 
-        public RolesController(IRoleService roleService)
+        [HttpGet("users")]
+        public async Task<IActionResult> SearchUsers([FromQuery] SearchUsersParameters parameters)
         {
-            this.roleService = roleService;
+            var result = await _roleService.SearchUsers(parameters);
+            return Ok(result);
         }
 
-        [HttpGet]
-        [Route("users")]
-        [Authorize(Policy = "CanSeeRoles", AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> GetUsersByUsername(
-            [FromQuery] string username,
-            [ModelBinder(BinderType = typeof(PaginationModelBinder))] int page,
-            [ModelBinder(BinderType = typeof(SortingOrderModelBinder))] SortingOrders order
-            )
+        [HttpPatch("add")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ServiceFilter(typeof(LogRoleChangeFilter))]
+        public async Task<IActionResult> AddRoleToUser(ChangeRoleViewModel model)
         {
-            try
+            var result = await _roleService.GiveUserRole(model);
+            if (result.IsFailure)
             {
-                var users = await this.roleService.GetUsersByUsername(username, page, order);
-                return Ok(users);
-            }
-            catch
-            {
-                return StatusCode(503);
-            }
-        }
+                if (result.Error == AddRoleError.UserDoesNotExist)
+                {
+                    return NotFound();
+                }
 
-        [HttpGet]
-        [Route("users/{role}")]
-        [Authorize(Policy = "CanSeeRoles", AuthenticationSchemes = "Bearer")]
-        public async Task<ActionResult> GetUsersOfRole(
-            string role,
-            [FromQuery] string? username,
-            [ModelBinder(BinderType = typeof(PaginationModelBinder))] int page,
-            [ModelBinder(BinderType = typeof(SortingOrderModelBinder))] SortingOrders order
-        )
-        {
-            try
-            {
-                var users = await this.roleService.GetUsersOfRole(role, username ?? string.Empty, page, order, 20);
-                return Ok(users);
-
-            }
-            catch (ArgumentException)
-            {
                 return BadRequest();
             }
-            catch
-            {
-                return StatusCode(503);
-            }
+
+            return NoContent();
         }
 
-        [HttpPut]
-        [Route("promote/{userId}/{role}")]
-        [Authorize(Policy = "CanChangeRoles", AuthenticationSchemes = "Bearer")]
-        public async Task<ActionResult> GiveUserRole(
-            string userId,
-            string role,
-            [ModelBinder(BinderType = typeof(PaginationModelBinder))] int page,
-            [ModelBinder(BinderType = typeof(SortingOrderModelBinder))] SortingOrders order)
+        [HttpPatch("remove")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ServiceFilter(typeof(LogRoleChangeFilter))]
+        public async Task<IActionResult> RemoveRoleFromUser(ChangeRoleViewModel model)
         {
-            try
+            var result = await _roleService.RemoveRoleFromUser(model);
+            if (result.IsFailure)
             {
-                var result = await this.roleService.GiveUserRole(userId, role);
-                if (result == null)
+                if (result.Error == RemoveRoleError.UserDoesNotExist)
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
 
-                var updatedUserList = await this.roleService.GetUsersOfRole(role, page, order, 20);
-                return Ok(updatedUserList);
+                return BadRequest();
             }
-            catch (ArgumentException e)
-            {
-                var errors = new ErrorViewModel() { Errors = new string[] { e.Message } };
-                return NotFound(errors);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(503);
-            }
-        }
 
-        [HttpPut]
-        [Route("demote/{userId}/{role}")]
-        [Authorize(Policy = "CanChangeRoles", AuthenticationSchemes = "Bearer")]
-        public async Task<ActionResult> RemoveRoleFromUser(
-            string userId,
-            string role,
-            [ModelBinder(BinderType = typeof(PaginationModelBinder))] int page,
-            [ModelBinder(BinderType = typeof(SortingOrderModelBinder))] SortingOrders order)
-        {
-            try
-            {
-                var result = await this.roleService.RemoveRoleFromUser(userId, role);
-                if (result == null)
-                {
-                    return BadRequest();
-                }
-
-                var updatedUserList = await this.roleService.GetUsersOfRole(role, page, order, 20);
-                return Ok(updatedUserList);
-            }
-            catch (ArgumentException e)
-            {
-                var errors = new ErrorViewModel() { Errors = new string[] { e.Message } };
-                return NotFound(errors);
-            }
-            catch
-            {
-                return StatusCode(503);
-            }
+            return NoContent();
         }
     }
 }
