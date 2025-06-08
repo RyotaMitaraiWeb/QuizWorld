@@ -35,9 +35,22 @@ namespace QuizWorld.Web.Services
             return Result<string, AddRoleError>.Success(data.UserId);
         }
 
-        public Task<Result<string, RemoveRoleError>> RemoveRoleFromUser(ChangeRoleViewModel data)
+        public async Task<Result<string, RemoveRoleError>> RemoveRoleFromUser(ChangeRoleViewModel data)
         {
-            throw new NotImplementedException();
+            ApplicationUser? user = await _userManager.FindByIdAsync(data.UserId);
+            if (user is null)
+            {
+                return Result<string, RemoveRoleError>.Failure(RemoveRoleError.UserDoesNotExist);
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+            if (!roles.Contains(data.Role))
+            {
+                return Result<string, RemoveRoleError>.Failure(RemoveRoleError.UserDoesNotHaveRoleInFirstPlace);
+            }
+
+            await _userManager.RemoveFromRoleAsync(user, data.Role);
+            return Result<string, RemoveRoleError>.Success(data.UserId);
         }
 
         public async Task<ListUsersViewModel> SearchUsers(SearchUsersParameters parameters)

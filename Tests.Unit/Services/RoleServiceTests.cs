@@ -70,6 +70,48 @@ namespace Tests.Unit.Services
             Assert.That(result.IsSuccess, Is.True);
         }
 
+        [Test]
+        public async Task Test_RemoveRoleFromUserReturnsErrorWhenTheUserDoesNotExist()
+        {
+            UserManager.FindByIdAsync(ChangeRoleData.UserId)
+                .Returns((ApplicationUser?)null);
+
+            var result = await RoleService.RemoveRoleFromUser(ChangeRoleData);
+            Assert.That(result.Error, Is.EqualTo(RemoveRoleError.UserDoesNotExist));
+        }
+
+        [Test]
+        public async Task Test_RemoveRoleFromUserReturnsErrorWhenTheRoleIsNotGivenInFirstPlace()
+        {
+            var user = CreateUser(Roles.Moderator);
+            UserManager
+                .FindByIdAsync(ChangeRoleData.UserId)
+                .Returns(user);
+
+            UserManager
+                .GetRolesAsync(user)
+                .Returns([Roles.User]);
+
+            var result = await RoleService.RemoveRoleFromUser(ChangeRoleData);
+            Assert.That(result.Error, Is.EqualTo(RemoveRoleError.UserDoesNotHaveRoleInFirstPlace));
+        }
+
+        [Test]
+        public async Task Test_RemoveRoleFromUserReturnsSuccessWhenSuccessful()
+        {
+            var user = CreateUser(Roles.Moderator, Roles.User);
+            UserManager
+                .FindByIdAsync(ChangeRoleData.UserId)
+                .Returns(user);
+
+            UserManager
+                .GetRolesAsync(user)
+                .Returns([Roles.Moderator, Roles.User]);
+
+            var result = await RoleService.RemoveRoleFromUser(ChangeRoleData);
+            Assert.That(result.IsSuccess, Is.True);
+        }
+
         [TearDown]
         public void Teardown()
         {
