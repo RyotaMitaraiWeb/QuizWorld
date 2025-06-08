@@ -7,7 +7,7 @@ using QuizWorld.Infrastructure.Data.Entities.Identity;
 
 namespace QuizWorld.Infrastructure.AuthConfig.Handlers
 {
-    public class CanViewLogsHandler(UserManager<ApplicationUser> userManager)
+    public class HasRequiredRolesHandler(UserManager<ApplicationUser> userManager)
         : AuthorizationHandler<HasRolesRequirement>
     {
         private readonly UserManager<ApplicationUser> _userManager = userManager;
@@ -44,6 +44,6 @@ namespace QuizWorld.Infrastructure.AuthConfig.Handlers
             return [.. roles];
         }
 
-        public const string Name = "CanViewLogsPolicy";
+        public const string Name = "HasRequiredRolesPolicy";
     }
 }

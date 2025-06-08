@@ -41,7 +41,7 @@ namespace QuizWorld.Web.Areas.Administration.Controllers
         [ApiVersion("2.0")]
         [NotFoundException]
         [Authorize(
-            Policy = CanViewLogsHandler.Name)]
+            Policy = HasRequiredRolesHandler.Name)]
         public async Task<IActionResult> GetLogs([FromQuery]SearchLogsParameters searchParameters)
         {
             var logs = await _logger.RetrieveLogs(searchParameters);

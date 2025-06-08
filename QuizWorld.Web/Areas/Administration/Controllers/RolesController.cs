@@ -1,5 +1,9 @@
 ﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using QuizWorld.Common.Constants.Roles;
+using QuizWorld.Common.Policy;
 using QuizWorld.Common.Search;
 using QuizWorld.ViewModels.Roles;
 using QuizWorld.Web.Contracts.Roles;
@@ -9,6 +13,7 @@ namespace QuizWorld.Web.Areas.Administration.Controllers
 {
     [Route("roles")]
     [ApiVersion("2.0")]
+    [Authorize(Policy = PolicyNames.CanInteractWithRoles)]
     public class RolesController(IRoleService roleService) : BaseController
     {
         private readonly IRoleService _roleService = roleService;

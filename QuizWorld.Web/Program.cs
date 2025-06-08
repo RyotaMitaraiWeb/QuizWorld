@@ -44,6 +44,7 @@ using QuizWorld.Web.Filters;
 using QuizWorld.Infrastructure.AuthConfig.Handlers;
 using QuizWorld.Infrastructure.AuthConfig.Requirements;
 using Microsoft.AspNetCore.Authorization.Policy;
+using QuizWorld.Common.Policy;
 
 namespace QuizWorld.Web
 {
@@ -94,16 +95,16 @@ namespace QuizWorld.Web
             builder.Services.AddScoped<IAuthorizationHandler, CanPerformOwnerActionHandler>();
             builder.Services.AddScoped<IAuthorizationHandler, CanAccessLogsHandler>();
             builder.Services.AddScoped<IAuthorizationHandler, CanEditAndDeleteQuizzesHandler>();
-            builder.Services.AddScoped<IAuthorizationHandler, CanViewLogsHandler>();
+            builder.Services.AddScoped<IAuthorizationHandler, HasRequiredRolesHandler>();
             builder.Services.AddSingleton<IAuthorizationHandler, CreatedTheQuizHandler>();
             builder.Services.AddScoped<LogEditOrDeleteActivityFilter>();
             builder.Services.AddSingleton<AuthorizationMiddlewareResultHandler>();
-
             builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler>(sp =>
             {
                 var defaultHandler = sp.GetRequiredService<AuthorizationMiddlewareResultHandler>();
                 return new To404NotFoundMiddlewareResultHandler(defaultHandler);
             });
+
             builder.Services.AddDbContext<QuizWorldDbContext>(options =>
             {
                 SqlConnectionStringBuilder connBuilder = new()
@@ -244,7 +245,11 @@ namespace QuizWorld.Web
                     policy.RequireAuthenticatedUser();
                     policy.Requirements.Add(new CanEditAndDeleteQuizzesRequirement(Roles.Moderator));
                 })
-                .AddPolicy(CanViewLogsHandler.Name, policy =>
+                .AddPolicy(HasRequiredRolesHandler.Name, policy =>
+                {
+                    policy.Requirements.Add(new HasRolesRequirement(Roles.Admin));
+                })
+                .AddPolicy(PolicyNames.CanInteractWithRoles, policy =>
                 {
                     policy.Requirements.Add(new HasRolesRequirement(Roles.Admin));
                 });

@@ -12,10 +12,10 @@ using System.Security.Claims;
 
 namespace Tests.Unit.Policy
 {
-    public class CanViewLogsHandlerTests
+    public class HasRequiredRoleHandlerTests
     {
         public DefaultHttpContext HttpContext { get; set; }
-        public CanViewLogsHandler CanViewLogsHandler { get; set; }
+        public HasRequiredRolesHandler CanViewLogsHandler { get; set; }
         public UserManager<ApplicationUser> UserManager { get; set; }
         public Guid UserId { get; set; }
 
@@ -24,7 +24,7 @@ namespace Tests.Unit.Policy
         {
             HttpContext = new DefaultHttpContext();
             UserManager = MockUserManager.Get();
-            CanViewLogsHandler = new CanViewLogsHandler(UserManager);
+            CanViewLogsHandler = new HasRequiredRolesHandler(UserManager);
             UserId = Guid.NewGuid();
         }
 
