@@ -7,7 +7,7 @@ using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Infrastructure.Extensions;
-using QuizWorld.Web.Services.RoleService;
+using QuizWorld.Web.Services.Legacy;
 
 namespace QuizWorld.Tests.Services.RoleServiceUnitTests
 {
