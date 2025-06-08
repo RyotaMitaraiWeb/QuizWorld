@@ -51,6 +51,7 @@ namespace QuizWorld.Web.Areas.Administration.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ServiceFilter(typeof(LogRoleChangeFilter))]
         public async Task<IActionResult> RemoveRoleFromUser(ChangeRoleViewModel model)
         {
             var result = await _roleService.RemoveRoleFromUser(model);
