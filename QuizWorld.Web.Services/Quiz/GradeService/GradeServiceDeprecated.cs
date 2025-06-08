@@ -4,21 +4,17 @@ using QuizWorld.Infrastructure.Data.Entities.Quiz;
 using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Question;
 using QuizWorld.Web.Contracts.Quiz;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QuizWorld.Web.Services.GradeService
 {
+    [Obsolete]
     /// <summary>
     /// A service for retrieving correct answers of quizzes or questions.
     /// </summary>
-    public class GradeService : IGradeService
+    public class GradeServiceDeprecated : IGradeServiceDeprecated
     {
         private readonly IRepository repository;
-        public GradeService(IRepository repository)
+        public GradeServiceDeprecated(IRepository repository)
         {
             this.repository = repository;
         }

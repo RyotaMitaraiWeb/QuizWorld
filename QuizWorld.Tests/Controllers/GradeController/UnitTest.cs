@@ -14,15 +14,15 @@ namespace QuizWorld.Tests.Controllers.GradeControllerUnitTests
 {
     public class UnitTest
     {
-        public Mock<IGradeService> gradeServiceMock;
-        public GradeController controller;
+        public Mock<IGradeServiceDeprecated> gradeServiceMock;
+        public GradeControllerV1 controller;
         public GradedQuestionViewModel question;
 
         [SetUp]
         public void Setup()
         {
-            this.gradeServiceMock = new Mock<IGradeService>();
-            this.controller = new GradeController(this.gradeServiceMock.Object);
+            this.gradeServiceMock = new Mock<IGradeServiceDeprecated>();
+            this.controller = new GradeControllerV1(this.gradeServiceMock.Object);
             this.question = new GradedQuestionViewModel()
             {
                 Id = "a",

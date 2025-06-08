@@ -12,7 +12,7 @@ namespace QuizWorld.Tests.Services.GradeServiceInMemoryTests
 {
     public class InMemory
     {
-        public GradeService service;
+        public GradeServiceDeprecated service;
         public TestDB testDb;
         public Repository repository;
 
@@ -21,7 +21,7 @@ namespace QuizWorld.Tests.Services.GradeServiceInMemoryTests
         {
             this.testDb = new TestDB();
             this.repository = this.testDb.repository;
-            this.service = new GradeService(this.repository);
+            this.service = new GradeServiceDeprecated(this.repository);
         }
 
         [Test]

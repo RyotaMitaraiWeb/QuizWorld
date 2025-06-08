@@ -16,7 +16,7 @@ namespace QuizWorld.Tests.Services.GradeServiceUnitTests
     public class UnitTest
     {
         public Mock<IRepository> repositoryMock;
-        public GradeService service;
+        public GradeServiceDeprecated service;
         public GradedQuestionViewModel question;
        
 
@@ -24,7 +24,7 @@ namespace QuizWorld.Tests.Services.GradeServiceUnitTests
         public void Setup()
         {
             this.repositoryMock = new Mock<IRepository>();
-            this.service = new GradeService(this.repositoryMock.Object);
+            this.service = new GradeServiceDeprecated(this.repositoryMock.Object);
             this.question = new GradedQuestionViewModel()
             {
                 Answers = new List<AnswerViewModel>()

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QuizWorld.Web.Contracts.Quiz;
@@ -8,11 +9,13 @@ namespace QuizWorld.Web.Controllers
     [Route("/grade")]
     [ApiController]
     [AllowAnonymous]
-    public class GradeController : BaseController
+    [ApiVersion("1.0")]
+    [Obsolete]
+    public class GradeControllerV1 : BaseController
     {
-        private readonly IGradeService gradeService;
+        private readonly IGradeServiceDeprecated gradeService;
 
-        public GradeController(IGradeService gradeService)
+        public GradeControllerV1(IGradeServiceDeprecated gradeService)
         {
             this.gradeService = gradeService;
         }

@@ -87,7 +87,7 @@ namespace QuizWorld.Web
             builder.Services.AddScoped<IRepository, Repository>();
             builder.Services.AddScoped<IQuizServiceDeprecated, QuizServiceDeprecated>();
             builder.Services.AddScoped<IQuizService, QuizService>();
-            builder.Services.AddScoped<IGradeService, GradeService>();
+            builder.Services.AddScoped<IGradeServiceDeprecated, GradeServiceDeprecated>();
             builder.Services.AddScoped<IActivityLogger, ActivityLogger>();
             builder.Services.AddScoped<IRoleServiceDeprecated, RoleServiceDeprecated>();
             builder.Services.AddScoped<IRoleService, RoleService>();
