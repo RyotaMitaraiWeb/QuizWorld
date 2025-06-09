@@ -3,7 +3,7 @@ using QuizWorld.Infrastructure.Data.Redis.Models;
 using Redis.OM;
 using Redis.OM.Searching;
 
-namespace QuizWorld.Web.Services.JsonWebToken
+namespace QuizWorld.Web.Services.Legacy
 {
     /// <summary>
     /// A service to manage a Redis-based of JWTs. A blacklisted JWT will be rejected

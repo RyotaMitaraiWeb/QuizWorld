@@ -13,7 +13,6 @@ using QuizWorld.Web.Services;
 using Redis.OM.Skeleton.HostedServices;
 using Redis.OM;
 using QuizWorld.Web.Contracts.JsonWebToken;
-using QuizWorld.Web.Services.JsonWebToken;
 using QuizWorld.Infrastructure.Filters.GuestsOnly;
 using QuizWorld.Infrastructure.AuthConfig;
 using QuizWorld.Infrastructure.AuthConfig.CanPerformOwnerAction;

@@ -4,9 +4,9 @@ using Microsoft.Extensions.Options;
 using Moq;
 using QuizWorld.Web.Contracts.JsonWebToken;
 using QuizWorld.ViewModels.Authentication;
-using QuizWorld.Web.Services;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Common.Constants.Roles;
+using QuizWorld.Web.Services.Legacy;
 
 namespace QuizWorld.Tests.Services.UserServiceTest
 {

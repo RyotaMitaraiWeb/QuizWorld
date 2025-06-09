@@ -6,7 +6,7 @@ using QuizWorld.Web.Contracts;
 using QuizWorld.Web.Contracts.JsonWebToken;
 
 
-namespace QuizWorld.Web.Services
+namespace QuizWorld.Web.Services.Legacy
 {
     [Obsolete("Deprecated, use AuthService")]
     public class UserService : IUserService
@@ -39,7 +39,7 @@ namespace QuizWorld.Web.Services
                 NormalizedUserName = user.Username.ToUpper()
             };
 
-            var result = await this.userManager.CreateAsync(applicationUser, user.Password);
+            var result = await userManager.CreateAsync(applicationUser, user.Password);
             if (result == null)
             {
                 return null;
@@ -51,7 +51,7 @@ namespace QuizWorld.Web.Services
                 return null;
             }
 
-            await this.userManager.AddToRoleAsync(applicationUser, "User");
+            await userManager.AddToRoleAsync(applicationUser, "User");
 
             return new UserViewModel()
             {
@@ -71,13 +71,13 @@ namespace QuizWorld.Web.Services
         /// </returns>
         public async Task<UserViewModel?> Login(LoginViewModel user)
         {
-            var applicationUser = await this.userManager.FindByNameAsync(user.Username);
+            var applicationUser = await userManager.FindByNameAsync(user.Username);
             if (applicationUser == null)
             {
                 return null;
             }
 
-            var passwordMatches = await this.userManager.CheckPasswordAsync(applicationUser, user.Password);
+            var passwordMatches = await userManager.CheckPasswordAsync(applicationUser, user.Password);
             if (!passwordMatches)
             {
                 return null;
@@ -95,14 +95,14 @@ namespace QuizWorld.Web.Services
 
         public async Task<bool> Logout(string jwt)
         {
-            var result = await this.jwtService.InvalidateJWT(jwt);
+            var result = await jwtService.InvalidateJWT(jwt);
             return result;
 
         }
 
         public async Task<bool> CheckIfUsernameIsTaken(string username)
         {
-            var user = await this.userManager.FindByNameAsync(username);
+            var user = await userManager.FindByNameAsync(username);
             return user != null;
         }
 
@@ -115,13 +115,13 @@ namespace QuizWorld.Web.Services
                 return null;
             }
 
-            var user = await this.userManager.FindByIdAsync(id);
+            var user = await userManager.FindByIdAsync(id);
             if (user == null)
             {
                 return null;
             }
 
-            var roles = await this.userManager.GetRolesAsync(user);
+            var roles = await userManager.GetRolesAsync(user);
             if (roles.Count > 1)
             {
                 roles.Remove(Roles.User);
@@ -139,14 +139,14 @@ namespace QuizWorld.Web.Services
 
         public async Task<UserViewModel?> GetUserByUsername(string username)
         {
-            ApplicationUser? appUser = await this.userManager.FindByNameAsync(username);
+            ApplicationUser? appUser = await userManager.FindByNameAsync(username);
 
             if (appUser == null)
             {
                 return null;
             }
 
-            var roles = await this.userManager.GetRolesAsync(appUser);
+            var roles = await userManager.GetRolesAsync(appUser);
 
             var model = new UserViewModel()
             {

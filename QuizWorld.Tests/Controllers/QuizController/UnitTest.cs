@@ -9,11 +9,6 @@ using QuizWorld.ViewModels.Quiz;
 using QuizWorld.Web.Contracts.JsonWebToken;
 using QuizWorld.Web.Contracts.Quiz;
 using QuizWorld.Web.Controllers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QuizWorld.Tests.Controllers.QuizControllerUnitTests
 {
