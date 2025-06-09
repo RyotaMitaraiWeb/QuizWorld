@@ -12,6 +12,7 @@ namespace QuizWorld.Web.Legacy.Controllers
 {
     [Route("auth")]
     [ApiVersion("1.0")]
+    [Obsolete]
     public class AuthenticationControllerV1 : BaseController
     {
         private readonly IJwtServiceDeprecated jwtService;
