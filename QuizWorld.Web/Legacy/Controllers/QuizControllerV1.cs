@@ -13,7 +13,7 @@ using QuizWorld.ViewModels.Question;
 using QuizWorld.ViewModels.Quiz;
 using QuizWorld.Web.Contracts.Legacy;
 
-namespace QuizWorld.Web.Controllers
+namespace QuizWorld.Web.Legacy.Controllers
 {
     [Route("quiz")]
     [ApiController]
@@ -39,7 +39,7 @@ namespace QuizWorld.Web.Controllers
         {
             try
             {
-                var catalogue = await this.quizService.GetAllQuizzes(page, category, order, 6);
+                var catalogue = await quizService.GetAllQuizzes(page, category, order, 6);
                 return Ok(catalogue);
             }
             catch
@@ -59,7 +59,7 @@ namespace QuizWorld.Web.Controllers
         {
             try
             {
-                var catalogue = await this.quizService.GetUserQuizzes(id, page, category, order, 6);
+                var catalogue = await quizService.GetUserQuizzes(id, page, category, order, 6);
                 return Ok(catalogue);
             }
             catch (ArgumentException)
@@ -83,7 +83,7 @@ namespace QuizWorld.Web.Controllers
         {
             try
             {
-                var catalogue = await this.quizService.GetQuizzesByQuery(search, page, category, order, 6);
+                var catalogue = await quizService.GetQuizzesByQuery(search, page, category, order, 6);
                 return Ok(catalogue);
             }
             catch
@@ -97,10 +97,10 @@ namespace QuizWorld.Web.Controllers
         {
             try
             {
-                string jwt = this.jwtService.RemoveBearer(token);
-                UserViewModel user = this.jwtService.DecodeJWT(jwt);
+                string jwt = jwtService.RemoveBearer(token);
+                UserViewModel user = jwtService.DecodeJWT(jwt);
 
-                int id = await this.quizService.CreateQuiz(quiz, user.Id);
+                int id = await quizService.CreateQuiz(quiz, user.Id);
                 var response = new CreatedResponseViewModel() { Id = id };
 
                 return Created("/quiz/" + id, response);
@@ -122,7 +122,7 @@ namespace QuizWorld.Web.Controllers
         {
             try
             {
-                var quiz = await this.quizService.GetQuizById(id);
+                var quiz = await quizService.GetQuizById(id);
                 if (quiz == null)
                 {
                     return NotFound();
@@ -143,7 +143,7 @@ namespace QuizWorld.Web.Controllers
         {
             try
             {
-                var result = await this.quizService.DeleteQuizById(id);
+                var result = await quizService.DeleteQuizById(id);
                 if (result == null)
                 {
                     return NotFound();
@@ -162,7 +162,7 @@ namespace QuizWorld.Web.Controllers
         [Route("{id}/edit")]
         public async Task<ActionResult> GetQuizForEdit(int id)
         {
-            return Ok(await this.quizService.GetQuizForEdit(id));
+            return Ok(await quizService.GetQuizForEdit(id));
         }
 
         [HttpPut]
@@ -172,7 +172,7 @@ namespace QuizWorld.Web.Controllers
         {
             try
             {
-                var result = await this.quizService.EditQuizById(id, quiz);
+                var result = await quizService.EditQuizById(id, quiz);
                 if (result == null)
                 {
                     return NotFound();

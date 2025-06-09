@@ -7,7 +7,7 @@ using QuizWorld.ViewModels.Authentication;
 using QuizWorld.ViewModels.Common;
 using QuizWorld.ViewModels.Quiz;
 using QuizWorld.Web.Contracts.Legacy;
-using QuizWorld.Web.Controllers;
+using QuizWorld.Web.Legacy.Controllers;
 
 namespace QuizWorld.Tests.Controllers.QuizControllerUnitTests
 {

@@ -7,7 +7,7 @@ using QuizWorld.Infrastructure.Legacy.ModelBinders.SortingOrderModelBinder;
 using QuizWorld.ViewModels.Common;
 using QuizWorld.Web.Contracts.Legacy;
 
-namespace QuizWorld.Web.Areas.Administration.Controllers
+namespace QuizWorld.Web.Legacy.Controllers
 {
     [ApiController]
     [Route("/roles")]
@@ -33,7 +33,7 @@ namespace QuizWorld.Web.Areas.Administration.Controllers
         {
             try
             {
-                var users = await this.roleService.GetUsersByUsername(username, page, order);
+                var users = await roleService.GetUsersByUsername(username, page, order);
                 return Ok(users);
             }
             catch
@@ -54,7 +54,7 @@ namespace QuizWorld.Web.Areas.Administration.Controllers
         {
             try
             {
-                var users = await this.roleService.GetUsersOfRole(role, username ?? string.Empty, page, order, 20);
+                var users = await roleService.GetUsersOfRole(role, username ?? string.Empty, page, order, 20);
                 return Ok(users);
 
             }
@@ -79,13 +79,13 @@ namespace QuizWorld.Web.Areas.Administration.Controllers
         {
             try
             {
-                var result = await this.roleService.GiveUserRole(userId, role);
+                var result = await roleService.GiveUserRole(userId, role);
                 if (result == null)
                 {
                     return BadRequest();
                 }
 
-                var updatedUserList = await this.roleService.GetUsersOfRole(role, page, order, 20);
+                var updatedUserList = await roleService.GetUsersOfRole(role, page, order, 20);
                 return Ok(updatedUserList);
             }
             catch (ArgumentException e)
@@ -110,13 +110,13 @@ namespace QuizWorld.Web.Areas.Administration.Controllers
         {
             try
             {
-                var result = await this.roleService.RemoveRoleFromUser(userId, role);
+                var result = await roleService.RemoveRoleFromUser(userId, role);
                 if (result == null)
                 {
                     return BadRequest();
                 }
 
-                var updatedUserList = await this.roleService.GetUsersOfRole(role, page, order, 20);
+                var updatedUserList = await roleService.GetUsersOfRole(role, page, order, 20);
                 return Ok(updatedUserList);
             }
             catch (ArgumentException e)

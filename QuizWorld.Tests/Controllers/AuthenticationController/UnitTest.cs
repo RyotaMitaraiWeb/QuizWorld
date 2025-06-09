@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using QuizWorld.ViewModels.Authentication;
-using QuizWorld.Web.Areas.Authentication.Controllers;
 using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Web.Contracts.Legacy;
+using QuizWorld.Web.Legacy.Controllers;
 
 namespace QuizWorld.Tests.Controllers.AuthenticationControllerUnitTests
 {

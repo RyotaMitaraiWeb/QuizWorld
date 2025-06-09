@@ -8,7 +8,7 @@ using Asp.Versioning;
 using QuizWorld.Web.Contracts.Legacy;
 using QuizWorld.Infrastructure.Legacy.Filters.GuestsOnly;
 
-namespace QuizWorld.Web.Areas.Authentication.Controllers
+namespace QuizWorld.Web.Legacy.Controllers
 {
     [Route("auth")]
     [ApiVersion("1.0")]
@@ -35,14 +35,14 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
         {
             try
             {
-                var user = await this.userService.Register(register);
+                var user = await userService.Register(register);
                 if (user == null)
                 {
                     var errors = new ErrorViewModel() { Errors = new string[] { "Something went wrong while registering you, please try again or check your input!" } };
                     return BadRequest(errors);
                 }
 
-                string jwt = this.jwtService.GenerateJWT(user);
+                string jwt = jwtService.GenerateJWT(user);
                 var session = new SessionViewModel()
                 {
                     Id = user.Id,
@@ -55,7 +55,7 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
             }
             catch
             {
-                var errors = new ErrorViewModel() { Errors = new string[] { InvalidActionsMessages.RequestFailed } };
+                var errors = new ErrorViewModel() { Errors = new string[] { RequestFailed } };
                 return StatusCode(503, errors);
             }
         }
@@ -67,7 +67,7 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
         {
             try
             {
-                var user = await this.userService.GetUser(id);
+                var user = await userService.GetUser(id);
                 if (user == null)
                 {
                     return NotFound();
@@ -88,7 +88,7 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
         {
             try
             {
-                var user = await this.userService.GetUserByUsername(username);
+                var user = await userService.GetUserByUsername(username);
                 if (user == null)
                 {
                     return NotFound();
@@ -110,14 +110,14 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
         {
             try
             {
-                var user = await this.userService.Login(login);
+                var user = await userService.Login(login);
                 if (user == null)
                 {
-                    var errors = new ErrorViewModel() { Errors = new string[] { InvalidActionsMessages.FailedLogin } };
+                    var errors = new ErrorViewModel() { Errors = new string[] { FailedLogin } };
                     return Unauthorized(errors);
                 }
 
-                string jwt = this.jwtService.GenerateJWT(user);
+                string jwt = jwtService.GenerateJWT(user);
                 var session = new SessionViewModel()
                 {
                     Id = user.Id,
@@ -132,7 +132,7 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
             
             catch
             {
-                var errors = new ErrorViewModel() { Errors = new string[] { InvalidActionsMessages.RequestFailed } };
+                var errors = new ErrorViewModel() { Errors = new string[] { RequestFailed } };
                 return StatusCode(503, errors);
             }
         }
@@ -141,10 +141,10 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
         [Route("session")]
         public async Task<IActionResult> Session([FromHeader(Name = "Authorization")] string? jwt)
         {
-            string token = this.jwtService.RemoveBearer(jwt);
+            string token = jwtService.RemoveBearer(jwt);
             try
             {
-                var user = this.jwtService.DecodeJWT(token);
+                var user = jwtService.DecodeJWT(token);
                 var session = new SessionViewModel()
                 {
                     Token = token,
@@ -170,7 +170,7 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
         {
             try
             {
-                var exists = await this.userService.CheckIfUsernameIsTaken(username);
+                var exists = await userService.CheckIfUsernameIsTaken(username);
                 if (exists == false)
                 {
                     return NotFound();
@@ -180,7 +180,7 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
             }
             catch
             {
-                var errors = new ErrorViewModel() { Errors = new string[] { InvalidActionsMessages.RequestFailed } };
+                var errors = new ErrorViewModel() { Errors = new string[] { RequestFailed } };
                 return StatusCode(503, errors);
             }
         }
@@ -189,10 +189,10 @@ namespace QuizWorld.Web.Areas.Authentication.Controllers
         [Route("logout")]
         public async Task<IActionResult> Logout([FromHeader(Name = "Authorization")] string? jwt)
         {
-            string token = this.jwtService.RemoveBearer(jwt);
+            string token = jwtService.RemoveBearer(jwt);
             try
             {
-                bool succeeded = await this.jwtService.InvalidateJWT(token);
+                bool succeeded = await jwtService.InvalidateJWT(token);
                 if (!succeeded)
                 {
                     return Forbid("Bearer");

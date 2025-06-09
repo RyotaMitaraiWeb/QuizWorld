@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QuizWorld.Web.Contracts.Legacy;
 
-namespace QuizWorld.Web.Controllers
+namespace QuizWorld.Web.Legacy.Controllers
 {
     [Route("/grade")]
     [ApiController]
@@ -26,7 +26,7 @@ namespace QuizWorld.Web.Controllers
         {
             try
             {
-                var result = await this.gradeService.GetCorrectAnswersForQuestionById(id, version);
+                var result = await gradeService.GetCorrectAnswersForQuestionById(id, version);
                 if (result == null)
                 {
                     return NotFound();
@@ -50,7 +50,7 @@ namespace QuizWorld.Web.Controllers
         {
             try
             {
-                var result = await this.gradeService.GetCorrectAnswersForQuestionsByQuizId(id, version);
+                var result = await gradeService.GetCorrectAnswersForQuestionsByQuizId(id, version);
                 if (result == null)
                 {
                     return NotFound();
