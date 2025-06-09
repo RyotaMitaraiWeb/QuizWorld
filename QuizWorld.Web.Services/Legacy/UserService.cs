@@ -2,8 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.ViewModels.Authentication;
-using QuizWorld.Web.Contracts;
-using QuizWorld.Web.Contracts.JsonWebToken;
+using QuizWorld.Web.Contracts.Legacy;
 
 
 namespace QuizWorld.Web.Services.Legacy

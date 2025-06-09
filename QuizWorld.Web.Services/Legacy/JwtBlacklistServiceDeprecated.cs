@@ -1,7 +1,7 @@
-﻿using QuizWorld.Web.Contracts.JsonWebToken;
-using QuizWorld.Infrastructure.Data.Redis.Models;
+﻿using QuizWorld.Infrastructure.Data.Redis.Models;
 using Redis.OM;
 using Redis.OM.Searching;
+using QuizWorld.Web.Contracts.Legacy;
 
 namespace QuizWorld.Web.Services.Legacy
 {

@@ -1,6 +1,6 @@
 ﻿using QuizWorld.ViewModels.Question;
 
-namespace QuizWorld.Web.Contracts.Quiz
+namespace QuizWorld.Web.Contracts.Legacy
 {
     [Obsolete]
     public interface IGradeServiceDeprecated

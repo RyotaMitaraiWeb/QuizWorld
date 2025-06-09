@@ -12,7 +12,6 @@ using QuizWorld.Web.Contracts;
 using QuizWorld.Web.Services;
 using Redis.OM.Skeleton.HostedServices;
 using Redis.OM;
-using QuizWorld.Web.Contracts.JsonWebToken;
 using QuizWorld.Infrastructure.Filters.GuestsOnly;
 using QuizWorld.Infrastructure.AuthConfig;
 using QuizWorld.Infrastructure.AuthConfig.CanPerformOwnerAction;
@@ -40,6 +39,7 @@ using QuizWorld.Infrastructure.AuthConfig.Handlers;
 using QuizWorld.Infrastructure.AuthConfig.Requirements;
 using Microsoft.AspNetCore.Authorization.Policy;
 using QuizWorld.Common.Policy;
+using QuizWorld.Web.Contracts.Legacy;
 
 namespace QuizWorld.Web
 {

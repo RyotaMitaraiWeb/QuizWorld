@@ -2,11 +2,10 @@ using Azure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using QuizWorld.Web.Contracts.JsonWebToken;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.Web.Areas.Authentication.Controllers;
-using QuizWorld.Web.Contracts;
 using QuizWorld.Common.Constants.Roles;
+using QuizWorld.Web.Contracts.Legacy;
 
 namespace QuizWorld.Tests.Controllers.AuthenticationControllerUnitTests
 {

@@ -6,8 +6,7 @@ using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.ViewModels.Common;
 using QuizWorld.ViewModels.Quiz;
-using QuizWorld.Web.Contracts.JsonWebToken;
-using QuizWorld.Web.Contracts.Quiz;
+using QuizWorld.Web.Contracts.Legacy;
 using QuizWorld.Web.Controllers;
 
 namespace QuizWorld.Tests.Controllers.QuizControllerUnitTests

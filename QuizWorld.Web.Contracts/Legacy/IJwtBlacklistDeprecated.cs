@@ -1,4 +1,4 @@
-﻿namespace QuizWorld.Web.Contracts.JsonWebToken
+﻿namespace QuizWorld.Web.Contracts.Legacy
 {
     [Obsolete]
     public interface IJwtBlacklistDeprecated

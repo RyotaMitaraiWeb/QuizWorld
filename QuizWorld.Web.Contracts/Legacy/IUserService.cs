@@ -1,6 +1,6 @@
 ﻿using QuizWorld.ViewModels.Authentication;
 
-namespace QuizWorld.Web.Contracts
+namespace QuizWorld.Web.Contracts.Legacy
 {
     [Obsolete("Deprecated. Use IAuthService")]
     public interface IUserService
