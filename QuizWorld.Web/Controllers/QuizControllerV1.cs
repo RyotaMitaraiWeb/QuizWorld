@@ -9,8 +9,7 @@ using QuizWorld.ViewModels.Authentication;
 using QuizWorld.ViewModels.Common;
 using QuizWorld.ViewModels.Question;
 using QuizWorld.ViewModels.Quiz;
-using QuizWorld.Web.Contracts.JsonWebToken;
-using QuizWorld.Web.Contracts.Quiz;
+using QuizWorld.Web.Contracts.Legacy;
 
 namespace QuizWorld.Web.Controllers
 {

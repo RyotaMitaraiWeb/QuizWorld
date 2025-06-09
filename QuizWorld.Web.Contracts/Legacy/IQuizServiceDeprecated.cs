@@ -1,6 +1,6 @@
 ﻿using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.ViewModels.Quiz;
-namespace QuizWorld.Web.Contracts.Quiz
+namespace QuizWorld.Web.Contracts.Legacy
 {
     [Obsolete("Deprecated")]
     public interface IQuizServiceDeprecated

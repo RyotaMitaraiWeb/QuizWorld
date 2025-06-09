@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Infrastructure.ModelBinders;
 using QuizWorld.ViewModels.Common;
-using QuizWorld.Web.Contracts.Roles;
+using QuizWorld.Web.Contracts.Legacy;
 
 namespace QuizWorld.Web.Areas.Administration.Controllers
 {

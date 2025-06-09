@@ -6,7 +6,7 @@ using QuizWorld.Infrastructure.Extensions;
 using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Question;
 using QuizWorld.ViewModels.Quiz;
-using QuizWorld.Web.Contracts.Quiz;
+using QuizWorld.Web.Contracts.Legacy;
 
 namespace QuizWorld.Web.Services.Legacy
 {

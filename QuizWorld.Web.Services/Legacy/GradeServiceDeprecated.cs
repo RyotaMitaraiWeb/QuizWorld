@@ -3,7 +3,7 @@ using QuizWorld.Infrastructure;
 using QuizWorld.Infrastructure.Data.Entities.Quiz;
 using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Question;
-using QuizWorld.Web.Contracts.Quiz;
+using QuizWorld.Web.Contracts.Legacy;
 
 namespace QuizWorld.Web.Services.Legacy
 {

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Moq;
-using QuizWorld.Web.Contracts.JsonWebToken;
 using QuizWorld.Infrastructure.Filters.GuestsOnly;
 using System;
 using System.Collections.Generic;
@@ -11,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Filters;
+using QuizWorld.Web.Contracts.Legacy;
 
 namespace QuizWorld.Tests.Filters.GuestsOnly
 {

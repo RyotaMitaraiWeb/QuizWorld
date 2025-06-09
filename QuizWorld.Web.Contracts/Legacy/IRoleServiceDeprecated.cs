@@ -1,7 +1,7 @@
 ﻿using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.ViewModels.UserList;
 
-namespace QuizWorld.Web.Contracts.Roles
+namespace QuizWorld.Web.Contracts.Legacy
 {
     [Obsolete]
     public interface IRoleServiceDeprecated

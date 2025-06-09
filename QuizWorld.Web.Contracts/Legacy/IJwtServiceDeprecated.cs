@@ -1,6 +1,6 @@
 ﻿using QuizWorld.ViewModels.Authentication;
 
-namespace QuizWorld.Web.Contracts.JsonWebToken;
+namespace QuizWorld.Web.Contracts.Legacy;
 
 [Obsolete("Deprecated as part of the refactor")]
 public interface IJwtServiceDeprecated

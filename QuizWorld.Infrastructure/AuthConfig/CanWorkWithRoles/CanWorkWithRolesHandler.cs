@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.ViewModels.Authentication;
-using QuizWorld.Web.Contracts.JsonWebToken;
+using QuizWorld.Web.Contracts.Legacy;
 using QuizWorld.Web.Contracts.Logging;
 using System.Text;
 

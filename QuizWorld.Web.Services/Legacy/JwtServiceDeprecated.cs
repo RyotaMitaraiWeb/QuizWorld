@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using QuizWorld.Web.Contracts.JsonWebToken;
 using QuizWorld.ViewModels.Authentication;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using QuizWorld.Web.Contracts.Legacy;
 
 namespace QuizWorld.Web.Services.Legacy
 {

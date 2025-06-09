@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using QuizWorld.Web.Contracts.Quiz;
+using QuizWorld.Web.Contracts.Legacy;
 
 namespace QuizWorld.Web.Controllers
 {

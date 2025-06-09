@@ -1,7 +1,7 @@
 using Moq;
-using QuizWorld.Web.Contracts.JsonWebToken;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.Web.Services.Legacy;
+using QuizWorld.Web.Contracts.Legacy;
 
 namespace QuizWorld.Tests.Services.UserServiceTest
 {

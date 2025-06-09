@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Infrastructure.Data.Entities.Quiz;
 using QuizWorld.ViewModels.Authentication;
-using QuizWorld.Web.Contracts.JsonWebToken;
+using QuizWorld.Web.Contracts.Legacy;
 using QuizWorld.Web.Contracts.Logging;
 using System;
 using System.Collections.Generic;
