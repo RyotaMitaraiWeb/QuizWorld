@@ -7,7 +7,7 @@ using QuizWorld.ViewModels.Authentication;
 using QuizWorld.Web.Services;
 using static QuizWorld.Common.Errors.AuthError;
 
-namespace QuizWorld.Tests.Unit.Services
+namespace Tests.Unit.Services
 {
     public class AuthServiceTests
     {
@@ -48,7 +48,7 @@ namespace QuizWorld.Tests.Unit.Services
         
         public async Task Test_LoginReturnsErrorWhenUserDoesNotExist()
         {
-            this.UserManager.FindByNameAsync(ExampleLogin.Username)
+            UserManager.FindByNameAsync(ExampleLogin.Username)
                 .Returns((ApplicationUser?) null);
 
             var result = await AuthService.LoginAsync(ExampleLogin);
@@ -59,13 +59,13 @@ namespace QuizWorld.Tests.Unit.Services
         public async Task Test_LoginReturnsErrorWhenPasswordIsIncorrect()
         {
             var user = ExampleUser;
-            this.UserManager.FindByNameAsync(ExampleLogin.Username)
+            UserManager.FindByNameAsync(ExampleLogin.Username)
                 .Returns(user);
 
-            this.UserManager.CheckPasswordAsync(user, ExampleLogin.Password)
+            UserManager.CheckPasswordAsync(user, ExampleLogin.Password)
                 .Returns(false);
 
-            var result = await this.AuthService.LoginAsync(ExampleLogin);
+            var result = await AuthService.LoginAsync(ExampleLogin);
             Assert.That(result.Error, Is.EqualTo(FailedLoginError.WrongPassword));
         }
 
@@ -73,13 +73,13 @@ namespace QuizWorld.Tests.Unit.Services
         public async Task Test_LoginReturnsAUserWhenSuccessful()
         {
             var user = ExampleUser;
-            this.UserManager.FindByNameAsync(ExampleLogin.Username)
+            UserManager.FindByNameAsync(ExampleLogin.Username)
                 .Returns(user);
 
-            this.UserManager.CheckPasswordAsync(user, ExampleLogin.Password)
+            UserManager.CheckPasswordAsync(user, ExampleLogin.Password)
                 .Returns(true);
 
-            this.UserManager.GetRolesAsync(user)
+            UserManager.GetRolesAsync(user)
                 .Returns([Roles.User]);
 
             var result = await AuthService.LoginAsync(ExampleLogin);
