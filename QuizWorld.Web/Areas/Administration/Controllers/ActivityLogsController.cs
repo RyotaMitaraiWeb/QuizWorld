@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Common.Policy;
 using QuizWorld.Common.Search;
-using QuizWorld.Infrastructure.ModelBinders;
+using QuizWorld.Infrastructure.Legacy.ModelBinders.PaginationModelBinder;
+using QuizWorld.Infrastructure.Legacy.ModelBinders.SortingOrderModelBinder;
 using QuizWorld.Web.Contracts;
 using QuizWorld.Web.Filters;
 

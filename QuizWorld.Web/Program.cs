@@ -12,7 +12,6 @@ using QuizWorld.Web.Contracts;
 using QuizWorld.Web.Services;
 using Redis.OM.Skeleton.HostedServices;
 using Redis.OM;
-using QuizWorld.Infrastructure.Filters.GuestsOnly;
 using QuizWorld.Infrastructure.AuthConfig;
 using QuizWorld.Infrastructure.AuthConfig.CanPerformOwnerAction;
 using QuizWorld.Infrastructure;
@@ -37,6 +36,7 @@ using QuizWorld.Web.Contracts.Legacy;
 using QuizWorld.Infrastructure.AuthConfig.Legacy.CanAccessLogs;
 using QuizWorld.Infrastructure.AuthConfig.Legacy.CanPerformOwnerAction;
 using QuizWorld.Infrastructure.AuthConfig.Legacy.CanWorkWithRoles;
+using QuizWorld.Infrastructure.Legacy.Filters.GuestsOnly;
 
 namespace QuizWorld.Web
 {

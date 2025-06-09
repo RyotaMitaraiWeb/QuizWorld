@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuizWorld.Infrastructure.ModelBinders
+namespace QuizWorld.Infrastructure.Legacy.ModelBinders.SortingOrderModelBinder
 {
     [Obsolete("Use simple classes instead")]
     /// <summary>

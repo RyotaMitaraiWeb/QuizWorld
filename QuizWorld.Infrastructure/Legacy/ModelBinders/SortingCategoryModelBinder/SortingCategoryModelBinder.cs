@@ -7,7 +7,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuizWorld.Infrastructure.ModelBinders
+namespace QuizWorld.Infrastructure.Legacy.ModelBinders.SortingCategoryModelBinder
 {
     [Obsolete("Use simple classes instead")]
     /// <summary>

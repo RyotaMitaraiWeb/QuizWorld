@@ -5,8 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuizWorld.Infrastructure.Filters.GuestsOnly
+namespace QuizWorld.Infrastructure.Legacy.Filters.GuestsOnly
 {
+    [Obsolete]
     /// <summary>
     /// Prevents access to a given route or controller by logged in users. Only guests can
     /// access it.

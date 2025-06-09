@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace QuizWorld.Infrastructure.ModelBinders
+namespace QuizWorld.Infrastructure.Legacy.ModelBinders.PaginationModelBinder
 {
     [Obsolete("Use simple classes instead")]
     /// <summary>
