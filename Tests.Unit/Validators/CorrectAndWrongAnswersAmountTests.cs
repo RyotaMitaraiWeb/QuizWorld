@@ -4,12 +4,12 @@ using QuizWorld.ViewModels.Quiz;
 using QuizWorld.ViewModels.Validators;
 using System.ComponentModel.DataAnnotations;
 
-namespace QuizWorld.Tests.Validators.CorrectAndWrongAnswersAmountUnitTest
+namespace Tests.Unit.Validators
 {
-    public class UnitTest
+    public class CorrectAndWrongAnswersAmountTests
     {
-        public CorrectAndWrongAnswersAmount validator;
-        private IEnumerable<CreateAnswerViewModel> generateAnswers(int correctAmount, int wrongAmount)
+        public CorrectAndWrongAnswersAmount Validator;
+        private static List<CreateAnswerViewModel> GenerateAnswers(int correctAmount, int wrongAmount)
         {
             var answers = new List<CreateAnswerViewModel>();
 
@@ -33,9 +33,9 @@ namespace QuizWorld.Tests.Validators.CorrectAndWrongAnswersAmountUnitTest
             return answers;
         }
 
-        private CreateQuestionViewModel generateQuestion(QuestionTypes questionType, int correctAmount, int wrongAmount)
+        private static CreateQuestionViewModel GenerateQuestion(QuestionTypes questionType, int correctAmount, int wrongAmount)
         {
-            var answers = this.generateAnswers(correctAmount, wrongAmount);
+            var answers = GenerateAnswers(correctAmount, wrongAmount);
             return new CreateQuestionViewModel()
             {
                 Prompt = "valid prompt",
@@ -47,7 +47,7 @@ namespace QuizWorld.Tests.Validators.CorrectAndWrongAnswersAmountUnitTest
         [SetUp]
         public void Setup()
         {
-            this.validator = new CorrectAndWrongAnswersAmount();
+            Validator = new CorrectAndWrongAnswersAmount();
         }
 
         [Test]
@@ -57,12 +57,12 @@ namespace QuizWorld.Tests.Validators.CorrectAndWrongAnswersAmountUnitTest
         [TestCase(QuestionTypes.Text, 0, 0)]
         public void Test_CorrectAndWrongAnswersAmountConsidersItAnErrorIfCorrectAnswersAmountIsNotInRange(QuestionTypes type, int correctAmount, int wrongAmount)
         {
-            var question = this.generateQuestion(type, correctAmount, wrongAmount);
+            var question = GenerateQuestion(type, correctAmount, wrongAmount);
             var context = new ValidationContext(question);
 
             try
             {
-                validator.Validate(question.Answers, context);
+                Validator.Validate(question.Answers, context);
                 Assert.Fail("Validator should have thrown a validation error, but passed");
             }
             catch (ValidationException)
@@ -76,12 +76,12 @@ namespace QuizWorld.Tests.Validators.CorrectAndWrongAnswersAmountUnitTest
         [TestCase(QuestionTypes.Text, 1, 1)]
         public void Test_CorrectAndWrongAnswersAmountConsidersItAnErrorIfWrongAnswersAmountIsNotInRange(QuestionTypes type, int correctAmount, int wrongAmount)
         {
-            var question = this.generateQuestion(type, correctAmount, wrongAmount);
+            var question = GenerateQuestion(type, correctAmount, wrongAmount);
             var context = new ValidationContext(question);
 
             try
             {
-                validator.Validate(question.Answers, context);
+                Validator.Validate(question.Answers, context);
                 Assert.Fail("Validator should have thrown a validation error, but passed");
             }
             catch (ValidationException)
@@ -98,12 +98,12 @@ namespace QuizWorld.Tests.Validators.CorrectAndWrongAnswersAmountUnitTest
         [TestCase(QuestionTypes.Text, 1, 0)]
         public void Test_CorrectAndWrongAnswersAmountConsidersItASuccessIfCorrectAndWrongAnswersAmountIsInRange(QuestionTypes type, int correctAmount, int wrongAmount)
         {
-            var question = this.generateQuestion(type, correctAmount, wrongAmount);
+            var question = GenerateQuestion(type, correctAmount, wrongAmount);
             var context = new ValidationContext(question);
 
             try
             {
-                validator.Validate(question.Answers, context);
+                Validator.Validate(question.Answers, context);
                 Assert.Pass();
             }
             catch (ValidationException e)
@@ -115,12 +115,12 @@ namespace QuizWorld.Tests.Validators.CorrectAndWrongAnswersAmountUnitTest
         [Test]
         public void Test_HasEnoughAnswersConsidersItAnErrorIfPassedNull()
         {
-            var question = this.generateQuestion(QuestionTypes.SingleChoice, 1, 2);
+            var question = GenerateQuestion(QuestionTypes.SingleChoice, 1, 2);
             var context = new ValidationContext(question);
 
             try
             {
-                validator.Validate(null, context);
+                Validator.Validate(null, context);
                 Assert.Fail("Validator should have thrown, but passed");
             }
             catch (ValidationException)

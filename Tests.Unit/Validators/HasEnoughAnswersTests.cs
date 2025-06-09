@@ -1,18 +1,16 @@
 using QuizWorld.Common.Constants.Types;
-using QuizWorld.Infrastructure.Data.Entities;
 using QuizWorld.ViewModels.Answer;
-using QuizWorld.ViewModels.Question;
 using QuizWorld.ViewModels.Quiz;
 using QuizWorld.ViewModels.Validators;
 using System.ComponentModel.DataAnnotations;
 
 
-namespace QuizWorld.Tests.Validators.HasEnoughAnswersUnitTests
+namespace Tests.Unit.Validators
 {
-    public class UnitTest
+    public class HasEnoughAnswersTests
     {
-        public HasEnoughAnswers validator;
-        private IEnumerable<CreateAnswerViewModel> generateAnswers(int amount)
+        public HasEnoughAnswers Validator;
+        private static List<CreateAnswerViewModel> GenerateAnswers(int amount)
         {
             var answers = new List<CreateAnswerViewModel>();
 
@@ -28,9 +26,9 @@ namespace QuizWorld.Tests.Validators.HasEnoughAnswersUnitTests
             return answers;
         }
 
-        private CreateQuestionViewModel generateQuestion(QuestionTypes type, int amount)
+        private static CreateQuestionViewModel GenerateQuestion(QuestionTypes type, int amount)
         {
-            var answers = this.generateAnswers(amount);
+            var answers = GenerateAnswers(amount);
             return new CreateQuestionViewModel()
             {
                 Prompt = "valid prompt",
@@ -42,7 +40,7 @@ namespace QuizWorld.Tests.Validators.HasEnoughAnswersUnitTests
         [SetUp]
         public void Setup()
         {
-            this.validator = new HasEnoughAnswers();
+            Validator = new HasEnoughAnswers();
         }
 
         [Test]
@@ -54,12 +52,12 @@ namespace QuizWorld.Tests.Validators.HasEnoughAnswersUnitTests
         [TestCase(QuestionTypes.Text, 16)]
         public void Test_HasEnoughAnswersConsidersItAnErrorIfAnswersAmountIsNotInRange(QuestionTypes type, int amount)
         {
-            var question = this.generateQuestion(type, amount);
+            var question = GenerateQuestion(type, amount);
             var context = new ValidationContext(question);
 
             try
             {
-                validator.Validate(question.Answers, context);
+                Validator.Validate(question.Answers, context);
                 Assert.Fail("Validator should have thrown, but passed");
             }
             catch (ValidationException)
@@ -81,12 +79,12 @@ namespace QuizWorld.Tests.Validators.HasEnoughAnswersUnitTests
         [TestCase(QuestionTypes.Text, 15)]
         public void Test_HasEnoughAnswersConsidersItASuccessIfQuestionHasEnoughAnswers(QuestionTypes type, int amount)
         {
-            var question = this.generateQuestion(type, amount);
+            var question = GenerateQuestion(type, amount);
             var context = new ValidationContext(question);
 
             try
             {
-                validator.Validate(question.Answers, context);
+                Validator.Validate(question.Answers, context);
                 Assert.Pass();
             }
             catch (ValidationException e)
@@ -99,12 +97,12 @@ namespace QuizWorld.Tests.Validators.HasEnoughAnswersUnitTests
         [Test]
         public void Test_HasEnoughAnswersConsidersItAnErrorIfPassedNull()
         {
-            var question = this.generateQuestion(QuestionTypes.SingleChoice, 5);
+            var question = GenerateQuestion(QuestionTypes.SingleChoice, 5);
             var context = new ValidationContext(question);
 
             try
             {
-                validator.Validate(null, context);
+                Validator.Validate(null, context);
                 Assert.Fail("Validator should have thrown, but passed");
             }
             catch (ValidationException)
