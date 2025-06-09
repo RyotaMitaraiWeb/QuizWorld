@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 using QuizWorld.Common.Http;
 using QuizWorld.Web;
-using QuizWorld.Web.Contracts.Logging;
+using QuizWorld.Web.Contracts;
 using QuizWorld.Web.Controllers;
 using QuizWorld.Web.Filters;
 using System.Net.Http;

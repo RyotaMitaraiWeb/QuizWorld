@@ -1,13 +1,13 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Moq;
-using QuizWorld.Web.Contracts.JsonWebToken;
-using QuizWorld.Web.Services.JsonWebToken;
 using QuizWorld.ViewModels.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using QuizWorld.Web.Services.Legacy;
+using QuizWorld.Web.Contracts.Legacy;
 
 namespace QuizWorld.Tests.Services.JwtServiceUnitTests
 {

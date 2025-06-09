@@ -6,7 +6,7 @@ using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Common.Policy;
 using QuizWorld.Common.Search;
 using QuizWorld.ViewModels.Roles;
-using QuizWorld.Web.Contracts.Roles;
+using QuizWorld.Web.Contracts;
 using QuizWorld.Web.Filters;
 using static QuizWorld.Common.Errors.RoleError;
 

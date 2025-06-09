@@ -4,8 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using QuizWorld.Common.Http;
 using QuizWorld.Common.Util;
 using QuizWorld.ViewModels.Authentication;
-using QuizWorld.Web.Contracts.Authentication;
-using QuizWorld.Web.Contracts.Authentication.JsonWebToken;
+using QuizWorld.Web.Contracts;
 using static QuizWorld.Common.Errors.AuthError;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 

@@ -5,13 +5,12 @@ using QuizWorld.Common.Http;
 using QuizWorld.Common.Result;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.Web.Areas.Authentication.Controllers;
-using QuizWorld.Web.Contracts.Authentication;
-using QuizWorld.Web.Contracts.Authentication.JsonWebToken;
+using QuizWorld.Web.Contracts;
 using static QuizWorld.Common.Errors.AuthError;
 using static QuizWorld.Common.Results.JwtError;
 using static QuizWorld.Common.Results.JwtStoreError;
 
-namespace QuizWorld.Tests.Unit.Controllers
+namespace Tests.Unit.Controllers
 {
     public class AuthenticationControllerTests
     {
@@ -217,7 +216,7 @@ namespace QuizWorld.Tests.Unit.Controllers
         {
             string jwt = "a";
             var mockResult = CreateMockResultForLogout(jwt);
-            this.JwtStore.BlacklistTokenAsync(jwt)
+            JwtStore.BlacklistTokenAsync(jwt)
                 .Returns(mockResult);
 
             var result = await AuthenticationController.Logout(jwt);
@@ -229,7 +228,7 @@ namespace QuizWorld.Tests.Unit.Controllers
         {
             string jwt = "a";
             var mockResult = CreateMockResultForLogout(BlacklistTokenError.AlreadyBlacklisted);
-            this.JwtStore.BlacklistTokenAsync(jwt)
+            JwtStore.BlacklistTokenAsync(jwt)
                 .Returns(mockResult);
 
             var result = await AuthenticationController.Logout(jwt);

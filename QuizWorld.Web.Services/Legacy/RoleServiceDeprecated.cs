@@ -5,8 +5,7 @@ using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Infrastructure.Extensions;
 using QuizWorld.ViewModels.UserList;
-using QuizWorld.Web.Contracts.Roles;
-
+using QuizWorld.Web.Contracts.Legacy;
 
 namespace QuizWorld.Web.Services.Legacy
 {

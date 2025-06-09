@@ -1,15 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MockQueryable.Moq;
 using Moq;
 using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.ViewModels.Logging;
 using QuizWorld.Web.Areas.Administration.Controllers;
-using QuizWorld.Web.Contracts.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using QuizWorld.Web.Contracts;
+
 
 namespace QuizWorld.Tests.Controllers.ActivityLogsControllerUnitTests
 {

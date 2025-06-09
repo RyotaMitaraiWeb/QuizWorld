@@ -6,14 +6,8 @@ using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.ViewModels.Common;
 using QuizWorld.ViewModels.Quiz;
-using QuizWorld.Web.Contracts.JsonWebToken;
-using QuizWorld.Web.Contracts.Quiz;
-using QuizWorld.Web.Controllers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using QuizWorld.Web.Contracts.Legacy;
+using QuizWorld.Web.Legacy.Controllers;
 
 namespace QuizWorld.Tests.Controllers.QuizControllerUnitTests
 {

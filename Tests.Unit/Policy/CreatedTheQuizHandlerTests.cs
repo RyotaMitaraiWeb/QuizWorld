@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Http;
 using NSubstitute;
 using QuizWorld.Common.Claims;
 using QuizWorld.Common.Http;
-using QuizWorld.Infrastructure.AuthConfig.CanEditAndDeleteQuizzes;
-using QuizWorld.Infrastructure.AuthConfig.CreatedTheQuiz;
+using QuizWorld.Infrastructure.AuthConfig.Handlers;
+using QuizWorld.Infrastructure.AuthConfig.Requirements;
 using System.Security.Claims;
 
 

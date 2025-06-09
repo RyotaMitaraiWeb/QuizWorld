@@ -4,7 +4,7 @@ using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Common.Result;
 using QuizWorld.ViewModels.Roles;
 using QuizWorld.Web.Areas.Administration.Controllers;
-using QuizWorld.Web.Contracts.Roles;
+using QuizWorld.Web.Contracts;
 using static QuizWorld.Common.Errors.RoleError;
 
 namespace Tests.Unit.Controllers

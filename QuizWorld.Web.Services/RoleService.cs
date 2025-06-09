@@ -7,7 +7,7 @@ using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Infrastructure.Extensions;
 using QuizWorld.ViewModels.Roles;
 using QuizWorld.ViewModels.UserList;
-using QuizWorld.Web.Contracts.Roles;
+using QuizWorld.Web.Contracts;
 using System.Linq.Expressions;
 using static QuizWorld.Common.Errors.RoleError;
 

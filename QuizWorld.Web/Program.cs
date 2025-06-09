@@ -12,38 +12,27 @@ using QuizWorld.Web.Contracts;
 using QuizWorld.Web.Services;
 using Redis.OM.Skeleton.HostedServices;
 using Redis.OM;
-using QuizWorld.Web.Contracts.JsonWebToken;
-using QuizWorld.Web.Services.JsonWebToken;
-using QuizWorld.Infrastructure.Filters.GuestsOnly;
 using QuizWorld.Infrastructure.AuthConfig;
-using QuizWorld.Infrastructure.AuthConfig.CanPerformOwnerAction;
-using QuizWorld.Web.Contracts.Quiz;
 using QuizWorld.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
-using QuizWorld.Infrastructure.AuthConfig.CanAccessLogs;
-using QuizWorld.Web.Contracts.Logging;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
-using QuizWorld.Web.Contracts.Roles;
-using QuizWorld.Infrastructure.AuthConfig.CanWorkWithRoles;
 using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Infrastructure.Extensions;
 using Microsoft.Data.SqlClient;
 using StackExchange.Redis;
 using Asp.Versioning;
-using QuizWorld.Web.Contracts.Authentication.JsonWebToken;
-using QuizWorld.Web.Services.Authentication.JsonWebToken.JwtService;
-using QuizWorld.Web.Services.Authentication.JsonWebToken.JwtBlacklistService;
-using QuizWorld.Web.Contracts.Authentication;
-using QuizWorld.Web.Services.Authentication;
 using QuizWorld.Web.Services.Legacy;
 using QuizWorld.Web.Middlewares;
-using QuizWorld.Infrastructure.AuthConfig.CanEditAndDeleteQuizzes;
-using QuizWorld.Infrastructure.AuthConfig.CreatedTheQuiz;
 using QuizWorld.Web.Filters;
 using QuizWorld.Infrastructure.AuthConfig.Handlers;
 using QuizWorld.Infrastructure.AuthConfig.Requirements;
 using Microsoft.AspNetCore.Authorization.Policy;
 using QuizWorld.Common.Policy;
+using QuizWorld.Web.Contracts.Legacy;
+using QuizWorld.Infrastructure.AuthConfig.Legacy.CanAccessLogs;
+using QuizWorld.Infrastructure.AuthConfig.Legacy.CanPerformOwnerAction;
+using QuizWorld.Infrastructure.AuthConfig.Legacy.CanWorkWithRoles;
+using QuizWorld.Infrastructure.Legacy.Filters.GuestsOnly;
 
 namespace QuizWorld.Web
 {
@@ -207,7 +196,7 @@ namespace QuizWorld.Web
 
             builder.Services.AddApiVersioning(options =>
             {
-                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.DefaultApiVersion = new ApiVersion(2, 0);
                 options.AssumeDefaultVersionWhenUnspecified = true;
                 options.ReportApiVersions = true;
                 options.ApiVersionReader = ApiVersionReader.Combine(
@@ -272,8 +261,8 @@ namespace QuizWorld.Web
             var app = builder.Build();
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
                 options.SwaggerEndpoint("/swagger/v2/swagger.json", "v2");
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
             });
 
             // Configure the HTTP request pipeline.
