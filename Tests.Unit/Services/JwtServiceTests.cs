@@ -2,7 +2,7 @@
 using NSubstitute;
 using QuizWorld.Common.Constants.Roles;
 using QuizWorld.ViewModels.Authentication;
-using QuizWorld.Web.Services.Authentication.JsonWebToken.JwtService;
+using QuizWorld.Web.Services;
 using static QuizWorld.Common.Results.JwtError;
 
 namespace Tests.Unit.Services

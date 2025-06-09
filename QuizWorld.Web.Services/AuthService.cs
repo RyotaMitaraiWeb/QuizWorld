@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using QuizWorld.Common.Constants.Roles;
-using QuizWorld.Common.Errors;
 using QuizWorld.Common.Result;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.Web.Contracts.Authentication;
 using static QuizWorld.Common.Errors.AuthError;
 
-namespace QuizWorld.Web.Services.Authentication
+namespace QuizWorld.Web.Services
 {
     public class AuthService(UserManager<ApplicationUser> userManager) : IAuthService
     {

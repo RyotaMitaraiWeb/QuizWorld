@@ -4,7 +4,7 @@ using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Tests.Unit.Util;
 using QuizWorld.ViewModels.Authentication;
-using QuizWorld.Web.Services.Authentication;
+using QuizWorld.Web.Services;
 using static QuizWorld.Common.Errors.AuthError;
 
 namespace QuizWorld.Tests.Unit.Services

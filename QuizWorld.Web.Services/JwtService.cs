@@ -12,7 +12,7 @@ using System.Security.Claims;
 using System.Text;
 using static QuizWorld.Common.Results.JwtError;
 
-namespace QuizWorld.Web.Services.Authentication.JsonWebToken.JwtService
+namespace QuizWorld.Web.Services
 {
     public class JwtService(IConfiguration config) : IJwtService
     {
