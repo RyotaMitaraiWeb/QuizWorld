@@ -8,7 +8,6 @@ namespace QuizWorld.Web.Contracts
 {
     public interface IRoleService
     {
-        Task<ListUsersViewModel> SearchUsers(SearchUsersParameters parameters);
         Task<Result<string, AddRoleError>> GiveUserRole(ChangeRoleViewModel data);
         Task<Result<string, RemoveRoleError>> RemoveRoleFromUser(ChangeRoleViewModel data);
     }

@@ -1,10 +1,7 @@
 ﻿using Asp.Versioning;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Common.Policy;
-using QuizWorld.Common.Search;
 using QuizWorld.ViewModels.Roles;
 using QuizWorld.Web.Contracts;
 using QuizWorld.Web.Filters;
@@ -18,13 +15,6 @@ namespace QuizWorld.Web.Areas.Administration.Controllers
     public class RolesController(IRoleService roleService) : BaseController
     {
         private readonly IRoleService _roleService = roleService;
-
-        [HttpGet("users")]
-        public async Task<IActionResult> SearchUsers([FromQuery] SearchUsersParameters parameters)
-        {
-            var result = await _roleService.SearchUsers(parameters);
-            return Ok(result);
-        }
 
         [HttpPatch("add")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
