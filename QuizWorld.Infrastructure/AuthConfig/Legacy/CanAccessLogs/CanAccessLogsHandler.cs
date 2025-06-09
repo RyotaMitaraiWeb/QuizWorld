@@ -11,8 +11,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuizWorld.Infrastructure.AuthConfig.CanAccessLogs
+namespace QuizWorld.Infrastructure.AuthConfig.Legacy.CanAccessLogs
 {
+    [Obsolete]
     /// <summary>
     /// Checks whether the user has a role that can access logs. For security purposes, all unauthorized
     /// requests are responded with 404.
@@ -38,23 +39,23 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanAccessLogs
 
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, CanAccessLogsRequirement requirement)
         {
-            var bearer = this.http.HttpContext?.Request.Headers.Authorization.FirstOrDefault();
+            var bearer = http.HttpContext?.Request.Headers.Authorization.FirstOrDefault();
 
-            string jwt = this.jwtService.RemoveBearer(bearer);
+            string jwt = jwtService.RemoveBearer(bearer);
 
-            this.logger.LogInformation("POLICY ADMIN");
+            logger.LogInformation("POLICY ADMIN");
 
-            if (!await this.jwtService.CheckIfJWTIsValid(jwt))
+            if (!await jwtService.CheckIfJWTIsValid(jwt))
             {
-                await this.Fail(context);
+                await Fail(context);
                 return;
             }
 
-            UserViewModel user = this.jwtService.DecodeJWT(jwt);
+            UserViewModel user = jwtService.DecodeJWT(jwt);
             string id = user.Id;
 
-            var applicationUser = await this.userManager.FindByIdAsync(id);
-            var userRoles = await this.userManager.GetRolesAsync(applicationUser);
+            var applicationUser = await userManager.FindByIdAsync(id);
+            var userRoles = await userManager.GetRolesAsync(applicationUser);
             
             foreach (var role in userRoles )
             {
@@ -65,7 +66,7 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanAccessLogs
                 }
             }
 
-            await this.Fail(context);
+            await Fail(context);
             return;
         }
 
@@ -80,11 +81,11 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanAccessLogs
         private Task Fail(AuthorizationHandlerContext context)
         {
             context.Fail();
-            this.http.HttpContext.Response.OnStarting(async () =>
+            http.HttpContext.Response.OnStarting(async () =>
             {
-                this.http.HttpContext.Response.StatusCode = 404;
+                http.HttpContext.Response.StatusCode = 404;
                 var responseText = Encoding.UTF8.GetBytes("Page does not exist");
-                await this.http.HttpContext.Response.Body.WriteAsync(responseText, 0, responseText.Length);
+                await http.HttpContext.Response.Body.WriteAsync(responseText, 0, responseText.Length);
             });
 
             return Task.CompletedTask;

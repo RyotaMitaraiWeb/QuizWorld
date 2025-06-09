@@ -18,8 +18,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuizWorld.Infrastructure.AuthConfig.CanPerformOwnerAction
+namespace QuizWorld.Infrastructure.AuthConfig.Legacy.CanPerformOwnerAction
 {
+    [Obsolete]
     /// <summary>
     /// Checks if the user is the owner of the quiz or has at least one of the specified roles.
     /// </summary>
@@ -52,21 +53,21 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanPerformOwnerAction
         /// <returns></returns>
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, CanPerformOwnerActionRequirement requirement)
         {
-            var bearer = this.http.HttpContext?.Request.Headers.Authorization.FirstOrDefault();
+            var bearer = http.HttpContext?.Request.Headers.Authorization.FirstOrDefault();
 
-            string jwt = this.jwtService.RemoveBearer(bearer);
+            string jwt = jwtService.RemoveBearer(bearer);
 
-            if (!await this.jwtService.CheckIfJWTIsValid(jwt))
+            if (!await jwtService.CheckIfJWTIsValid(jwt))
             {
-                await this.FailWithStatusCode(context, 401, "Invalid token");
+                await FailWithStatusCode(context, 401, "Invalid token");
                 return;
             }
 
-            UserViewModel user = this.jwtService.DecodeJWT(jwt);
-            var quiz = await this.FindQuiz(context);
+            UserViewModel user = jwtService.DecodeJWT(jwt);
+            var quiz = await FindQuiz(context);
             if (quiz == null)
             {
-                await this.FailWithStatusCode(context, 404, "Quiz does not exist");
+                await FailWithStatusCode(context, 404, "Quiz does not exist");
 
                 return;
             }
@@ -81,22 +82,22 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanPerformOwnerAction
             {
                 try
                 {
-                    var applicationUser = await this.userManager.FindByIdAsync(user.Id);
+                    var applicationUser = await userManager.FindByIdAsync(user.Id);
 
                     if (applicationUser == null)
                     {
-                        await this.FailWithStatusCode(context, 401, "Invalid token");
+                        await FailWithStatusCode(context, 401, "Invalid token");
                         return;
                     }
 
-                    var roles = await this.userManager.GetRolesAsync(applicationUser);
+                    var roles = await userManager.GetRolesAsync(applicationUser);
                     foreach (string role in roles)
                     {
                         if (requirement.RolesThatCanPerformAction.Contains(role))
                         {
-                            string? route = this.http.HttpContext?.Request.GetEncodedPathAndQuery();
-                            string? method = this.http.HttpContext?.Request.Method;
-                            await this.logger.LogActivity(
+                            string? route = http.HttpContext?.Request.GetEncodedPathAndQuery();
+                            string? method = http.HttpContext?.Request.Method;
+                            await logger.LogActivity(
                                 $"{applicationUser.NormalizedUserName} sent a {method} request to {route}",
                                 DateTime.Now);
                             context.Succeed(requirement);
@@ -106,7 +107,7 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanPerformOwnerAction
                 }
                 catch
                 {
-                    await this.FailWithStatusCode(context, 503, "Something went wrong with your request, try again later");
+                    await FailWithStatusCode(context, 503, "Something went wrong with your request, try again later");
                     return;
                 }
                 
@@ -127,11 +128,11 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanPerformOwnerAction
         private Task FailWithStatusCode(AuthorizationHandlerContext context, int status, string message)
         {
             context.Fail();
-            this.http.HttpContext.Response.OnStarting(async () =>
+            http.HttpContext.Response.OnStarting(async () =>
             {
-                this.http.HttpContext.Response.StatusCode = status;
+                http.HttpContext.Response.StatusCode = status;
                 var responseText = Encoding.UTF8.GetBytes(message);
-                await this.http.HttpContext.Response.Body.WriteAsync(responseText, 0, responseText.Length);
+                await http.HttpContext.Response.Body.WriteAsync(responseText, 0, responseText.Length);
             });
 
             return Task.CompletedTask;
@@ -159,7 +160,7 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanPerformOwnerAction
                     return null;
                 }
 
-                var quiz = await this.repository.GetByIdAsync<Quiz>(quizId);
+                var quiz = await repository.GetByIdAsync<Quiz>(quizId);
                 if (quiz == null || quiz.IsDeleted)
                 {
                     return null;

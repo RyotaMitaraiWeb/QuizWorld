@@ -5,8 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuizWorld.Infrastructure.AuthConfig.CanPerformOwnerAction
+namespace QuizWorld.Infrastructure.AuthConfig.Legacy.CanPerformOwnerAction
 {
+    [Obsolete]
     /// <summary>
     /// Checks if the user is the owner of the quiz or has at least one of the specified roles.
     /// </summary>
@@ -17,7 +18,7 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanPerformOwnerAction
         /// <param name="roles">The roles that will be authorized for this policy alongside the creator of the quiz</param>
         public CanPerformOwnerActionRequirement(params string[] roles)
         {
-            this.RolesThatCanPerformAction = roles;
+            RolesThatCanPerformAction = roles;
         }
     }
 }

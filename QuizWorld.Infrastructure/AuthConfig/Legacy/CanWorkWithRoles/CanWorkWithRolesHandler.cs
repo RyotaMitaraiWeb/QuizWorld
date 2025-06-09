@@ -8,8 +8,9 @@ using QuizWorld.Web.Contracts;
 using QuizWorld.Web.Contracts.Legacy;
 using System.Text;
 
-namespace QuizWorld.Infrastructure.AuthConfig.CanWorkWithRoles
+namespace QuizWorld.Infrastructure.AuthConfig.Legacy.CanWorkWithRoles
 {
+    [Obsolete]
     /// <summary>
     /// Checks whether the user has a role that allows them to interact with users' roles.
     /// For security purposes, all unauthorized requests are responded with 404.
@@ -35,21 +36,21 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanWorkWithRoles
 
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, CanWorkWithRolesRequirement requirement)
         {
-            var bearer = this.http.HttpContext?.Request.Headers.Authorization.FirstOrDefault();
+            var bearer = http.HttpContext?.Request.Headers.Authorization.FirstOrDefault();
 
-            string jwt = this.jwtService.RemoveBearer(bearer);
+            string jwt = jwtService.RemoveBearer(bearer);
 
-            if (!await this.jwtService.CheckIfJWTIsValid(jwt))
+            if (!await jwtService.CheckIfJWTIsValid(jwt))
             {
-                await this.Fail(context);
+                await Fail(context);
                 return;
             }
 
-            UserViewModel user = this.jwtService.DecodeJWT(jwt);
+            UserViewModel user = jwtService.DecodeJWT(jwt);
             string id = user.Id;
 
-            var applicationUser = await this.userManager.FindByIdAsync(id);
-            var userRoles = await this.userManager.GetRolesAsync(applicationUser);
+            var applicationUser = await userManager.FindByIdAsync(id);
+            var userRoles = await userManager.GetRolesAsync(applicationUser);
             
             foreach (var role in userRoles)
             {
@@ -57,9 +58,9 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanWorkWithRoles
                 {
                     if (requirement.LogActivity)
                     {
-                        string? route = this.http.HttpContext?.Request.GetEncodedPathAndQuery();
-                        string? method = this.http.HttpContext?.Request.Method;
-                        await this.logger.LogActivity(
+                        string? route = http.HttpContext?.Request.GetEncodedPathAndQuery();
+                        string? method = http.HttpContext?.Request.Method;
+                        await logger.LogActivity(
                             $"{applicationUser.NormalizedUserName} sent a {method} request to {route}",
                             DateTime.Now);
                     }
@@ -69,7 +70,7 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanWorkWithRoles
                 }
             }
 
-            await this.Fail(context);
+            await Fail(context);
             return;
         }
 
@@ -84,11 +85,11 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanWorkWithRoles
         private Task Fail(AuthorizationHandlerContext context)
         {
             context.Fail();
-            this.http.HttpContext.Response.OnStarting(async () =>
+            http.HttpContext.Response.OnStarting(async () =>
             {
-                this.http.HttpContext.Response.StatusCode = 404;
+                http.HttpContext.Response.StatusCode = 404;
                 var responseText = Encoding.UTF8.GetBytes("Page does not exist");
-                await this.http.HttpContext.Response.Body.WriteAsync(responseText, 0, responseText.Length);
+                await http.HttpContext.Response.Body.WriteAsync(responseText, 0, responseText.Length);
             });
 
             return Task.CompletedTask;

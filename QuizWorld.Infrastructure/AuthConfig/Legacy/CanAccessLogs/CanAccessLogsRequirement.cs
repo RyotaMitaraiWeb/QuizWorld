@@ -5,8 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuizWorld.Infrastructure.AuthConfig.CanAccessLogs
+namespace QuizWorld.Infrastructure.AuthConfig.Legacy.CanAccessLogs
 {
+    [Obsolete]
     /// <summary>
     /// Checks whether the user has a role that can access activity logs. 
     /// For security purposes, all unauthorized requests are responded with 404.
@@ -17,7 +18,7 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanAccessLogs
         /// <param name="roles">The roles that can access the activity logs</param>
         public CanAccessLogsRequirement(params string[] roles)
         {
-            this.RolesThatCanAccessLogs = roles;
+            RolesThatCanAccessLogs = roles;
         }
     }
 }

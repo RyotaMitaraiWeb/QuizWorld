@@ -5,8 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuizWorld.Infrastructure.AuthConfig.CanWorkWithRoles
+namespace QuizWorld.Infrastructure.AuthConfig.Legacy.CanWorkWithRoles
 {
+    [Obsolete]
     /// <summary>
     /// Checks whether the user has a role that allows them to interact with users' roles.
     /// For security purposes, all unauthorized requests are responded with 404.
@@ -19,8 +20,8 @@ namespace QuizWorld.Infrastructure.AuthConfig.CanWorkWithRoles
         /// <param name="roles">The roles that can change users' roles</param>
         public CanWorkWithRolesRequirement(bool logActivity, params string[] roles)
         {
-            this.LogActivity = logActivity;
-            this.RolesThatCanWorkWithRoles = roles;
+            LogActivity = logActivity;
+            RolesThatCanWorkWithRoles = roles;
         }
     }
 }

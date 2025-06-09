@@ -35,6 +35,9 @@ using QuizWorld.Infrastructure.AuthConfig.Requirements;
 using Microsoft.AspNetCore.Authorization.Policy;
 using QuizWorld.Common.Policy;
 using QuizWorld.Web.Contracts.Legacy;
+using QuizWorld.Infrastructure.AuthConfig.Legacy.CanAccessLogs;
+using QuizWorld.Infrastructure.AuthConfig.Legacy.CanPerformOwnerAction;
+using QuizWorld.Infrastructure.AuthConfig.Legacy.CanWorkWithRoles;
 
 namespace QuizWorld.Web
 {
