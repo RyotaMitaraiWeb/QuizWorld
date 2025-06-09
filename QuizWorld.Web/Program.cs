@@ -196,7 +196,7 @@ namespace QuizWorld.Web
 
             builder.Services.AddApiVersioning(options =>
             {
-                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.DefaultApiVersion = new ApiVersion(2, 0);
                 options.AssumeDefaultVersionWhenUnspecified = true;
                 options.ReportApiVersions = true;
                 options.ApiVersionReader = ApiVersionReader.Combine(
@@ -261,8 +261,8 @@ namespace QuizWorld.Web
             var app = builder.Build();
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
                 options.SwaggerEndpoint("/swagger/v2/swagger.json", "v2");
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
             });
 
             // Configure the HTTP request pipeline.

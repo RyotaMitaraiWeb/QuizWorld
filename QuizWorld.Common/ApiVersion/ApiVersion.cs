@@ -3,6 +3,6 @@
     public static class ApiVersion
     {
         public const string QueryStringName = "api-version";
-        public const string DefaultVersion = "1.0";
+        public const string DefaultVersion = "2.0";
     }
 }
