@@ -14,9 +14,12 @@ namespace QuizWorld.ViewModels.Question
     public class GradedQuestionViewModel
     {
         public string Id { get; set; } = string.Empty;
-        public IEnumerable<AnswerViewModel> Answers = Enumerable.Empty<AnswerViewModel>();
+        public IEnumerable<AnswerViewModel> Answers = [];
 
         [JsonIgnore]
         public bool InstantMode;
+
+        [JsonIgnore]
+        public int Version { get; set; }
     }
 }

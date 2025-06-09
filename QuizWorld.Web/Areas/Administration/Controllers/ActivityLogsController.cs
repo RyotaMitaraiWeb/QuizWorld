@@ -1,11 +1,9 @@
 ﻿using Asp.Versioning;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.Common.Policy;
 using QuizWorld.Common.Search;
-using QuizWorld.Infrastructure.AuthConfig.Handlers;
 using QuizWorld.Infrastructure.ModelBinders;
 using QuizWorld.Web.Contracts.Logging;
 using QuizWorld.Web.Filters;

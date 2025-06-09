@@ -4,21 +4,17 @@ using QuizWorld.Infrastructure.Data.Entities.Quiz;
 using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Question;
 using QuizWorld.Web.Contracts.Quiz;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace QuizWorld.Web.Services.GradeService
+namespace QuizWorld.Web.Services.Legacy
 {
+    [Obsolete]
     /// <summary>
     /// A service for retrieving correct answers of quizzes or questions.
     /// </summary>
-    public class GradeService : IGradeService
+    public class GradeServiceDeprecated : IGradeServiceDeprecated
     {
         private readonly IRepository repository;
-        public GradeService(IRepository repository)
+        public GradeServiceDeprecated(IRepository repository)
         {
             this.repository = repository;
         }
@@ -33,7 +29,7 @@ namespace QuizWorld.Web.Services.GradeService
         /// <exception cref="InvalidOperationException"></exception>
         public async Task<GradedQuestionViewModel?> GetCorrectAnswersForQuestionById(Guid questionId, int version)
         {
-            var question = await this.repository
+            var question = await repository
                 .AllReadonly<Question>()
                 .Where(q => q.Id == questionId && q.Version == version && !q.Quiz.IsDeleted)
                 .Select(q => new GradedQuestionViewModel()
@@ -80,7 +76,7 @@ namespace QuizWorld.Web.Services.GradeService
                 throw new ArgumentException("questionId is an invalid GUID");
             }
 
-            return await this.GetCorrectAnswersForQuestionById(id, version);
+            return await GetCorrectAnswersForQuestionById(id, version);
         }
 
         /// <summary>
@@ -93,7 +89,7 @@ namespace QuizWorld.Web.Services.GradeService
         /// <exception cref="InvalidOperationException"></exception>
         public async Task<IEnumerable<GradedQuestionViewModel>?> GetCorrectAnswersForQuestionsByQuizId(int quizId, int version)
         {
-            var questions = await this.repository
+            var questions = await repository
                 .AllReadonly<Question>()
                 .Where(q => q.QuizId == quizId && q.Version == version && !q.Quiz.IsDeleted)
                 .Select(q => new GradedQuestionViewModel()

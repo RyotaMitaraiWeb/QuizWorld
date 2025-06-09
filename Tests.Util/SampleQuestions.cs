@@ -4,7 +4,7 @@ using QuizWorld.Infrastructure.Data.Entities.Quiz;
 
 namespace Tests.Util
 {
-    internal class SampleQuestions
+    public class SampleQuestions
     {
         public const int SampleSize = 10;
 

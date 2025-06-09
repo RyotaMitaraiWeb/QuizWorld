@@ -4,19 +4,14 @@ using QuizWorld.Infrastructure;
 using QuizWorld.Infrastructure.Data.Entities.Quiz;
 using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Question;
-using QuizWorld.Web.Services.GradeService;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using QuizWorld.Web.Services.Legacy;
 
 namespace QuizWorld.Tests.Services.GradeServiceUnitTests
 {
     public class UnitTest
     {
         public Mock<IRepository> repositoryMock;
-        public GradeService service;
+        public GradeServiceDeprecated service;
         public GradedQuestionViewModel question;
        
 
@@ -24,7 +19,7 @@ namespace QuizWorld.Tests.Services.GradeServiceUnitTests
         public void Setup()
         {
             this.repositoryMock = new Mock<IRepository>();
-            this.service = new GradeService(this.repositoryMock.Object);
+            this.service = new GradeServiceDeprecated(this.repositoryMock.Object);
             this.question = new GradedQuestionViewModel()
             {
                 Answers = new List<AnswerViewModel>()
