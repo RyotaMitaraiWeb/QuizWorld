@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using QuizWorld.Common.Errors;
 using QuizWorld.Common.Http;
 using QuizWorld.Common.Search;
-using QuizWorld.Infrastructure.AuthConfig.CanEditAndDeleteQuizzes;
+using QuizWorld.Infrastructure.AuthConfig.Handlers;
 using QuizWorld.ViewModels.Common;
 using QuizWorld.ViewModels.Quiz;
 using QuizWorld.Web.Contracts;

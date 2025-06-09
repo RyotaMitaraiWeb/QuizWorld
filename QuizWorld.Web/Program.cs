@@ -28,7 +28,6 @@ using Asp.Versioning;
 using QuizWorld.Web.Services.Legacy;
 using QuizWorld.Web.Middlewares;
 using QuizWorld.Infrastructure.AuthConfig.CanEditAndDeleteQuizzes;
-using QuizWorld.Infrastructure.AuthConfig.CreatedTheQuiz;
 using QuizWorld.Web.Filters;
 using QuizWorld.Infrastructure.AuthConfig.Handlers;
 using QuizWorld.Infrastructure.AuthConfig.Requirements;

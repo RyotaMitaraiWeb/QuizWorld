@@ -5,10 +5,11 @@ using Microsoft.AspNetCore.Routing;
 using QuizWorld.Common.Claims;
 using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Common.Http;
+using QuizWorld.Infrastructure.AuthConfig.Requirements;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 
 
-namespace QuizWorld.Infrastructure.AuthConfig.CanEditAndDeleteQuizzes
+namespace QuizWorld.Infrastructure.AuthConfig.Handlers
 {
     public class CanEditAndDeleteQuizzesHandler(
         IHttpContextAccessor http,

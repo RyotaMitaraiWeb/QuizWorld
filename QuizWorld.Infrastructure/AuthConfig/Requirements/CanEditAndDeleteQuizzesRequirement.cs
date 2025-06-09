@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace QuizWorld.Infrastructure.AuthConfig.CanEditAndDeleteQuizzes
+namespace QuizWorld.Infrastructure.AuthConfig.Requirements
 {
     public class CanEditAndDeleteQuizzesRequirement(params string[] rolesThatCanEditAndDeleteQuizzes) : IAuthorizationRequirement
     {

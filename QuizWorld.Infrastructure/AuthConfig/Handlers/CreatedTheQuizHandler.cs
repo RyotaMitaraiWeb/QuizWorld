@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using QuizWorld.Common.Claims;
 using QuizWorld.Common.Http;
-using QuizWorld.Infrastructure.AuthConfig.CanEditAndDeleteQuizzes;
+using QuizWorld.Infrastructure.AuthConfig.Requirements;
 
-namespace QuizWorld.Infrastructure.AuthConfig.CreatedTheQuiz
+namespace QuizWorld.Infrastructure.AuthConfig.Handlers
 {
     public class CreatedTheQuizHandler(IHttpContextAccessor http) : AuthorizationHandler<CanEditAndDeleteQuizzesRequirement>
     {
