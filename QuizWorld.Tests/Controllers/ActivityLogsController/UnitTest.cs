@@ -1,15 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MockQueryable.Moq;
 using Moq;
 using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.ViewModels.Logging;
-using QuizWorld.Web.Areas.Logging.Controllers;
+using QuizWorld.Web.Areas.Administration.Controllers;
 using QuizWorld.Web.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace QuizWorld.Tests.Controllers.ActivityLogsControllerUnitTests
 {
@@ -43,7 +38,7 @@ namespace QuizWorld.Tests.Controllers.ActivityLogsControllerUnitTests
                 .Setup(l => l.RetrieveLogs(1, SortingOrders.Ascending, 20))
                 .ReturnsAsync(new ActivityLogsViewModel() {  Total = 1, Logs = list });
 
-            var result = await this.controller.GetLogs(1, SortingOrders.Ascending) as OkObjectResult;
+            var result = await this.controller.GetLogsDeprecated(1, SortingOrders.Ascending) as OkObjectResult;
             var value = result.Value as ActivityLogsViewModel;
 
             Assert.That(value.Logs, Is.EqualTo(list));
@@ -56,7 +51,7 @@ namespace QuizWorld.Tests.Controllers.ActivityLogsControllerUnitTests
                 .Setup(l => l.RetrieveLogs(1, SortingOrders.Ascending, 20))
                 .ThrowsAsync(new Exception());
 
-            var result = await this.controller.GetLogs(1, SortingOrders.Ascending);
+            var result = await this.controller.GetLogsDeprecated(1, SortingOrders.Ascending);
             Assert.That(result, Is.TypeOf<NotFoundResult>());
         }
     }

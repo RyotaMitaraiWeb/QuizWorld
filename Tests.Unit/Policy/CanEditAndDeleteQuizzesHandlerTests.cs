@@ -5,7 +5,6 @@ using NSubstitute;
 using QuizWorld.Common.Claims;
 using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Common.Http;
-using QuizWorld.Infrastructure.AuthConfig.CreatedTheQuiz;
 using QuizWorld.Infrastructure.AuthConfig.Handlers;
 using QuizWorld.Infrastructure.AuthConfig.Requirements;
 using QuizWorld.Infrastructure.Data.Entities.Identity;

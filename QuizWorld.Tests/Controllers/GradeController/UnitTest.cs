@@ -2,7 +2,7 @@
 using Moq;
 using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Question;
-using QuizWorld.Web.Contracts.Quiz;
+using QuizWorld.Web.Contracts.Legacy;
 using QuizWorld.Web.Controllers;
 using System;
 using System.Collections.Generic;

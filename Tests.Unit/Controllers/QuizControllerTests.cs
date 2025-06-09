@@ -3,7 +3,6 @@ using NSubstitute;
 using QuizWorld.Common.Result;
 using QuizWorld.ViewModels.Quiz;
 using QuizWorld.Web.Contracts;
-using QuizWorld.Web.Contracts.Authentication.JsonWebToken;
 using QuizWorld.Web.Controllers;
 using static QuizWorld.Common.Errors.QuizError;
 

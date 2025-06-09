@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QuizWorld.Common.Constants.InvalidActionsMessages;
-using QuizWorld.Infrastructure.Filters.GuestsOnly;
 using QuizWorld.ViewModels.Authentication;
 using QuizWorld.ViewModels.Common;
 using static QuizWorld.Common.Constants.InvalidActionsMessages.InvalidActionsMessages;
 using Asp.Versioning;
 using QuizWorld.Web.Contracts.Legacy;
+using QuizWorld.Infrastructure.Legacy.Filters.GuestsOnly;
 
 namespace QuizWorld.Web.Areas.Authentication.Controllers
 {
