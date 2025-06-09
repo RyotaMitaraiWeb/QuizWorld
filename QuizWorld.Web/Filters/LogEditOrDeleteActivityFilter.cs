@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using QuizWorld.Common.Http;
-using QuizWorld.Web.Contracts.Logging;
+using QuizWorld.Web.Contracts;
 
 namespace QuizWorld.Web.Filters
 {

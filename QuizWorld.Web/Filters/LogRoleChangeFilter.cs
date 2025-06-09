@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using QuizWorld.Common.Claims;
 using QuizWorld.ViewModels.Roles;
-using QuizWorld.Web.Contracts.Logging;
+using QuizWorld.Web.Contracts;
 using System.Text;
 
 namespace QuizWorld.Web.Filters

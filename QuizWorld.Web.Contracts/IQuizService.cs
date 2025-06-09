@@ -3,7 +3,7 @@ using QuizWorld.Common.Search;
 using QuizWorld.ViewModels.Quiz;
 using static QuizWorld.Common.Errors.QuizError;
 
-namespace QuizWorld.Web.Contracts.Quiz
+namespace QuizWorld.Web.Contracts
 {
     public interface IQuizService
     {

@@ -2,7 +2,7 @@
 using QuizWorld.ViewModels.Authentication;
 using static QuizWorld.Common.Errors.AuthError;
 
-namespace QuizWorld.Web.Contracts.Authentication
+namespace QuizWorld.Web.Contracts
 {
     public interface IAuthService
     {

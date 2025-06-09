@@ -5,7 +5,7 @@ using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Common.Constants.Sorting;
 using QuizWorld.ViewModels.UserList;
 using QuizWorld.Web.Areas.Administration.Controllers;
-using QuizWorld.Web.Contracts.Roles;
+using QuizWorld.Web.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,14 +16,14 @@ namespace QuizWorld.Tests.Controllers.RolesControllerUnitTests
 {
     public class UnitTest
     {
-        public Mock<IRoleServiceDeprecated> roleServiceMock;
-        public RolesControllerV1 controller;
+        public Mock<IRoleService> roleServiceMock;
+        public RolesController controller;
 
         [SetUp]
         public void Setup()
         {
-            this.roleServiceMock = new Mock<IRoleServiceDeprecated>();
-            this.controller = new RolesControllerV1(this.roleServiceMock.Object);
+            this.roleServiceMock = new Mock<IRoleService>();
+            this.controller = new RolesController(this.roleServiceMock.Object);
         }
 
         [Test]

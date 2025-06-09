@@ -2,7 +2,7 @@
 using QuizWorld.ViewModels.Authentication;
 using static QuizWorld.Common.Results.JwtError;
 
-namespace QuizWorld.Web.Contracts.Authentication.JsonWebToken
+namespace QuizWorld.Web.Contracts
 {
     public interface IJwtService
     {

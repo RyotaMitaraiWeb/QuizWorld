@@ -5,8 +5,7 @@ using QuizWorld.Infrastructure;
 using QuizWorld.Infrastructure.Data.Entities.Logging;
 using QuizWorld.Infrastructure.Extensions;
 using QuizWorld.ViewModels.Logging;
-using QuizWorld.Web.Contracts.Logging;
-
+using QuizWorld.Web.Contracts;
 
 namespace QuizWorld.Web.Services
 {

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuizWorld.Web.Contracts.Logging
+namespace QuizWorld.Web.Contracts
 {
     public interface IActivityLogger
     {

@@ -1,9 +1,9 @@
 ﻿using QuizWorld.Infrastructure.Data.Redis.Models;
-using QuizWorld.Web.Contracts.Authentication.JsonWebToken;
 using Redis.OM.Searching;
 using Redis.OM;
 using static QuizWorld.Common.Results.JwtStoreError;
 using QuizWorld.Common.Result;
+using QuizWorld.Web.Contracts;
 namespace QuizWorld.Web.Services
 {
     public class JwtStore(RedisConnectionProvider redisProvider) : IJwtStore

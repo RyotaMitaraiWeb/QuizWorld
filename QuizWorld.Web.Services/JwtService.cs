@@ -6,7 +6,7 @@ using QuizWorld.Common.Result;
 using QuizWorld.Common.Util;
 using QuizWorld.Infrastructure.Data.Redis.Models;
 using QuizWorld.ViewModels.Authentication;
-using QuizWorld.Web.Contracts.Authentication.JsonWebToken;
+using QuizWorld.Web.Contracts;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;

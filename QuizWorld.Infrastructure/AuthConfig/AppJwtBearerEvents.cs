@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using QuizWorld.Common.ApiVersion;
 using QuizWorld.Common.Util;
-using QuizWorld.Web.Contracts.Authentication.JsonWebToken;
+using QuizWorld.Web.Contracts;
 using QuizWorld.Web.Contracts.Legacy;
 
 

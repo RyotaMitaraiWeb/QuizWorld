@@ -1,7 +1,7 @@
 ﻿using QuizWorld.Common.Result;
 using static QuizWorld.Common.Results.JwtStoreError;
 
-namespace QuizWorld.Web.Contracts.Authentication.JsonWebToken
+namespace QuizWorld.Web.Contracts
 {
     /// <summary>
     /// An interface for interacting with databases that track blacklisted JWTs.

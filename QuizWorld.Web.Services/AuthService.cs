@@ -3,7 +3,7 @@ using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Common.Result;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.ViewModels.Authentication;
-using QuizWorld.Web.Contracts.Authentication;
+using QuizWorld.Web.Contracts;
 using static QuizWorld.Common.Errors.AuthError;
 
 namespace QuizWorld.Web.Services

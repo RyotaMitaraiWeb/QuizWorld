@@ -4,7 +4,7 @@ using QuizWorld.ViewModels.Roles;
 using QuizWorld.ViewModels.UserList;
 using static QuizWorld.Common.Errors.RoleError;
 
-namespace QuizWorld.Web.Contracts.Roles
+namespace QuizWorld.Web.Contracts
 {
     public interface IRoleService
     {

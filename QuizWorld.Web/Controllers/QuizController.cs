@@ -8,7 +8,7 @@ using QuizWorld.Common.Search;
 using QuizWorld.Infrastructure.AuthConfig.CanEditAndDeleteQuizzes;
 using QuizWorld.ViewModels.Common;
 using QuizWorld.ViewModels.Quiz;
-using QuizWorld.Web.Contracts.Quiz;
+using QuizWorld.Web.Contracts;
 using QuizWorld.Web.Filters;
 
 namespace QuizWorld.Web.Controllers
