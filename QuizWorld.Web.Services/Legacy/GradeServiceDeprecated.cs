@@ -5,7 +5,7 @@ using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Question;
 using QuizWorld.Web.Contracts.Quiz;
 
-namespace QuizWorld.Web.Services.GradeService
+namespace QuizWorld.Web.Services.Legacy
 {
     [Obsolete]
     /// <summary>
@@ -29,7 +29,7 @@ namespace QuizWorld.Web.Services.GradeService
         /// <exception cref="InvalidOperationException"></exception>
         public async Task<GradedQuestionViewModel?> GetCorrectAnswersForQuestionById(Guid questionId, int version)
         {
-            var question = await this.repository
+            var question = await repository
                 .AllReadonly<Question>()
                 .Where(q => q.Id == questionId && q.Version == version && !q.Quiz.IsDeleted)
                 .Select(q => new GradedQuestionViewModel()
@@ -76,7 +76,7 @@ namespace QuizWorld.Web.Services.GradeService
                 throw new ArgumentException("questionId is an invalid GUID");
             }
 
-            return await this.GetCorrectAnswersForQuestionById(id, version);
+            return await GetCorrectAnswersForQuestionById(id, version);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace QuizWorld.Web.Services.GradeService
         /// <exception cref="InvalidOperationException"></exception>
         public async Task<IEnumerable<GradedQuestionViewModel>?> GetCorrectAnswersForQuestionsByQuizId(int quizId, int version)
         {
-            var questions = await this.repository
+            var questions = await repository
                 .AllReadonly<Question>()
                 .Where(q => q.QuizId == quizId && q.Version == version && !q.Quiz.IsDeleted)
                 .Select(q => new GradedQuestionViewModel()

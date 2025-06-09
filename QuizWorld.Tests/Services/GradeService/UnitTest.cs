@@ -4,12 +4,7 @@ using QuizWorld.Infrastructure;
 using QuizWorld.Infrastructure.Data.Entities.Quiz;
 using QuizWorld.ViewModels.Answer;
 using QuizWorld.ViewModels.Question;
-using QuizWorld.Web.Services.GradeService;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using QuizWorld.Web.Services.Legacy;
 
 namespace QuizWorld.Tests.Services.GradeServiceUnitTests
 {

@@ -1,7 +1,7 @@
 ﻿using QuizWorld.Common.Constants.Types;
 using QuizWorld.Infrastructure;
 using QuizWorld.Infrastructure.Data.Entities;
-using QuizWorld.Web.Services.GradeService;
+using QuizWorld.Web.Services.Legacy;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -20,7 +20,6 @@ using QuizWorld.Infrastructure.AuthConfig.CanPerformOwnerAction;
 using QuizWorld.Web.Contracts.Quiz;
 using QuizWorld.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
-using QuizWorld.Web.Services.GradeService;
 using QuizWorld.Infrastructure.AuthConfig.CanAccessLogs;
 using QuizWorld.Web.Contracts.Logging;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
@@ -91,6 +90,7 @@ namespace QuizWorld.Web
             builder.Services.AddScoped<IActivityLogger, ActivityLogger>();
             builder.Services.AddScoped<IRoleServiceDeprecated, RoleServiceDeprecated>();
             builder.Services.AddScoped<IRoleService, RoleService>();
+            builder.Services.AddScoped<IGradeService, GradeService>();
             builder.Services.AddScoped<IAuthorizationHandler, CanWorkWithRolesHandler>();
             builder.Services.AddScoped<IAuthorizationHandler, CanPerformOwnerActionHandler>();
             builder.Services.AddScoped<IAuthorizationHandler, CanAccessLogsHandler>();
