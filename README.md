@@ -16,15 +16,18 @@ Quiz World is an application that allows users to participate in and create quiz
 <img src="./preview-images/creating_quiz_4.png" alt="An example of creating a text question">
 </details>
 
+Note: images are outdated, they will be updated in the future, so stay tuned!
+
+## API version
+The current version of the API is ``2.0``. This is also the default one if you hit the API endpoints without specifying a concrete version.
+
+If you want to hit the old API version or to safeguard yourself from future update, attach a query parameter of ``api-version=1.0`` (or the respective version) to
+all of your requests.
+
 
 ## Running in Docker
 To run this in Docker, simply run the ``docker-compose.yml`` file located at the root of the project.
-Most of the default environment variables are enough to quickstart the project. The only thing you need to configure locally is an SSL password to enable HTTPS connections. To do this, run the following command in the .NET CLI:
-
-```bash
-dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\aspnetapp.pfx -p 7a15279b-6c3a-42b1-978c-1e5dfa029b7e
-dotnet dev-certs https --trust
-```
+Most of the default environment variables are enough to quickstart the project.
 
 **Note:** a Redis Insight tool is available on localhost:8001 which you can use to monitor your Redis data.
 
@@ -56,13 +59,13 @@ To run the client associated with this project, [refer to the client-side projec
 ## Project architecture
 - ``Common`` - holds constant values, such as validation rules and messages, custom enums, and some utility values (for example, an array of roles that can be given to users, constant variables that refer to the names of the roles, etc.). This project is referenced by every other in the project.
 - ``Infrastructure`` - holds database configurations, custom model binders and filters, custom authentication settings and policies, and extension methods. This project also provides an entity-agnostic repository, which you can use to access the database for any entity.
-- ``Tests`` - holds the application's tests.
+- ``Tests.Unit`` - holds the application's tests.
 - ``Web.ViewModels`` - holds the view models that are used throughout the application, as well as custom validators that are applied to those models.
 - ``Web.Contracts`` - holds interfaces that will be implemented by the services.
 - ``Web.Services`` - holds the services that the controllers (and potentially other services themselves) will use.
 - ``Web``- this is essentially the entry and exit point of the application. It holds controllers and ``Program.cs``.
 
-For more information on each project, refer to its documentation (which can be found in the respective folders). You can also find documentation about more specific features/classes (e.g. a specific service) in its respective subfolder.
+Note: some projects and folders are leftovers from the initial version of the API and are marked as deprecated. They will have the appropriate names (like "legacy", "deprecataed", and so on...). They are left for compatibility reasons
 
 ## Seeding
 An administrator is seeded when the server is initialized. The username and password are "admin" and whatever you passed in the ``ADMIN_PASS`` environment variable, respectively.
