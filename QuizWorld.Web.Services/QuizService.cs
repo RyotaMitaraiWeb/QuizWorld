@@ -26,9 +26,9 @@ namespace QuizWorld.Web.Services
             int count = await query.CountAsync();
 
             var quizzes = await query
-                .Paginate(parameters.Page, parameters.PageSize)
                 .SortByOptions(
                     category: parameters.SortBy, order: parameters.Order)
+                .Paginate(parameters.Page, parameters.PageSize)
                 .Select(q => new CatalogueQuizItemViewModel()
                 {
                     Title = q.Title,
