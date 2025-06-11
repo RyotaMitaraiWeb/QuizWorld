@@ -82,10 +82,10 @@ namespace QuizWorld.Web.Services
 
             if (!isSearchingForHigherRanks && !string.IsNullOrWhiteSpace(parameters.Username))
             {
-                return u => u.NormalizedUserName == parameters.Username.Normalized();
+                return u => u.NormalizedUserName!.Contains(parameters.Username.Normalized());
             }
 
-            return u => u.NormalizedUserName == parameters.Username!.Normalized()
+            return u => u.NormalizedUserName!.Contains(parameters.Username!.Normalized())
                 && roles.All(role => u.UserRoles.Any(ur => ur.Role.Name == role));
         }
 
