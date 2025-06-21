@@ -255,7 +255,7 @@ namespace QuizWorld.Web
                         
                         policy.WithOrigins(origins.Split(", "));
                         policy.AllowAnyHeader();
-                        policy.WithMethods("GET", "PUT", "POST", "DELETE");
+                        policy.WithMethods("GET", "PUT", "POST", "DELETE", "PATCH");
                     });
             });
 
