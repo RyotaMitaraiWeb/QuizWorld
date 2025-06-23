@@ -33,6 +33,8 @@ using QuizWorld.Infrastructure.AuthConfig.Legacy.CanAccessLogs;
 using QuizWorld.Infrastructure.AuthConfig.Legacy.CanPerformOwnerAction;
 using QuizWorld.Infrastructure.AuthConfig.Legacy.CanWorkWithRoles;
 using QuizWorld.Infrastructure.Legacy.Filters.GuestsOnly;
+using QuizWorld.Web.Hubs;
+using QuizWorld.Common.Hubs;
 
 namespace QuizWorld.Web
 {
@@ -140,6 +142,8 @@ namespace QuizWorld.Web
 
                 options.EventsType = typeof(AppJwtBearerEvents);
             });
+
+            builder.Services.AddSignalR(o => o.EnableDetailedErrors = true);
             builder.Services.AddControllers()
                 .AddJsonOptions(options =>
                 {
@@ -256,6 +260,7 @@ namespace QuizWorld.Web
                         policy.WithOrigins(origins.Split(", "));
                         policy.AllowAnyHeader();
                         policy.WithMethods("GET", "PUT", "POST", "DELETE", "PATCH");
+                        policy.AllowCredentials();
                     });
             });
 
@@ -278,11 +283,12 @@ namespace QuizWorld.Web
             app.UseAuthentication();
             app.UseAttachQuizToContext();
             app.UseAuthorization();
-
+            app.MapHub<SessionHub>(HubEndpoints.Session);
 
             app.SeedAdministrator("admin", builder.Configuration["ADMIN_PASS"]);
 
             app.MapControllers();
+            
 
             app.Run();
         }

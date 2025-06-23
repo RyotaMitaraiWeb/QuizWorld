@@ -19,7 +19,7 @@ services:
         - JWT_VALID_ISSUER=Quiz World
         - JWT_VALID_AUDIENCE=localhost:4200
         - REDIS_CONNECTION_STRING=redis_cache
-        - ALLOWED_HOSTS=*
+        - ALLOWED_HOSTS=http://localhost:4200
         - DB_PASSWORD=a(!)ComplexPassword1234
         - DB_USER=sa 
         - DB_NAME=quizworld

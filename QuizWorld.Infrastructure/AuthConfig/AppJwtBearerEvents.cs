@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using QuizWorld.Common.ApiVersion;
+using QuizWorld.Common.Hubs;
 using QuizWorld.Common.Util;
 using QuizWorld.Web.Contracts;
 using QuizWorld.Web.Contracts.Legacy;
@@ -17,7 +18,7 @@ namespace QuizWorld.Infrastructure.AuthConfig
 
         public override async Task TokenValidated(TokenValidatedContext context)
         {
-            string? bearer = context.Request.Headers.Authorization.FirstOrDefault();
+            string? bearer = context.Request.Headers.Authorization.FirstOrDefault() ?? context.Request.Query["access_token"];
             if (string.IsNullOrWhiteSpace(bearer))
             {
                 context.Fail("Missing header Authorization");
@@ -40,7 +41,18 @@ namespace QuizWorld.Infrastructure.AuthConfig
             return;
         }
 
-        
+        public override async Task MessageReceived(MessageReceivedContext context)
+        {
+            var accessToken = context.Request.Query["access_token"];
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) &&
+                (path.StartsWithSegments(HubEndpoints.HubsPrefix)))
+            {
+                context.Token = accessToken;
+            }
+
+            await base.MessageReceived(context);
+        }
 
         private async Task ValidateJwt(TokenValidatedContext context, string bearer)
         {
