@@ -2,6 +2,6 @@
 {
     public static class GroupNames
     {
-        public static string UserIdGroup(string userId) => $"userid-group-{userId}";
+        public static string UserIdGroup(string userId) => $"userid-group-{userId.ToLower()}";
     }
 }
