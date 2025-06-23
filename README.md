@@ -17,8 +17,6 @@ Quiz World is an application that allows users to participate in and create quiz
 <img src="./preview-images/login.jpg" alt="Login">
 </details>
 
-Note: images are outdated, they will be updated in the future, so stay tuned!
-
 ## API version
 The current version of the API is ``2.0``. This is also the default one if you hit the API endpoints without specifying a concrete version.
 
