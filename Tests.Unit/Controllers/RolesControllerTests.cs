@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using NSubstitute;
 using QuizWorld.Common.Constants.Roles;
 using QuizWorld.Common.Result;
 using QuizWorld.ViewModels.Roles;
 using QuizWorld.Web.Areas.Administration.Controllers;
 using QuizWorld.Web.Contracts;
+using QuizWorld.Web.Hubs;
 using static QuizWorld.Common.Errors.RoleError;
 
 namespace Tests.Unit.Controllers
@@ -14,12 +16,14 @@ namespace Tests.Unit.Controllers
         public IRoleService RoleService { get; set; }
         public RolesController RolesController { get; set; }
         public ChangeRoleViewModel ChangeRoleViewModel { get; set; }
+        public IHubContext<SessionHub> HubContext { get; set; }
 
         [SetUp]
         public void Setup()
         {
             RoleService = Substitute.For<IRoleService>();
-            RolesController = new RolesController(RoleService);
+            HubContext = Substitute.For<IHubContext<SessionHub>>();
+            RolesController = new RolesController(RoleService, HubContext);
             ChangeRoleViewModel = new()
             {
                 UserId = Guid.NewGuid().ToString(),

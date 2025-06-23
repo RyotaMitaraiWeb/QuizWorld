@@ -1,10 +1,13 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using QuizWorld.Common.Hubs;
 using QuizWorld.Common.Policy;
 using QuizWorld.ViewModels.Roles;
 using QuizWorld.Web.Contracts;
 using QuizWorld.Web.Filters;
+using QuizWorld.Web.Hubs;
 using static QuizWorld.Common.Errors.RoleError;
 
 namespace QuizWorld.Web.Areas.Administration.Controllers
@@ -12,9 +15,10 @@ namespace QuizWorld.Web.Areas.Administration.Controllers
     [Route("roles")]
     [ApiVersion("2.0")]
     [Authorize(Policy = PolicyNames.CanInteractWithRoles)]
-    public class RolesController(IRoleService roleService) : BaseController
+    public class RolesController(IRoleService roleService, IHubContext<SessionHub> sessionHubContext) : BaseController
     {
         private readonly IRoleService _roleService = roleService;
+        private readonly IHubContext<SessionHub> _sessionHubContext = sessionHubContext;
 
         [HttpPatch("add")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -34,6 +38,11 @@ namespace QuizWorld.Web.Areas.Administration.Controllers
                 return BadRequest();
             }
 
+            var notification = CreateNotification(model);
+
+            await _sessionHubContext.Clients
+                .Group(GroupNames.UserIdGroup(model.UserId))
+                .SendAsync(HubMethodNames.Session.RoleAdded, notification);
             return NoContent();
         }
 
@@ -55,7 +64,16 @@ namespace QuizWorld.Web.Areas.Administration.Controllers
                 return BadRequest();
             }
 
+            var notification = CreateNotification(model);
+
+            await _sessionHubContext.Clients
+                .Group(GroupNames.UserIdGroup(model.UserId))
+                .SendAsync(HubMethodNames.Session.RoleRemoved, notification);
+
             return NoContent();
         }
+
+        private static RoleChangeNotificationViewModel CreateNotification(ChangeRoleViewModel model) 
+            => new() { Role = model.Role };
     }
 }
