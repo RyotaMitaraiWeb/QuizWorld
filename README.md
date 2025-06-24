@@ -7,21 +7,20 @@ Quiz World is an application that allows users to participate in and create quiz
 <details>
 <summary>Toggle images</summary>
 <br>
-<img src="./preview-images/question_example.png" alt="An example of a question during a quiz session">
-<img src="./preview-images/correct_answer_example.png" alt="An example of answering a question correctly">
-<img src="./preview-images/wrong_answer_example.png" alt="An example of answering a question incorrectly">
-<img src="./preview-images/creating_quiz_1.png" alt="An example of creating a quiz by filling the title and description and choosing the question type">
-<img src="./preview-images/creating_quiz_2.png" alt="An example of creating a single-choice question">
-<img src="./preview-images/creating_quiz_3.png" alt="An example of creating a multiple-choice question">
-<img src="./preview-images/creating_quiz_4.png" alt="An example of creating a text question">
+<img src="./preview-images/creating_quiz_1.jpg" alt="First step of creating a quiz">
+<img src="./preview-images/creating_quiz_2.jpg" alt="Creating a question">
+<img src="./preview-images/creating_quiz_3.jpg" alt="Creating a question">
+<img src="./preview-images/playing_quiz_1.jpg" alt="Playing a quiz">
+<img src="./preview-images/playing_quiz_2.jpg" alt="Playing a quiz">
+<img src="./preview-images/playing_quiz_3.jpg" alt="Playing a quiz">
+<img src="./preview-images/playing_quiz_4.jpg" alt="Playing a quiz">
+<img src="./preview-images/login.jpg" alt="Login">
 </details>
-
-Note: images are outdated, they will be updated in the future, so stay tuned!
 
 ## API version
 The current version of the API is ``2.0``. This is also the default one if you hit the API endpoints without specifying a concrete version.
 
-If you want to hit the old API version or to safeguard yourself from future update, attach a query parameter of ``api-version=1.0`` (or the respective version) to
+If you want to hit the old API version or to safeguard yourself from future updates, attach a query parameter of ``api-version=1.0`` (or the respective version) to
 all of your requests.
 
 
