@@ -44,5 +44,25 @@ namespace QuizWorld.Web.Controllers
             var result = await _profileService.UploadProfilePicture(model, username);
             return Ok(result);
         }
+
+        [HttpDelete("{username}/profile-picture")]
+        [Authorize(Policy = JwtMatchesOwnUsernameHandler.Name)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> DeleteProfilePicture(string username)
+        {
+            var metadata = new DeleteProfilePictureViewModel()
+            { 
+                Username = username
+            };
+
+            var result = await _profileService.DeleteProfilePicture(metadata);
+
+            if (!result.ProfilePictureExisted)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
     }
 }
