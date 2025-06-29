@@ -31,4 +31,7 @@
     <ProjectReference Include="..\QuizWorld.Web.Contracts\QuizWorld.Web.Contracts.csproj" />
     <ProjectReference Include="..\QuizWorld.Web.Services\QuizWorld.Web.Services.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="images\" />
+  </ItemGroup>
 </Project>
