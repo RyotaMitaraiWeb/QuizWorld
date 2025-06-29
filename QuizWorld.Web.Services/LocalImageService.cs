@@ -81,6 +81,24 @@ namespace QuizWorld.Web.Services
             await image.SaveAsWebpAsync(filePath, encoder);
         }
 
+        public Task<DeletedImageResultViewModel> DeleteImage(DeleteImageViewModel data)
+        {
+            string filePath = Path.Combine(ImagesPath, data.Directory, data.FileName);
+            var result = new DeletedImageResultViewModel()
+            {
+                ImageExisted = false,
+            };
+
+            if (!File.Exists(filePath))
+            {
+                return Task.FromResult(result);
+            }
+
+            result.ImageExisted = true;
+            File.Delete(filePath);
+            return Task.FromResult(result);
+        }
+
         private static readonly int ImageQuality = 75;
     }
 }
