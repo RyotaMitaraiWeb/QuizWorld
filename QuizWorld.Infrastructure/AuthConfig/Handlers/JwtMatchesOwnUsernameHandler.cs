@@ -15,10 +15,8 @@ namespace QuizWorld.Infrastructure.AuthConfig.Handlers
             if (username == requestUsername)
             {
                 context.Succeed(requirement);
-                return Task.CompletedTask;
             }
 
-            context.Fail();
             return Task.CompletedTask;
         }
 

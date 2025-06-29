@@ -60,7 +60,7 @@ namespace QuizWorld.Tests.AuthConfig.Handlers
 
             await handler.HandleAsync(authContext);
 
-            Assert.That(authContext.HasFailed, Is.True);
+            Assert.That(authContext.HasSucceeded, Is.False);
         }
     }
 }
