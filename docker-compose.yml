@@ -6,6 +6,7 @@ services:
     container_name: quiz-world
     volumes:
       - ~/.aspnet/https:/https
+      - ./QuizWorld.Web/images:/app/images
     depends_on:
         mssql:
             condition: service_started

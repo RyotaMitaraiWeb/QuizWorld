@@ -35,6 +35,7 @@ using QuizWorld.Infrastructure.AuthConfig.Legacy.CanWorkWithRoles;
 using QuizWorld.Infrastructure.Legacy.Filters.GuestsOnly;
 using QuizWorld.Web.Hubs;
 using QuizWorld.Common.Hubs;
+using Microsoft.Extensions.FileProviders;
 
 namespace QuizWorld.Web
 {
@@ -88,15 +89,21 @@ namespace QuizWorld.Web
             builder.Services.AddScoped<IAuthorizationHandler, CanAccessLogsHandler>();
             builder.Services.AddScoped<IAuthorizationHandler, CanEditAndDeleteQuizzesHandler>();
             builder.Services.AddScoped<IAuthorizationHandler, HasRequiredRolesHandler>();
+            builder.Services.AddScoped<IAuthorizationHandler, JwtMatchesOwnUsernameHandler>();
             builder.Services.AddSingleton<IAuthorizationHandler, CreatedTheQuizHandler>();
             builder.Services.AddScoped<LogEditOrDeleteActivityFilter>();
             builder.Services.AddScoped<LogRoleChangeFilter>();
             builder.Services.AddSingleton<AuthorizationMiddlewareResultHandler>();
+            builder.Services.AddSingleton<IImageService, LocalImageService>();
             builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler>(sp =>
             {
                 var defaultHandler = sp.GetRequiredService<AuthorizationMiddlewareResultHandler>();
                 return new To404NotFoundMiddlewareResultHandler(defaultHandler);
             });
+
+            string contentRootPath = builder.Environment.ContentRootPath;
+
+            builder.Services.AddSingleton<IContentRootPathProvider>(new ContentRootPathProvider(contentRootPath));
 
             builder.Services.AddDbContext<QuizWorldDbContext>(options =>
             {
@@ -247,6 +254,11 @@ namespace QuizWorld.Web
                 .AddPolicy(PolicyNames.CanInteractWithRoles, policy =>
                 {
                     policy.Requirements.Add(new HasRolesRequirement(Roles.Admin));
+                })
+                .AddPolicy(JwtMatchesOwnUsernameHandler.Name, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.Requirements.Add(new JwtMatchesOwnUsernameRequirement());
                 });
 
             
@@ -270,6 +282,18 @@ namespace QuizWorld.Web
                 options.SwaggerEndpoint("/swagger/v2/swagger.json", "v2");
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
             });
+
+            Console.WriteLine(Path.Combine(contentRootPath, LocalImageService.BasePath));
+
+            app.UseStaticFiles(
+                new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider(
+                        Path.Combine(contentRootPath, LocalImageService.BasePath)
+                    ),
+                    RequestPath = "/images"
+                }
+            );
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

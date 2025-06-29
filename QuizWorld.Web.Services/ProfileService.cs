@@ -5,15 +5,18 @@ using QuizWorld.Common.Search;
 using QuizWorld.Infrastructure.Data.Entities.Identity;
 using QuizWorld.Infrastructure.Extensions;
 using QuizWorld.ViewModels.Authentication;
+using QuizWorld.ViewModels.Image;
+using QuizWorld.ViewModels.Profile;
 using QuizWorld.ViewModels.UserList;
 using QuizWorld.Web.Contracts;
 using System.Linq.Expressions;
 
 namespace QuizWorld.Web.Services
 {
-    public class ProfileService(UserManager<ApplicationUser> userManager) : IProfileService
+    public class ProfileService(UserManager<ApplicationUser> userManager, IImageService imageService) : IProfileService
     {
         private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly IImageService _imageService = imageService;
 
         public async Task<UserViewModel?> GetUserByUsername(string username)
         {
@@ -104,6 +107,49 @@ namespace QuizWorld.Web.Services
             }
 
             return true;
+        }
+
+        public async Task<UploadedProfilePictureViewModel> UploadProfilePicture(UploadProfilePictureViewModel data, string user)
+        {
+            UploadImageViewModel metadata = new()
+            {
+                Directory = Destination,
+                Image = data.File,
+                FileName = GenerateFileName(user),
+                ResizeOptions = new()
+                {
+                    Width = AvatarSize,
+                    Height = AvatarSize,
+                }
+            };
+
+            var result = await _imageService.UploadImage(metadata);
+            return new UploadedProfilePictureViewModel()
+            {
+                Path = result.Name,
+            };
+        }
+
+        private readonly string Destination = "profile-pictures";
+        /// <summary>
+        /// Described in pixels
+        /// </summary>
+        private readonly int AvatarSize = 256;
+        private string GenerateFileName(string user) => $"{user}.{_imageService.DefaultFileExtension}";
+
+        public async Task<DeletedProfilePictureViewModel> DeleteProfilePicture(DeleteProfilePictureViewModel data)
+        {
+            var metadata = new DeleteImageViewModel()
+            {
+                Directory = Destination,
+                FileName = GenerateFileName(data.Username),
+            };
+
+            var result = await _imageService.DeleteImage(metadata);
+            return new DeletedProfilePictureViewModel()
+            {
+                ProfilePictureExisted = result.ImageExisted,
+            };
         }
     }
 }

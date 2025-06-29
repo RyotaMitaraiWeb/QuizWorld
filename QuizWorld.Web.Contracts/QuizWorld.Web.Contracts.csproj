@@ -5,6 +5,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\QuizWorld.Common\QuizWorld.Common.csproj" />
     <ProjectReference Include="..\QuizWorld.ViewModels\QuizWorld.ViewModels.csproj" />
   </ItemGroup>
