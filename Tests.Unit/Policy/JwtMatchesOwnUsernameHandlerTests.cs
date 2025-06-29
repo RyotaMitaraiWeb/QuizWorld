@@ -1,7 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using NUnit.Framework;
 using NSubstitute;
 using QuizWorld.Infrastructure.AuthConfig.Handlers;
 using QuizWorld.Infrastructure.AuthConfig.Requirements;
