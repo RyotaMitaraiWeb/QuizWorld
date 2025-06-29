@@ -10,5 +10,6 @@ namespace QuizWorld.Web.Contracts
         Task<UserViewModel?> GetUserByUsername(string username);
         Task<ListUsersViewModel> SearchUsers(SearchUsersParameters parameters);
         Task<UploadedProfilePictureViewModel> UploadProfilePicture(UploadProfilePictureViewModel data, string user);
+        Task<DeletedProfilePictureViewModel> DeleteProfilePicture(DeleteProfilePictureViewModel data);
     }
 }

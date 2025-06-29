@@ -136,5 +136,20 @@ namespace QuizWorld.Web.Services
         /// </summary>
         private readonly int AvatarSize = 256;
         private string GenerateFileName(string user) => $"{user}.{_imageService.DefaultFileExtension}";
+
+        public async Task<DeletedProfilePictureViewModel> DeleteProfilePicture(DeleteProfilePictureViewModel data)
+        {
+            var metadata = new DeleteImageViewModel()
+            {
+                Directory = Destination,
+                FileName = GenerateFileName(data.Username),
+            };
+
+            var result = await _imageService.DeleteImage(metadata);
+            return new DeletedProfilePictureViewModel()
+            {
+                ProfilePictureExisted = result.ImageExisted,
+            };
+        }
     }
 }
