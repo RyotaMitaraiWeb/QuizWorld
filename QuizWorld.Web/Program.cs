@@ -89,6 +89,7 @@ namespace QuizWorld.Web
             builder.Services.AddScoped<IAuthorizationHandler, CanAccessLogsHandler>();
             builder.Services.AddScoped<IAuthorizationHandler, CanEditAndDeleteQuizzesHandler>();
             builder.Services.AddScoped<IAuthorizationHandler, HasRequiredRolesHandler>();
+            builder.Services.AddScoped<IAuthorizationHandler, JwtMatchesOwnUsernameHandler>();
             builder.Services.AddSingleton<IAuthorizationHandler, CreatedTheQuizHandler>();
             builder.Services.AddScoped<LogEditOrDeleteActivityFilter>();
             builder.Services.AddScoped<LogRoleChangeFilter>();
@@ -253,6 +254,11 @@ namespace QuizWorld.Web
                 .AddPolicy(PolicyNames.CanInteractWithRoles, policy =>
                 {
                     policy.Requirements.Add(new HasRolesRequirement(Roles.Admin));
+                })
+                .AddPolicy(JwtMatchesOwnUsernameHandler.Name, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.Requirements.Add(new JwtMatchesOwnUsernameRequirement());
                 });
 
             
